@@ -1,0 +1,5 @@
+{
+  "env": {
+    "INDENT_WEBHOOK_SECRET": "@vercel-access-webhook-secret"
+  }
+}

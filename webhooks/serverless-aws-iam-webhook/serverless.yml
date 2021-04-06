@@ -1,0 +1,50 @@
+service: indent-aws-iam-webhook
+
+provider:
+  name: aws
+  region: us-west-2
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - iam:AddUserToGroup
+        - iam:RemoveUserFromGroup
+      Resource: '*'
+  environment:
+    INDENT_WEBHOOK_SECRET: ${env:INDENT_WEBHOOK_SECRET}
+
+functions:
+  webhook:
+    runtime: nodejs12.x
+    handler: index.handle
+    events:
+      - http:
+          method: post
+          path: webhook
+          cors:
+            origin: '*'
+            headers:
+              - X-Indent-Signature
+              - X-Indent-Timestamp
+
+plugins:
+  - serverless-offline
+  - serverless-webpack
+
+resources:
+  Resources:
+    s3Read:
+      Type: AWS::IAM::Group
+      Properties:
+        GroupName: s3-read-dev
+        Policies:
+          - PolicyName: s3-dev-get-any-object
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Resource:
+                    - 'arn:aws:s3:::*'
+                  Action:
+                    - 's3:GetObject'
+                    - 's3:ListBucket'
+                    - 's3:ListAllMyBuckets'

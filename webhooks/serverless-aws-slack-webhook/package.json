@@ -1,0 +1,33 @@
+{
+  "name": "@indent/serverless-slack-webhook",
+  "version": "0.0.0",
+  "description": "A Node.js starter for the Serverless Framework with Indent and Slack.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "serverless offline",
+    "test": "indent-webhook-test -c ./test/config.json http://localhost:3000"
+  },
+  "author": "Indent Inc <open@indent.com>",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/indentapis/indent-js.git"
+  },
+  "devDependencies": {
+    "@types/node": "^13.9.8",
+    "serverless-offline": "^6.1.4",
+    "serverless-webpack": "^5.3.1",
+    "ts-loader": "^6.2.2",
+    "typescript": "^3.8.3",
+    "webpack": "^4.42.1"
+  },
+  "dependencies": {
+    "@indent/types": "latest",
+    "@indent/webhook": "latest",
+    "@types/aws-lambda": "^8.10.46",
+    "@types/node-fetch": "^2.5.5",
+    "aws-lambda": "^1.0.5",
+    "aws-sdk": "^2.649.0",
+    "axios": "^0.21.1"
+  }
+}

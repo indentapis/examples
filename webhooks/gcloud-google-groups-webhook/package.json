@@ -1,0 +1,36 @@
+{
+  "name": "@indent/gcloud-google-groups-webhook",
+  "version": "0.0.0",
+  "description": "A Node.js starter for the Google Groups with Indent and GCloud Functions.",
+  "scripts": {
+    "build:lib": "./node_modules/.bin/tsc",
+    "build:env": "yaml2json .env.yaml > .env.json",
+    "build:dist": "ncc build lib/index.js -m -o dist",
+    "build": "npm run build:lib && npm run build:dist",
+    "dev": "npm run build && npm run build:env && env-cmd -r ./.env.json functions-framework --source=lib/index.js --target=webhook",
+    "deploy": "gcloud functions deploy indent-google-groups-webhook --entry-point webhook --env-vars-file .env.yaml --region us-central1 --project=$GCP_PROJECT --runtime=nodejs10 --trigger-http --allow-unauthenticated --source dist",
+    "test": "indent-webhook-test -c ./test/config.json http://localhost:8080"
+  },
+  "author": "Indent Inc <open@indent.com>",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/indentapis/indent-js.git"
+  },
+  "dependencies": {
+    "@indent/types": "latest",
+    "@indent/webhook": "latest",
+    "@types/node-fetch": "^2.5.5",
+    "axios": "^0.21.1",
+    "gaxios": "^4.0.1",
+    "googleapis": "^62.0.0",
+    "googleapis-common": "^4.4.3"
+  },
+  "devDependencies": {
+    "@google-cloud/functions-framework": "^1.6.0",
+    "@vercel/ncc": "^0.24.1",
+    "env-cmd": "^10.1.0",
+    "typescript": "^4.0.5",
+    "yaml2json": "^1.0.2"
+  }
+}

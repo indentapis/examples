@@ -1,0 +1,9 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "FUNCTIONS_WORKER_RUNTIME": "node",
+    "INDENT_WEBHOOK_SECRET": "<indent-webhook-secret>",
+    "OKTA_TENANT": "<okta-tenant>",
+    "OKTA_TOKEN": "<okta-token>"
+  }
+}

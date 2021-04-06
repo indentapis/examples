@@ -1,0 +1,60 @@
+{
+  "hook": {
+    "secret": "wkeXample",
+    "url": "http://localhost:8080",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  },
+  "entries": [
+    {
+      "events": [
+        {
+          "event": "access/grant",
+          "actor": {
+            "kind": "indent.com/user",
+            "id": "blockuuidv4:1",
+            "email": "bismuth@rainbowbismuth.com"
+          },
+          "reason": "good reason",
+          "resources": [
+            {
+              "kind": "indent.com/user",
+              "id": "blockuuidv4:2",
+              "email": "e2e@rainbowbismuth.com"
+            },
+            {
+              "kind": "google/group",
+              "id": "test-group-for-testing@rainbowbismuth.com"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "delay": 5000,
+      "events": [
+        {
+          "event": "access/revoke",
+          "actor": {
+            "kind": "indent.com/user",
+            "id": "blockuuidv4:1",
+            "email": "bismuth@rainbowbismuth.com"
+          },
+          "reason": "good reason",
+          "resources": [
+            {
+              "kind": "indent.com/user",
+              "id": "blockuuidv4:2",
+              "email": "e2e@rainbowbismuth.com"
+            },
+            {
+              "kind": "google/group",
+              "id": "test-group-for-testing@rainbowbismuth.com"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

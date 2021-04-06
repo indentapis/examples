@@ -1,0 +1,62 @@
+{
+  "entries": [
+    {
+      "events": [
+        {
+          "event": "access/grant",
+          "actor": {
+            "kind": "slack/user",
+            "id": "TL0Q0MJR7/U9G03MX"
+          },
+          "meta": {
+            "labels": {
+              "expires": "2020-04-07T19:23:42.335Z"
+            }
+          },
+          "reason": "debug jira ticket APP-123",
+          "resources": [
+            {
+              "kind": "slack/user",
+              "id": "TL0Q0MJR7/U822olY",
+              "labels": {
+                "arn": "dennis-developer",
+                "cognitoId": "d697483b81d0b72a37bf"
+              }
+            },
+            {
+              "kind": "aws:iam:group",
+              "id": "s3-read"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "delay": 1000,
+      "events": [
+        {
+          "event": "access/revoke",
+          "actor": {
+            "kind": "slack/user",
+            "id": "TL0Q0MJR7/U9G03MX"
+          },
+          "reason": "access grant expired",
+          "resources": [
+            {
+              "kind": "slack/user",
+              "id": "TL0Q0MJR7/U822olY",
+              "labels": {
+                "arn": "dennis-developer",
+                "cognitoId": "d697483b81d0b72a37bf"
+              }
+            },
+            {
+              "kind": "aws:iam:group",
+              "id": "s3-read"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

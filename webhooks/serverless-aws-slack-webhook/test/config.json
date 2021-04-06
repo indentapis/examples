@@ -1,0 +1,35 @@
+{
+  "entries": [
+    {
+      "events": [
+        {
+          "event": "access/grant",
+          "actor": {
+            "kind": "slack/user",
+            "id": "TL0Q0MJR7/U9G03MX",
+            "labels": {
+              "slackId": "123"
+            }
+          },
+          "reason": "good reason",
+          "resources": [
+            {
+              "kind": "slack/user",
+              "id": "TL0Q0MJR7/U822olY",
+              "labels": {
+                "slackId": "123"
+              }
+            },
+            {
+              "kind": "slack/channel",
+              "id": "123",
+              "labels": {
+                "slackId": 
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

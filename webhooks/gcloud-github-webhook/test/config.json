@@ -1,0 +1,32 @@
+{
+  "entries": [
+    {
+      "events": [
+        {
+          "event": "access/grant",
+          "actor": {
+            "kind": "slack/user",
+            "id": "TL0Q0MJR7/U9G03MX",
+            "labels": {
+              "githubId": "indent-bot"
+            }
+          },
+          "reason": "good reason",
+          "resources": [
+            {
+              "kind": "slack/user",
+              "id": "TL0Q0MJR7/U822olY",
+              "labels": {
+                "githubId": "indent-bot"
+              }
+            },
+            {
+              "kind": "github/team",
+              "id": "indentapis/oss-example"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

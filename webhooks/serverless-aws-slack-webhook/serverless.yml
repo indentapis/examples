@@ -1,0 +1,26 @@
+service: indent-slack-webhook
+
+provider:
+  name: aws
+  region: us-west-2
+  environment:
+    INDENT_WEBHOOK_SECRET: ${env:INDENT_WEBHOOK_SECRET}
+    SLACK_TOKEN: ${env:SLACK_TOKEN}
+
+functions:
+  webhook:
+    runtime: nodejs12.x
+    handler: index.handle
+    events:
+      - http:
+          method: post
+          path: webhook
+          cors:
+            origin: '*'
+            headers:
+              - X-Indent-Signature
+              - X-Indent-Timestamp
+
+plugins:
+  - serverless-offline
+  - serverless-webpack

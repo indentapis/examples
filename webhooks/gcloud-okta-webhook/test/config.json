@@ -1,0 +1,32 @@
+{
+  "entries": [
+    {
+      "events": [
+        {
+          "event": "access/grant",
+          "actor": {
+            "kind": "slack/user",
+            "id": "TL0Q0MJR7/U9G03MX",
+            "labels": {
+              "oktaId": "00uqlnv5oon8tTdlX356"
+            }
+          },
+          "reason": "good reason",
+          "resources": [
+            {
+              "kind": "slack/user",
+              "id": "TL0Q0MJR7/U822olY",
+              "labels": {
+                "oktaId": "00uqlnv5oon8tTdlX356"
+              }
+            },
+            {
+              "kind": "okta:group",
+              "id": "00g3rrcr73qNIVuwd357"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

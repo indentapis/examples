@@ -1,0 +1,60 @@
+{
+  "entries": [
+    {
+      "events": [
+        {
+          "event": "access/grant",
+          "actor": {
+            "kind": "slack/user",
+            "id": "TL0Q0MJR7/U9G03MX"
+          },
+          "meta": {
+            "labels": {
+              "expires": "2020-04-07T19:23:42.335Z"
+            }
+          },
+          "reason": "get access to azure dev tenant",
+          "resources": [
+            {
+              "kind": "slack/user",
+              "id": "TL0Q0MJR7/U822olY",
+              "labels": {
+                "oktaId": "00l36m4QLKFDCiy"
+              }
+            },
+            {
+              "kind": "okta/group",
+              "id": "00g11n0cubwMTUq224x7"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "delay": 1000,
+      "events": [
+        {
+          "event": "access/revoke",
+          "actor": {
+            "kind": "slack/user",
+            "id": "TL0Q0MJR7/U9G03MX"
+          },
+          "reason": "get access to azure dev tenant",
+          "resources": [
+            {
+              "kind": "slack/user",
+              "id": "TL0Q0MJR7/U822olY",
+              "labels": {
+                "oktaId": "00l36m4QLKFDCiy"
+              }
+            },
+            {
+              "kind": "okta/group",
+              "id": "00g11n0cubwMTUq224x7"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
