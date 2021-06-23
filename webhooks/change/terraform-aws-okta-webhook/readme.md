@@ -1,10 +1,10 @@
-# Terraform AWS + atSpoke Webhook
+# Terraform AWS + Okta Webhook
 
 ## How To Use
 
 ### Requirements
 
-- [atSpoke Account](https://atspoke.com)
+- [Okta Account](https://okta.com)
 - [Terraform](https://terraform.io)
 - [AWS CLI or ~/.aws/credentials](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html)
 
@@ -13,8 +13,8 @@
 Download the example:
 
 ```bash
-curl https://codeload.github.com/indentapis/examples/tar.gz/main | tar -xz --strip=2 examples-main/webhooks/terraform-aws-atspoke-webhook
-cd terraform-aws-atspoke-webhook
+curl https://codeload.github.com/indentapis/examples/tar.gz/main | tar -xz --strip=2 examples-main/webhooks/change/terraform-aws-okta-webhook
+cd terraform-aws-okta-webhook
 ```
 
 Install the dependencies...
@@ -35,10 +35,10 @@ mv terraform/config/example.tfvars terraform/config/terraform.tfvars
 ```hcl
 # Indent Webhook Secret is used to verify messages from Indent
 indent_webhook_secret = "wks0example-secret"
-# Indent Space Name is used to link to the right space on Indent
-indent_space_name = "my-space-123"
-# atSpoke API Key is used to authorize requests to your atSpoke environment
-atspoke_api_key = "AY_myapikey"
+# Okta Tenant is used to route requests to your Okta environment
+okta_tenant = "example.okta.com"
+# Okta Token is used to authorize requests to your Okta environment
+okta_token = "eXaMpLeOkTaToKeN"
 ```
 
 ### Deployment
@@ -48,17 +48,9 @@ Deploy it to the cloud with [Terraform](https://terraform.io) ([Documentation](h
 This will take a few minutes to run the first time as Terraform sets up the resources in the AWS Account. You should see an output similar to below:
 
 ```bash
-npm run deploy:all
+$ npm run deploy:all
 
-# or if you want to manually review
-npm run tf:plan
-npm run tf:apply
-```
-
-**Expected Output**
-
-```
-> @indent/terraform-aws-atspoke-webhook@0.0.0 deploy:all  /Users/docs/dl/indent-js/examples/terraform-aws-atspoke-webhook
+> @indent/terraform-aws-okta-webhook@0.0.0 deploy:all  /Users/docs/dl/indent-js/examples/terraform-aws-okta-webhook
 > npm install; npm run build; npm run tf:apply -auto-approve
 
 audited 406 packages in 1.878s
@@ -69,11 +61,11 @@ audited 406 packages in 1.878s
 found 0 vulnerabilities
 
 
-> @indent/terraform-aws-atspoke-webhook@0.0.0 build  /Users/docs/dl/indent-js/examples/terraform-aws-atspoke-webhook
+> @indent/terraform-aws-okta-webhook@0.0.0 build  /Users/docs/dl/indent-js/examples/terraform-aws-okta-webhook
 > tsc
 
 
-> @indent/terraform-aws-atspoke-webhook@0.0.0 tf:apply  /Users/docs/dl/indent-js/examples/terraform-aws-atspoke-webhook
+> @indent/terraform-aws-okta-webhook@0.0.0 tf:apply  /Users/docs/dl/indent-js/examples/terraform-aws-okta-webhook
 > cd terraform; terraform apply -compact-warnings -var-file ./config/terraform.tfvars
 
 data.archive_file.function_archive: Refreshing state...
@@ -107,16 +99,16 @@ aws_api_gateway_rest_api.api_gateway_rest_api: Creation complete after 1s [id=92
 aws_api_gateway_resource.api_gateway: Creating...
 aws_api_gateway_method.api_gateway_root_method: Creating...
 aws_api_gateway_method.api_gateway_root_method: Creation complete after 0s [id=agm-92jf20fmw-gldokcr667-ANY]
-aws_iam_role.lambda_role: Creation complete after 1s [id=indent-atspoke-webhook-sm85-role]
+aws_iam_role.lambda_role: Creation complete after 1s [id=indent-okta-webhook-sm85-role]
 aws_api_gateway_resource.api_gateway: Creation complete after 0s [id=3rgb0h]
 aws_api_gateway_method.api_gateway_method: Creating...
 aws_iam_policy.lambda_policy: Creation complete after 1s [id=arn:aws:iam::283478849108:policy/terraform-20200701073232957200000001]
 aws_iam_policy_attachment.lambda_attachment: Creating...
 aws_api_gateway_method.api_gateway_method: Creation complete after 0s [id=agm-92jf20fmw-3rgb0h-ANY]
-aws_iam_policy_attachment.lambda_attachment: Creation complete after 2s [id=indent-atspoke-webhook-sm85-attachment]
+aws_iam_policy_attachment.lambda_attachment: Creation complete after 2s [id=indent-okta-webhook-sm85-attachment]
 aws_lambda_layer_version.deps: Creation complete after 9s [id=arn:aws:lambda:us-west-2:283478849108:layer:dependency_layer:16]
 aws_lambda_function.lambda: Creating...
-aws_lambda_function.lambda: Creation complete after 10s [id=indent-atspoke-webhook-sm85]
+aws_lambda_function.lambda: Creation complete after 10s [id=indent-okta-webhook-sm85]
 aws_lambda_permission.lambda: Creating...
 aws_api_gateway_integration.api_gateway_root_integration: Creating...
 aws_api_gateway_integration.api_gateway_integration: Creating...
@@ -135,4 +127,4 @@ api_base_url = https://92jf20fmw.execute-api.us-west-2.amazonaws.com/dev
 
 ## About Example
 
-This is a simple example showing how to use [Terraform](https://terraform.io) to deploy a function that can create requests in atSpoke.
+This is a simple example showing how to use [Terraform](https://terraform.io) to deploy a function that can add or remove users from Okta Groups programatically.

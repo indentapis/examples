@@ -6,12 +6,12 @@ With [Webhooks](./webhooks), you can safely connect Indent to your cloud while k
 
 Using a [Webhook](./webhooks), you can...
 
-- [Grant and revoke access via Okta](./webhooks/terraform-aws-okta-webhook)
-- [Create tickets or grant/revoke roles in Jira](./webhooks/terraform-aws-jira-webhook)
-- [Add and remove users from a channel in Slack](./webhooks/serverless-aws-slack-webhook)
-- [Create tickets via emails to your service desk](./webhooks/serverless-aws-ses-webhook)
+- [Grant and revoke access via Okta](./webhooks/change/terraform-aws-okta-webhook)
+- [Create tickets or grant/revoke roles in Jira](./webhooks/change/terraform-aws-jira-webhook)
+- [Pull users and groups from Okta](./webhooks/pull/terraform-aws-okta-pull-webhook)
+- [Create tickets via emails to your service desk](./webhooks/xyz/serverless-aws-ses-webhook)
 
-... or create your own by following the [Custom Webhook Guide](https://indent.com/docs/connect/custom-webhook).
+... or create your own by following the [Webhooks Guide](https://indent.dev/docs/webhooks).
 
 [Learn more about Indent &rarr;](https://indent.com)
 
