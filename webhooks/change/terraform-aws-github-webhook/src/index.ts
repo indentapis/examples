@@ -1,21 +1,23 @@
 import { APIGatewayProxyHandler } from 'aws-lambda'
 import { verify } from '@indent/webhook'
 import * as Indent from '@indent/types'
-import axios from 'axios'
+import { Octokit } from '@octokit/rest'
+import hclParser from 'js-hcl-parser'
+import _ from 'lodash'
 
 export const handle: APIGatewayProxyHandler = async function handle(event) {
   try {
     await verify({
       secret: process.env.INDENT_WEBHOOK_SECRET,
       headers: event.headers,
-      body: event.body
+      body: event.body,
     })
   } catch (err) {
     console.error('@indent/webhook.verify(): failed')
     console.error(err)
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: { message: err.message } })
+      body: JSON.stringify({ error: { message: err.message } }),
     }
   }
 
@@ -23,7 +25,7 @@ export const handle: APIGatewayProxyHandler = async function handle(event) {
   const { events } = body
 
   console.log(`@indent/webhook: received ${events.length} events`)
-  console.log(JSON.stringify(events, null, 2))
+  console.log(JSON.stringify(events))
 
   await Promise.all(
     events.map((auditEvent: Indent.Event) => {
@@ -32,7 +34,7 @@ export const handle: APIGatewayProxyHandler = async function handle(event) {
       console.log(
         `@indent/webhook: ${event} { actor: ${
           actor.id
-        }, resources: ${JSON.stringify(resources.map(r => r.id))} }`
+        }, resources: ${JSON.stringify(resources.map((r) => r.id))} }`
       )
 
       switch (event) {
@@ -40,6 +42,8 @@ export const handle: APIGatewayProxyHandler = async function handle(event) {
           return grantPermission(auditEvent)
         case 'access/revoke':
           return revokePermission(auditEvent)
+        case 'access/approve':
+          return Promise.resolve()
         default:
           console.log('received unknown event')
           console.log(auditEvent)
@@ -50,84 +54,152 @@ export const handle: APIGatewayProxyHandler = async function handle(event) {
 
   return {
     statusCode: 200,
-    body: '{}'
+    body: '{}',
   }
 }
 
-const OKTA_TENANT = process.env.OKTA_TENANT
-const OKTA_TOKEN = process.env.OKTA_TOKEN
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN
 
-async function addUserToGroup({ user, group }) {
-  return await axios({
-    method: 'put',
-    url: `https://${OKTA_TENANT}/api/v1/groups/${group}/users/${user}`,
-    headers: {
-      Accept: 'application/json',
-      Authorization: `SSWS ${OKTA_TOKEN}`,
-      'Content-Type': 'application/json'
-    }
-  })
+const octokit = new Octokit({
+  auth: GITHUB_TOKEN,
+})
+
+async function getFile({ owner, repo, path }) {
+  return await octokit.repos
+    .getContent({
+      owner,
+      repo,
+      path,
+    })
+    .then((r) => r.data)
 }
 
-async function removeUserFromGroup({ user, group }) {
-  return await axios({
-    method: 'delete',
-    url: `https://${OKTA_TENANT}/api/v1/groups/${group}/users/${user}`,
-    headers: {
-      Accept: 'application/json',
-      Authorization: `SSWS ${OKTA_TOKEN}`,
-      'Content-Type': 'application/json'
-    }
-  })
+async function updateFile({ owner, repo, path, sha, newContent }) {
+  return await octokit.repos
+    .createOrUpdateFileContents({
+      owner,
+      repo,
+      path,
+      sha,
+      content: newContent,
+      message: 'chore(acl): update roles',
+      committer: {
+        name: 'Indent Bot',
+        email: 'github-bot@noreply.indentapis.com',
+      },
+      author: {
+        name: 'Indent Bot',
+        email: 'github-bot@noreply.indentapis.com',
+      },
+    })
+    .then((r) => r.data)
 }
 
-const okta = { addUserToGroup, removeUserFromGroup }
+const github = { getFile, updateFile }
 
 async function grantPermission(auditEvent: Indent.Event) {
-  const { event, actor, resources } = auditEvent
-  const user = getOktaIdFromResources(resources, 'user')
-  const group =
-    getOktaIdFromResources(resources, 'app') ||
-    getOktaIdFromResources(resources, 'group')
+  try {
+    const { resources } = auditEvent
+    const userId = getIdFromResources(resources, 'user')
+    const roleId = getIdFromResources(resources, 'role')
+    const { updateResult, acl, sourceACL } = await getAndUpdateACL(
+      roleId,
+      (role) => {
+        role = role.filter((id: string) => id !== userId)
+        role.push(userId)
+        return role
+      }
+    )
 
-  let result = await okta.addUserToGroup({ user, group })
-
-  console.log({
-    event,
-    actor,
-    resources,
-    success: result.status >= 200 && result.status < 300
-  })
+    console.log({
+      roleId,
+      userId,
+      updateResult,
+      acl,
+      sourceACL,
+    })
+  } catch (err) {
+    console.error(err)
+  }
 }
 
 async function revokePermission(auditEvent: Indent.Event) {
-  const { event, actor, resources } = auditEvent
-  const user = getOktaIdFromResources(resources, 'user')
-  const group =
-    getOktaIdFromResources(resources, 'app') ||
-    getOktaIdFromResources(resources, 'group')
+  try {
+    const { resources } = auditEvent
+    const userId = getIdFromResources(resources, 'user')
+    const roleId = getIdFromResources(resources, 'role')
+    const { updateResult, acl, sourceACL } = await getAndUpdateACL(
+      roleId,
+      (role) => role.filter((id: string) => id !== userId)
+    )
 
-  let result = await okta.removeUserFromGroup({ user, group })
-
-  console.log({
-    event,
-    actor,
-    resources,
-    success: result.status >= 200 && result.status < 300
-  })
+    console.log(
+      JSON.stringify({
+        roleId,
+        userId,
+        updateResult,
+        acl,
+        sourceACL,
+      })
+    )
+  } catch (err) {
+    console.error(err)
+  }
 }
 
-function getOktaIdFromResources(
+type RoleUpdater = (members: string[]) => string[]
+
+async function getAndUpdateACL(roleId: string, updater: RoleUpdater) {
+  const [fullRepo, path, roleObjectPath] = roleId.split(':')
+  const [owner, repo] = fullRepo.split('/')
+  const file = await github.getFile({ owner, repo, path })
+  const fileContent = Buffer.from(file.content, 'base64').toString('ascii')
+  const sourceACL = hclParser.parse(fileContent)
+  const sourceACLObject = JSON.parse(sourceACL)
+  const sourceRole = _.get(sourceACLObject, roleObjectPath) || []
+  const role = updater(sourceRole)
+  const acl = _.set(sourceACLObject, roleObjectPath, role)
+
+  console.log(
+    JSON.stringify({
+      role,
+      sourceRole,
+      sourceACLObject,
+      roleObjectPath
+    })
+  )
+
+  const newContentBody = hclParser.stringify(JSON.stringify(acl), null, 2)
+
+  if (newContentBody.includes('unable')) {
+    console.error('HCL.stringify: failed')
+    console.error(newContentBody)
+    return { sourceACL, acl }
+  }
+
+  let newContent = Buffer.from(newContentBody, 'ascii').toString('base64')
+
+  if (newContent === file.content) {
+    console.warn('No changes to be applied')
+    return { sourceACL, acl }
+  }
+
+  const updateResult = await github.updateFile({
+    owner,
+    repo,
+    path,
+    sha: file.sha,
+    newContent,
+  })
+
+  return { updateResult, acl, sourceACL }
+}
+
+function getIdFromResources(
   resources: Indent.Resource[],
   kind: string
 ): string {
   return resources
-    .filter(r => r.kind && r.kind.toLowerCase().includes(kind.toLowerCase()))
-    .map(r => {
-      if (r.labels && r.labels.oktaId) {
-        return r.labels.oktaId
-      }
-
-      return r.id
-    })[0]
+    .filter((r) => r.kind && r.kind.toLowerCase().includes(kind.toLowerCase()))
+    .map((r) => r.labels.githubId || r.email || r.id)[0]
 }
