@@ -2,7 +2,7 @@
 
 Indent enables simple, fast access requests & reviews for your cloud apps and infrastructure.
 
-With [Webhooks](./webhooks), you can safely connect Indent to your cloud while keeping API tokens and credentials opaque to Indent.
+With [Webhooks](./webhooks), you can safely connect Indent to your cloud resources while keeping API tokens and credentials on your infrastructure.
 
 Using a [Webhook](./webhooks), you can...
 
