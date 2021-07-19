@@ -1,0 +1,9 @@
+{
+  "name": "terraform-gcloud-google-groups-webhook",
+  "version": "1.0.0",
+  "description": "A Node.js starter for Terraform on GCP with Indent and Google Groups",
+  "main": "index.js",
+  "repository": "https://github.com/indentapis/indent-js.git",
+  "author": "Indent Inc",
+  "license": "Apache-2.0"
+}
