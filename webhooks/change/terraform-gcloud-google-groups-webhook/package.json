@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "A Node.js starter for Terraform on GCP with Indent and Google Groups",
   "scripts": {
-    "build": "./node_modules/.bin/tsc"
+    "bundle": "ncc build lib/index.js -m -o dist",
+    "build": "./node_modules/.bin/tsc",
+    "build:env": "yaml2json .env.yaml > .env.json",
+    "deploy": "npm run build && npm run bundle && cd terraform && terraform apply"
   },
   "main": "index.js",
   "repository": "https://github.com/indentapis/indent-js.git",
@@ -22,6 +25,7 @@
   },
   "devDependencies": {
     "@google-cloud/functions-framework": "^1.9.0",
+    "@vercel/ncc": "^0.29.0",
     "env-cmd": "^10.1.0",
     "typescript": "^4.3.5",
     "yamljs": "^0.3.0"
