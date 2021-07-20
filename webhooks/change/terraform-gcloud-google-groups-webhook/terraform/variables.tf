@@ -29,3 +29,8 @@ variable "webhook_secret" {
   description = "INDENT_WEBHOOK_SECRET for the indent-gcloud-groups-webhook"
   type        = string
 }
+
+variable "service_account_email" {
+  description = "Service account email address for managing Google Groups"
+  type        = string
+}

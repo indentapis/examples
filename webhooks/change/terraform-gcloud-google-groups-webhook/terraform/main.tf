@@ -12,5 +12,6 @@ module "google-groups" {
 
   environment_variables = {
     INDENT_WEBHOOK_SECRET = var.webhook_secret
+    GCP_SVC_ACCT_EMAIL    = var.service_account_email
   }
 }
