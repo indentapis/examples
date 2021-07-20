@@ -65,11 +65,7 @@ function getIdFromResources(resources: Resource[], kind: string) {
   return resources
     .filter((r) => r.kind?.toLowerCase().includes(kind.toLowerCase()))
     .map((r) => r.id)[0]
-<<<<<<< HEAD
 }
-=======
-} 
->>>>>>> a32c009 (feat(/webhooks/change/terraform-gcloud-google-groups/src): Add dependencies for new google groups terraform webhook [ID-859])
 
 function getEmailFromResources(resources: Resource[], kind: string) {
   return resources
