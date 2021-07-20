@@ -14,7 +14,6 @@ import { Event } from "@indent/types";
 import { GaxiosResponse } from "gaxios";
 import { verify } from "@indent/webhook";
 import { Request, Response } from "express";
-import { SetPolicyResponse } from "@google-cloud/storage";
 import * as groups from "./capabilities/google-groups";
 
 exports["webhook"] = async function handle(req: IRequest, res: Response) {
@@ -113,9 +112,6 @@ async function grantPermission(auditEvent: Event) {
       headers,
     });
   } catch (err) {
-    console.log(headers);
-    console.log(body);
-    console.log(rawBody);
     console.error("@indent/webhook.verify(): failed");
     console.error(err);
     return res.status(500).json({ status: { message: err.message } });
