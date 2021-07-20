@@ -11,7 +11,7 @@
 Download the example:
 
 ```bash
-curl https://codeload.github.com/indentapis/examples/tar.gz/main | tar -xz --strip=2 examples-main/webhooks/gcloud-okta-webhook
+curl https://codeload.github.com/indentapis/examples/tar.gz/main | tar -xz --strip=3 examples-main/webhooks/gcloud-okta-webhook
 cd gcloud-okta-webhook
 ```
 
