@@ -18,14 +18,19 @@ import { SetPolicyResponse } from "@google-cloud/storage";
 import * as groups from "./capabilities/google-groups";
 
 exports["webhook"] = async function handle(req: IRequest, res: Response) {
+<<<<<<< HEAD
   const { headers, body } = req;
   const rawBody =
     process.env.NODE_ENV === "development" ? body : JSON.stringify(body);
 >>>>>>> a32c009 (feat(/webhooks/change/terraform-gcloud-google-groups/src): Add dependencies for new google groups terraform webhook [ID-859])
+=======
+  const { headers, rawBody } = req;
+>>>>>>> 75eea69 (fixed bug by using rawBody from google message response instead of regular body)
 
   try {
     await verify({
       secret: process.env.INDENT_WEBHOOK_SECRET,
+<<<<<<< HEAD
 <<<<<<< HEAD
       body: rawBody.toString(),
       headers,
@@ -102,6 +107,9 @@ async function grantPermission(auditEvent: Event) {
     return await groups.grantPermission(auditEvent)
 =======
       body: rawBody,
+=======
+      body: rawBody.toString(),
+>>>>>>> 75eea69 (fixed bug by using rawBody from google message response instead of regular body)
       headers,
     });
   } catch (err) {
