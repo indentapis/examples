@@ -9,13 +9,13 @@ EOF
 
 variable "project" {
   description = "Google Cloud Platform project to deploy cluster in."
-  default     = "granite-functions"
+  default     = "id-drop-weekly-zkodj"
   type        = string
 }
 
 variable "bucket" {
   description = "Name of bucket to store function sources in"
-  default     = "indent-internal-webhooks"
+  default     = "indent-gcloud-groups-webhooks"
   type        = string
 }
 
@@ -26,6 +26,6 @@ variable "region" {
 }
 
 variable "webhook_secret" {
-  description = "INDENT_WEBHOOK_SECRET for the indent-gcloud-google-groups-webhook"
+  description = "INDENT_WEBHOOK_SECRET for the indent-gcloud-groups-webhook"
   type        = string
 }
