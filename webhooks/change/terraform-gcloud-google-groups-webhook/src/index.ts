@@ -105,6 +105,9 @@ async function grantPermission(auditEvent: Event) {
       headers,
     });
   } catch (err) {
+    console.log(headers);
+    console.log(body);
+    console.log(rawBody);
     console.error("@indent/webhook.verify(): failed");
     console.error(err);
     return res.status(500).json({ status: { message: err.message } });
@@ -147,9 +150,9 @@ async function grantPermission(auditEvent: Event) {
 
           switch (event) {
             case "access/grant":
-              return grantPermission(auditEvent, events);
+              return grantPermission(auditEvent);
             case "access/revoke":
-              return revokePermission(auditEvent, events);
+              return revokePermission(auditEvent);
             default:
               console.log("received unknown event");
               console.log(auditEvent);
@@ -179,7 +182,7 @@ async function grantPermission(auditEvent: Event) {
   return res.status(200).json({});
 };
 
-async function grantPermission(auditEvent: Event, allEvents: Event[]) {
+async function grantPermission(auditEvent: Event) {
   if (groups.matchEvent(auditEvent)) {
     return await groups.grantPermission(auditEvent);
 >>>>>>> a32c009 (feat(/webhooks/change/terraform-gcloud-google-groups/src): Add dependencies for new google groups terraform webhook [ID-859])
@@ -201,7 +204,7 @@ async function revokePermission(auditEvent: Event) {
   };
 }
 
-async function revokePermission(auditEvent: Event, allEvents: Event[]) {
+async function revokePermission(auditEvent: Event) {
   if (groups.matchEvent(auditEvent)) {
     return await groups.revokePermission(auditEvent);
 >>>>>>> a32c009 (feat(/webhooks/change/terraform-gcloud-google-groups/src): Add dependencies for new google groups terraform webhook [ID-859])
