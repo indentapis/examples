@@ -18,6 +18,9 @@ exports["webhook"] = async function handle(req: IRequest, res: Response) {
       headers,
     });
   } catch (err) {
+    console.log(headers);
+    console.log(body);
+    console.log(rawBody);
     console.error("@indent/webhook.verify(): failed");
     console.error(err);
     return res.status(500).json({ status: { message: err.message } });
@@ -60,9 +63,9 @@ exports["webhook"] = async function handle(req: IRequest, res: Response) {
 
           switch (event) {
             case "access/grant":
-              return grantPermission(auditEvent, events);
+              return grantPermission(auditEvent);
             case "access/revoke":
-              return revokePermission(auditEvent, events);
+              return revokePermission(auditEvent);
             default:
               console.log("received unknown event");
               console.log(auditEvent);
@@ -92,7 +95,7 @@ exports["webhook"] = async function handle(req: IRequest, res: Response) {
   return res.status(200).json({});
 };
 
-async function grantPermission(auditEvent: Event, allEvents: Event[]) {
+async function grantPermission(auditEvent: Event) {
   if (groups.matchEvent(auditEvent)) {
     return await groups.grantPermission(auditEvent);
   }
@@ -104,7 +107,7 @@ async function grantPermission(auditEvent: Event, allEvents: Event[]) {
   };
 }
 
-async function revokePermission(auditEvent: Event, allEvents: Event[]) {
+async function revokePermission(auditEvent: Event) {
   if (groups.matchEvent(auditEvent)) {
     return await groups.revokePermission(auditEvent);
   }
