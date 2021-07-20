@@ -65,7 +65,7 @@ function getIdFromResources(resources: Resource[], kind: string) {
   return resources
     .filter((r) => r.kind?.toLowerCase().includes(kind.toLowerCase()))
     .map((r) => r.id)[0]
-} 
+}
 
 function getEmailFromResources(resources: Resource[], kind: string) {
   return resources
