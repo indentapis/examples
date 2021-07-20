@@ -7,14 +7,12 @@ import { SetPolicyResponse } from "@google-cloud/storage";
 import * as groups from "./capabilities/google-groups";
 
 exports["webhook"] = async function handle(req: IRequest, res: Response) {
-  const { headers, body } = req;
-  const rawBody =
-    process.env.NODE_ENV === "development" ? body : JSON.stringify(body);
+  const { headers, rawBody } = req;
 
   try {
     await verify({
       secret: process.env.INDENT_WEBHOOK_SECRET,
-      body: rawBody,
+      body: rawBody.toString(),
       headers,
     });
   } catch (err) {
