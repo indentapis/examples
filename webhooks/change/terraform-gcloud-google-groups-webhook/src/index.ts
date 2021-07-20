@@ -138,11 +138,7 @@ async function grantPermission(auditEvent: Event) {
         (
           auditEvent: Event
         ): Promise<
-          | void
-          | GaxiosResponse<any>
-          | SetPolicyResponse
-          | AxiosResponse<any>
-          | Status
+          void | GaxiosResponse<any> | AxiosResponse<any> | Status
         > => {
           let { actor, event, resources } = auditEvent;
 
@@ -170,13 +166,13 @@ async function grantPermission(auditEvent: Event) {
       let res = err.response;
 
       if (res.body && res.body.toJSON) {
-        console.error(JSON.stringify(res.body.toJSON()));
+        console.error(JSON.stringify(res.body.toJSON(), null, 2));
       } else if (res.body) {
-        console.error(JSON.stringify(res.body));
+        console.error(JSON.stringify(res.body, null, 2));
       } else if (res.data) {
-        console.error(JSON.stringify(res.data));
+        console.error(JSON.stringify(res.data, null, 2));
       } else {
-        console.error(JSON.stringify(res));
+        console.error(JSON.stringify(res, null, 2));
       }
     } else {
       console.error(err);
