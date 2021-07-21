@@ -8,7 +8,6 @@ import * as groups from './capabilities/google-groups'
 exports['webhook'] = async function handle(req: IRequest, res: Response) {
   const { headers, rawBody } = req
 
-
   try {
     await verify({
       secret: process.env.INDENT_WEBHOOK_SECRET,
