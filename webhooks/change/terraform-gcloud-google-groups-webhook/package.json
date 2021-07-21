@@ -37,6 +37,10 @@
   "devDependencies": {
     "@google-cloud/functions-framework": "^1.6.0",
     "@vercel/ncc": "^0.29.0",
+<<<<<<< HEAD
+=======
+    "@zeit/ncc": "^0.22.3",
+>>>>>>> fe713f88832a5921e98b5298d5d2f20ab1e21b59
     "env-cmd": "^10.1.0",
     "typescript": "^4.3.5",
     "yamljs": "^0.3.0"

@@ -13,7 +13,7 @@
 Download the example:
 
 ```bash
-curl https://codeload.github.com/indentapis/examples/tar.gz/main | tar -xz --strip=2 examples-main/webhooks/change/terraform-aws-atspoke-webhook
+curl https://codeload.github.com/indentapis/examples/tar.gz/main | tar -xz --strip=3 examples-main/webhooks/change/terraform-aws-atspoke-webhook
 cd terraform-aws-atspoke-webhook
 ```
 

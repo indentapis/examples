@@ -2,7 +2,6 @@ import { APIGatewayProxyHandler } from 'aws-lambda'
 import { verify } from '@indent/webhook'
 import * as Indent from '@indent/types'
 import { Octokit } from '@octokit/rest'
-import hclParser from 'js-hcl-parser'
 import _ from 'lodash'
 
 export const handle: APIGatewayProxyHandler = async function handle(event) {
@@ -154,8 +153,8 @@ async function getAndUpdateACL(roleId: string, updater: RoleUpdater) {
   const [owner, repo] = fullRepo.split('/')
   const file = await github.getFile({ owner, repo, path })
   const fileContent = Buffer.from(file.content, 'base64').toString('ascii')
-  const sourceACL = hclParser.parse(fileContent)
-  const sourceACLObject = JSON.parse(sourceACL)
+  const sourceACLObject = JSON.parse(fileContent)
+  const sourceACL = sourceACLObject
   const sourceRole = _.get(sourceACLObject, roleObjectPath) || []
   const role = updater(sourceRole)
   const acl = _.set(sourceACLObject, roleObjectPath, role)
@@ -169,7 +168,7 @@ async function getAndUpdateACL(roleId: string, updater: RoleUpdater) {
     })
   )
 
-  const newContentBody = hclParser.stringify(JSON.stringify(acl), null, 2)
+  const newContentBody = JSON.stringify(acl, null, 2)
 
   if (newContentBody.includes('unable')) {
     console.error('HCL.stringify: failed')
