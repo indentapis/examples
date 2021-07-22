@@ -21,8 +21,7 @@ cd terraform-gcloud-google-groups-webhook
 Install the dependencies
 
 ```bash
-npm run deploy:init # initializes terraform aws provider with ~/.aws/config
-npm run deploy:prepare # builds AWS Lambda layers
+npm run deploy:init # initializes terraform GCloud provider
 ```
 
 **Note: If you are using an existing service account import the account at this step:**
@@ -67,10 +66,8 @@ found 0 vulnerabilities
 > terraform-gcloud-google-groups-webhook@1.0.0 build
 > tsc
 
-
 > terraform-gcloud-google-groups-webhook@1.0.0 tf:apply
 > cd terraform; terraform apply -compact-warnings -var-file ./config/terraform.tfvars
-
 
 Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
   + create
