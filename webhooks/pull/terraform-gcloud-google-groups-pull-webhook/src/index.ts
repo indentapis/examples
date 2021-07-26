@@ -1,7 +1,6 @@
 // import * as Indent from '@indent/types'
-import { readFile } from 'fs/promises'
 import { google } from 'googleapis'
-import { authorize } from './auth/google'
+import { getAuth } from './capabilities/google-groups'
 import { verify } from '@indent/webhook'
 import { Request, Response } from 'express'
 import { Resource } from '@indent/types'
@@ -39,8 +38,6 @@ async function loadFromGoogleGroups(): Promise<Resource[]> {
   })) as Resource[]
 }
 
-// handle the request
-// figure out what type this is
 exports['webhook'] = async function handle(req: IRequest, res: Response) {
   const { headers, rawBody } = req
 
@@ -77,34 +74,6 @@ exports['webhook'] = async function handle(req: IRequest, res: Response) {
   }
 
   return res.status(200).json({})
-}
-// refer to pull from google groups
-export async function getAuth() {
-  if (process.env.NODE_ENV !== 'development') {
-    let auth = new google.auth.Compute({
-      serviceAccountEmail: process.env.GCP_SVC_ACCT_EMAIL,
-      scopes: ['https://www.googleapis.com/auth/cloud-identity.groups'],
-    })
-
-    let { token } = await auth.getAccessToken()
-    if (!token) {
-      throw new Error('getAuth: getAccessToken: token not found')
-    }
-
-    let tokenInfo = await auth.getTokenInfo(token)
-    console.log(JSON.stringify({ tokenInfo }))
-
-    return auth
-  }
-
-  try {
-    // Load client secrets from a local file.
-    let content = await readFile('credentials.json')
-    return await authorize(JSON.parse(content.toString()))
-  } catch (err) {
-    console.error('Error loading client secret file', err)
-    throw err
-  }
 }
 
 type IRequest = Request & { rawBody: string }
