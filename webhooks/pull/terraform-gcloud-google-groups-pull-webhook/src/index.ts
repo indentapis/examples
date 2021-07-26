@@ -10,6 +10,7 @@ const GOOGLE_CUSTOMER_ID = process.env.GOOGLE_CUSTOMER_ID
 async function loadFromGoogleGroups(): Promise<Resource[]> {
   console.log('Loading data from Google Groups')
   const auth = await getAuth()
+  console.log('Auth:', auth)
   const service = google.cloudidentity({
     version: 'v1',
     auth,
@@ -19,8 +20,10 @@ async function loadFromGoogleGroups(): Promise<Resource[]> {
     data: { groups },
   } = await service.groups.list({
     parent: `customers/${GOOGLE_CUSTOMER_ID}`,
-    view: 'BASIC',
+    view: 'FULL',
   })
+  console.log('Customer ID:', GOOGLE_CUSTOMER_ID)
+  console.log('Groups:', groups)
 
   const kind = 'google.v1.group'
 
@@ -61,6 +64,7 @@ exports['webhook'] = async function handle(req: IRequest, res: Response) {
     try {
       const resources = await loadFromGoogleGroups()
       console.log('pullUpdate: success: ' + pull.kinds)
+      console.log('Resources:', resources)
       return res.status(200).json({ resources })
     } catch (err) {
       console.log('pullUpdate: error: ' + pull.kinds)
