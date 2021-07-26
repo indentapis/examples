@@ -8,8 +8,10 @@ const readFile = promisify(fs.readFile).bind(fs)
 const writeFile = promisify(fs.writeFile).bind(fs)
 
 const SCOPES = [
-  'https://www.googleapis.com/auth/admin.directory.group',
-  'https://www.googleapis.com/autho/cloud-identity.groups',
+  'https://www.googleapis.com/auth/cloud-identity.groups',
+  'https://www.googleapis.com/auth/cloud-identity.groups.readonly',
+  'https://www.googleapis.com/auth/cloud-identity',
+  'https://www.googleapis.com/auth/cloud-platform',
 ]
 const TOKEN_PATH = '../../token.json'
 
