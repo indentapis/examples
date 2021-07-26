@@ -6,7 +6,12 @@ export async function getAuth() {
   if (process.env.NODE_ENV !== 'development') {
     let auth = new google.auth.Compute({
       serviceAccountEmail: process.env.GCP_SVC_ACCT_EMAIL,
-      scopes: ['https://www.googleapis.com/auth/cloud-identity.groups'],
+      scopes: [
+        'https://www.googleapis.com/auth/cloud-identity.groups',
+        'https://www.googleapis.com/auth/cloud-identity.groups.readonly',
+        'https://www.googleapis.com/auth/cloud-identity',
+        'https://www.googleapis.com/auth/cloud-platform',
+      ],
     })
 
     let { token } = await auth.getAccessToken()
