@@ -1,4 +1,4 @@
-# Terraform GCloud + Google Groups Webhook
+# Terraform Google Groups Change Webhook
 
 ## How to Use
 
@@ -8,23 +8,24 @@
 - [Google Cloud SDK CLI](https://cloud.google.com/sdk/docs/install)
 - [Google Cloud Identity API](https://console.cloud.google.com/apis/library/cloudidentity.googleapis.com)
 - [Terraform](https://terraform.io)
+- [Google Cloud Customer ID](https://support.google.com/a/answer/10070793?hl=en)
 
 ### Download
 
 Download the example:
 
 ```bash
-curl https://codeload.github.com/indentapis/examples/tar.gz/main | tar -xz --strip=2 examples-main/webhooks/change/terraform-gcloud-google-groups-webhook
-cd terraform-gcloud-google-groups-webhook
+curl https://codeload.github.com/indentapis/examples/tar.gz/main | tar -xz --strip=2 examples-main/webhooks/change/terraform-gcloud-google-groups-pull-webhook
+cd terraform-gcloud-google-groups-pull-webhook
 ```
 
 Install the dependencies
 
 ```bash
-npm run deploy:init # initializes terraform GCloud provider
+npm run deploy:init # initializes Terraform GCloud provider
 ```
 
-**Note: If you are using an existing service account import the account at this step:**
+**Note: If you are using an existing service account you must import the account at this step:**
 
 ```bash
 terraform import <Google resource name> serviceaccount@domain.com
@@ -40,7 +41,10 @@ mv terraform/config/example.tfvars terraform/config/terraform.tfvars
 
 ```hcl
 # Indent Webhook Secret is used to verify messages from Indent
-indent_webhook_secret = "wks0example-secret"
+indent_webhook_secret = "wks0asdfghjkliqwertyuiop"
+
+# Google Customer ID
+google_customer_id = "C0qwertyui"
 ```
 
 ### Deployment
