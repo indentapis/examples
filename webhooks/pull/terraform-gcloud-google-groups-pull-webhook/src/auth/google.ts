@@ -1,11 +1,7 @@
-import * as fs from 'fs'
+import { readFile, writeFile } from 'fs/promises'
 import * as path from 'path'
-import { promisify } from 'util'
 import * as readline from 'readline'
 import { google, Auth } from 'googleapis'
-
-const readFile = promisify(fs.readFile).bind(fs)
-const writeFile = promisify(fs.writeFile).bind(fs)
 
 const SCOPES = [
   'https://www.googleapis.com/auth/cloud-identity.groups',
