@@ -11,6 +11,6 @@ module "google-groups" {
   source_dir = "/dist"
 
   environment_variables = {
-    INDENT_WEBHOOK_SECRET = var.webhook_secret
+    INDENT_WEBHOOK_SECRET = var.indent_webhook_secret
   }
 }

@@ -7,5 +7,6 @@ node_modules
 .terraform
 *.tfstate.*
 terraform/config/*.tfvars
+!terraform/config/example.tfvars
 *.log
 secrets

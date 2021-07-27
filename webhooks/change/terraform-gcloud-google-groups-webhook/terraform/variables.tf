@@ -25,12 +25,14 @@ variable "region" {
   type        = string
 }
 
-variable "webhook_secret" {
+variable "indent_webhook_secret" {
   description = "INDENT_WEBHOOK_SECRET for the indent-gcloud-groups-webhook"
   type        = string
+  sensitive   = true
 }
 
-variable "service_account_email" {
-  description = "Service account email address for managing Google Groups"
-  type        = string
-}
+#variable "service_account_email" {
+#  description = "Service account email address for managing Google Groups"
+#  default     = ""
+#  type        = string
+#}
