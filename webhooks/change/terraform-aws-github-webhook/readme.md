@@ -17,14 +17,16 @@ curl https://codeload.github.com/indentapis/examples/tar.gz/main | tar -xz --str
 cd terraform-aws-github-webhook
 ```
 
-Install the dependencies...
+Install the dependencies
 
 ```bash
 npm run deploy:init # initializes terraform aws provider with ~/.aws/config
 npm run deploy:prepare # builds AWS Lambda layers
 ```
 
-Add the environment variables...
+Create a [Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) for your webhook. It needs `repo` permissions in order to work with Indent.
+
+Add the environment variables, your Indent webhook secret and your new Personal Access Token
 
 ```bash
 mv terraform/config/example.tfvars terraform/config/terraform.tfvars
