@@ -3,6 +3,7 @@ node_modules
 
 webhooks/**/lib
 webhooks/**/dist
+webhooks/**/secrets
 webhooks/**/.env
 webhooks/**/.webpack
 webhooks/**/yarn.lock
