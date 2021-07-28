@@ -31,8 +31,9 @@ variable "indent_webhook_secret" {
   sensitive   = true
 }
 
-#variable "service_account_email" {
-#  description = "Service account email address for managing Google Groups"
-#  default     = ""
-#  type        = string
-#}
+variable "google_customer_id" {
+  description = "GOOGLE_CUSTOMER_ID for the indent-gcloud-groups-webhook"
+  default     = ""
+  type        = string
+  sensitive   = true
+}
