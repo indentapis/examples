@@ -1,7 +1,7 @@
 {
-  "name": "@indent/terraform-aws-github-webhook",
+  "name": "@indent/terraform-aws-github-teams-webhook",
   "version": "0.0.0",
-  "description": "A Node.js starter for Terraform on AWS with Indent and GitHub.",
+  "description": "A Node.js starter for Terraform on AWS with Indent and GitHub Teams.",
   "main": "index.js",
   "scripts": {
     "build": "tsc",

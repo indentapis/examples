@@ -1,4 +1,4 @@
-# Terraform AWS + GitHub Webhook
+# Terraform AWS + GitHub Teams Webhook
 
 ## How To Use
 
@@ -13,7 +13,7 @@
 Download the example:
 
 ```bash
-curl https://codeload.github.com/indentapis/examples/tar.gz/main | tar -xz --strip=3 examples-main/webhooks/change/terraform-aws-github-webhook
+curl https://codeload.github.com/indentapis/examples/tar.gz/main | tar -xz --strip=3 examples-main/webhooks/change/terraform-aws-github-teams-webhook
 cd terraform-aws-github-webhook
 ```
 

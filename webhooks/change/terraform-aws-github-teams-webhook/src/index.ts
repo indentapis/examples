@@ -63,6 +63,7 @@ const octokit = new Octokit({
   auth: GITHUB_TOKEN,
 })
 
+// need to get user membership
 async function getFile({ owner, repo, path }) {
   return await octokit.repos
     .getContent({
@@ -73,6 +74,7 @@ async function getFile({ owner, repo, path }) {
     .then((r) => r.data)
 }
 
+// add user to group
 async function updateFile({ owner, repo, path, sha, newContent }) {
   return await octokit.repos
     .createOrUpdateFileContents({
