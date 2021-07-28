@@ -152,7 +152,9 @@ async function getAndUpdateACL(roleId: string, updater: RoleUpdater) {
   const [fullRepo, path, roleObjectPath] = roleId.split(':')
   const [owner, repo] = fullRepo.split('/')
   const file = await github.getFile({ owner, repo, path })
-  const fileContent = Buffer.from(file.content, 'base64').toString('ascii')
+  const fileContent = Buffer.from((file as any).content, 'base64').toString(
+    'ascii'
+  )
   const sourceACLObject = JSON.parse(fileContent)
   const sourceACL = sourceACLObject
   const sourceRole = _.get(sourceACLObject, roleObjectPath) || []
@@ -164,7 +166,7 @@ async function getAndUpdateACL(roleId: string, updater: RoleUpdater) {
       role,
       sourceRole,
       sourceACLObject,
-      roleObjectPath
+      roleObjectPath,
     })
   )
 
@@ -178,7 +180,7 @@ async function getAndUpdateACL(roleId: string, updater: RoleUpdater) {
 
   let newContent = Buffer.from(newContentBody, 'ascii').toString('base64')
 
-  if (newContent === file.content) {
+  if (newContent === (file as any).content) {
     console.warn('No changes to be applied')
     return { sourceACL, acl }
   }
@@ -187,7 +189,7 @@ async function getAndUpdateACL(roleId: string, updater: RoleUpdater) {
     owner,
     repo,
     path,
-    sha: file.sha,
+    sha: (file as any).sha,
     newContent,
   })
 

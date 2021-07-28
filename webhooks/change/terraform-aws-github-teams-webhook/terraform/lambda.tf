@@ -5,7 +5,7 @@ data "archive_file" "function_archive" {
 }
 
 resource "aws_lambda_layer_version" "deps" {
-  compatible_runtimes = ["nodejs12.x"]
+  compatible_runtimes = ["nodejs14.x"]
   layer_name          = "${local.name}-dependency_layer"
   filename            = "${path.module}/../dist/layers/layers.zip"
   source_code_hash    = filesha256("${path.module}/../dist/layers/layers.zip")
@@ -17,7 +17,7 @@ resource "aws_lambda_function" "lambda" {
   filename      = data.archive_file.function_archive.output_path
   memory_size   = local.lambda_memory
   handler       = "index.handle"
-  runtime       = "nodejs12.x"
+  runtime       = "nodejs14.x"
   timeout       = "30"
 
   layers = [aws_lambda_layer_version.deps.arn]
@@ -25,8 +25,7 @@ resource "aws_lambda_function" "lambda" {
   environment {
     variables = {
       "INDENT_WEBHOOK_SECRET" = var.indent_webhook_secret
-      "OKTA_TENANT"           = var.okta_tenant
-      "OKTA_TOKEN"            = var.okta_token
+      "GITHUB_TOKEN"          = var.github_token
     }
   }
 }
