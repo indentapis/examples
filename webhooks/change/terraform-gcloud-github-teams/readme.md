@@ -15,17 +15,18 @@
 
 Download the example:
 
-````bash
-curl https://codeload.github.com/indentapis/examples/tar.gz/main | tar -xz --strip=3 examples-main/webhooks/gcloud-github-teams
+```bash
+curl https://codeload.github.com/indentapis/examples/tar.gz/main | tar -xz --strip=3 examples-main/webhooks/terraform-gcloud-github-teams
 cd gcloud-github-teams
 ```
+
 Install the dependencies:
 
 **NPM**
 
 ```bash
 npm run deploy:init
-````
+```
 
 **Yarn**
 
@@ -44,8 +45,6 @@ Add the environment variables:
 ```bash
 mv terraform/config/example.tfvars terraform/config/terraform.tfvars
 ```
-
-`terraform/config/terraform.tfvars`
 
 ```hcl
 # Indent Webhook Secret is used to verify messages from Indent
