@@ -83,9 +83,9 @@ module.google-groups.google_cloudfunctions_function.deploy[0]: Still creating...
 module.google-groups.google_cloudfunctions_function.deploy[0]: Still creating... [30s elapsed]
 module.google-groups.google_cloudfunctions_function.deploy[0]: Still creating... [40s elapsed]
 module.google-groups.google_cloudfunctions_function.deploy[0]: Still creating... [50s elapsed]
-module.google-groups.google_cloudfunctions_function.deploy[0]: Creation complete after 51s [id=projects/id-drop-weekly-zkodj/locations/us-central1/functions/indent-pull-google-groups]
+module.google-groups.google_cloudfunctions_function.deploy[0]: Creation complete after 51s [id=projects/my-gcp-example-project/locations/us-central1/functions/indent-pull-google-groups]
 module.google-groups.google_cloudfunctions_function_iam_member.invoker[0]: Creating...
-module.google-groups.google_cloudfunctions_function_iam_member.invoker[0]: Creation complete after 4s [id=projects/id-drop-weekly-zkodj/locations/us-central1/functions/indent-pull-google-groups/roles/cloudfunctions.invoker/allUsers]
+module.google-groups.google_cloudfunctions_function_iam_member.invoker[0]: Creation complete after 4s [id=projects/my-gcp-example-project/locations/us-central1/functions/indent-pull-google-groups/roles/cloudfunctions.invoker/allUsers]
 
 Warnings:
 

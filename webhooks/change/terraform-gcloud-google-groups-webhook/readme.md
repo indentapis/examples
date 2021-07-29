@@ -19,10 +19,18 @@ curl https://codeload.github.com/indentapis/examples/tar.gz/main | tar -xz --str
 cd terraform-gcloud-google-groups-pull-webhook
 ```
 
-Install the dependencies
+Install the dependencies:
+
+**NPM**
 
 ```bash
 npm run deploy:init # initializes Terraform GCloud provider
+```
+
+**Yarn**
+
+```bash
+yarn deploy:init
 ```
 
 **Note: If you are using an existing service account you must import the account at this step:**
@@ -31,7 +39,7 @@ npm run deploy:init # initializes Terraform GCloud provider
 terraform import <Google resource name> serviceaccount@domain.com
 ```
 
-Add the environment variables
+Add the environment variables:
 
 ```bash
 mv terraform/config/example.tfvars terraform/config/terraform.tfvars
