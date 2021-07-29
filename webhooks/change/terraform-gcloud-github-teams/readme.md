@@ -6,6 +6,10 @@
 
 - [Google Cloud SDK CLI](https://cloud.google.com/sdk/gcloud)
 - [Terraform](https://terraform.io)
+- [Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+- Enable the required Google APIs:
+  - [Google Cloud Functions API](https://cloud.google.com/functions)
+  - [Google Cloud Build API](https://console.cloud.google.com/cloud-build)
 
 ### Download
 
@@ -14,8 +18,8 @@ Download the example:
 ````bash
 curl https://codeload.github.com/indentapis/examples/tar.gz/main | tar -xz --strip=3 examples-main/webhooks/gcloud-github-teams
 cd gcloud-github-teams
-
-Install it and build:
+```
+Install the dependencies:
 
 **NPM**
 
@@ -29,77 +33,82 @@ npm run deploy:init
 yarn deploy:init
 ```
 
-Deploy it to the cloud with [Google Cloud Functions](https://cloud.google.com/functions) ([Documentation](https://cloud.google.com/functions/docs)).
-
-## About Example
-
-This is a simple example showing how to use [Google Cloud Functions](https://cloud.google.com/functions) to deploy a function that can add or remove users from GitHub Teams programatically.
-
-### Configuration
-
-You will need an _Indent Webhook Secret_ for your app. You can get it from the settings of your app in **Configuration for App**. Then, copy the string labeled **Webhook Secret**. This will allow you to verify request payloads from Indent.
-
-The Indent Webhook Secret should then be set as an environment variable along with your GitHub username and token. You can use the `.env.example` file as reference to create `.env.yaml` like this:
-
-```yaml
-INDENT_WEBHOOK_SECRET: wks012m1d127f10dj483elkfjw
-GITHUB_USERNAME: randomuser123
-GITHUB_TOKEN: <REDACTED>
-```
-
-### Development
-
-After setting up environment variables, you can run a development server:
+**Note: If you are using an existing service account you must import the account at this step:**
 
 ```bash
-$ npm run dev
+terraform import <Google resource name> serviceaccount@domain.com
 ```
 
-```
-> @indent/gcloud-github-webhook@0.0.0 dev /Users/docs/dl/gcloud-github-webhook
-> functions-framework --target=indent-github-webhook
+Add the environment variables:
 
-Serving function...
-Function: indent-github-webhook
-URL: http://localhost:8080/
+```bash
+mv terraform/config/example.tfvars terraform/config/terraform.tfvars
+```
+
+`terraform/config/terraform.tfvars`
+
+```hcl
+# Indent Webhook Secret is used to verify messages from Indent
+indent_webhook_secret = "wks0asdfghjkliqwertyuiop"
+
+# GitHub Username
+github_username = "random123"
+
+# GitHub Personal Access Token
+github_token = "ghp_asdfghjklqwertyuiop"
 ```
 
 ### Deployment
 
-Build the latest from source:
+Deploy it to the cloud with [Terraform](https://terraform.io) ([Documentation](https://terraform.io/docs/)) and [Google Cloud Functions](https://console.cloud.google.com/functions).
+
+This will take a few minutes to run the first time as Terraform sets up the resources in the Google Account. You should see an output similar to below:
 
 ```bash
-$ npm run build
+$ npm install; npm run build; npm run bundle; npm run tf:apply -auto-approve
+
+up to date, audited 114 packages in 596ms
+
+6 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+> @indent/gcloud-github-webhook@0.0.0 build
+> tsc
+
+
+> @indent/gcloud-github-webhook@0.0.0 bundle
+> ncc build lib/index.js -m -o dist
+
+ncc: Version 0.24.1
+ncc: Compiling file index.js
+107kB  dist/index.js
+107kB  [1119ms] - ncc 0.24.1
+
+> @indent/gcloud-github-webhook@0.0.0 tf:apply
+> cd terraform; terraform apply -compact-warnings -var-file ./config/terraform.tfvars
+
+google_storage_bucket.function_bucket: Refreshing state... [id=indent-gcloud-groups-webhooks]
+module.google-groups.google_service_account.runtime_account[0]: Refreshing state... [id=projects/my-gcp-example-project/serviceAccounts/indent-gcloud-github-teams@my-gcp-example-project.iam.gserviceaccount.com]
+module.google-groups.google_storage_bucket_object.uploaded_source: Refreshing state... [id=indent-gcloud-groups-webhooks-indent-gcloud-github-teams/wNlY1DIsZW6NXuGlkOZL+UNW+CYQ+zSD/Weyiy/jG6U=.zip]
+module.google-groups.google_cloudfunctions_function.deploy[0]: Refreshing state... [id=projects/my-gcp-example-project/locations/us-central1/functions/indent-gcloud-github-teams]
+module.google-groups.google_cloudfunctions_function_iam_member.invoker[0]: Refreshing state... [id=projects/my-gcp-example-project/locations/us-central1/functions/indent-gcloud-github-teams/roles/cloudfunctions.invoker/allUsers]
+
+Terraform will perform the following actions:
+
+<...terraformResources>
+
+Do you want to perform these actions?
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+  Enter a value: yes
+
+module.google-groups.google_service_account.runtime_account[0]: Creating...
+google_storage_bucket.function_bucket: Creating...
 ```
 
-To deploy this webhook on Google Cloud Functions, set up the environment variables and choose the project you'd like to deploy then run:
+## About Example
 
-```bash
-$ GCP_PROJECT=my-project-123 npm run deploy
-```
-
-```
-> @indent/gcloud-github-webhook@0.0.0 deploy /Users/docs/dl/gcloud-github-webhook
-> gcloud functions deploy indent-github-webhook --env-vars-file .env.yaml --region us-central1 --project=$GCP_PROJECT --runtime=nodejs10 --trigger-http --allow-unauthenticated
-
-Deploying function (may take a while - up to 2 minutes)...done.
-availableMemoryMb: 256
-entryPoint: indent-github-webhook
-environmentVariables:
-  INDENT_WEBHOOK_SECRET: <REDACTED>
-  GITHUB_USERNAME: <REDACTED>
-  GITHUB_TOKEN: <REDACTED>
-httpsTrigger:
-  url: https://us-central1-my-project-123.cloudfunctions.net/indent-github-webhook
-ingressSettings: ALLOW_ALL
-labels:
-  deployment-tool: cli-gcloud
-name: projects/my-project-123/locations/us-central1/functions/indent-github-webhook
-runtime: nodejs10
-serviceAccountEmail: my-project-123@appspot.gserviceaccount.com
-sourceUploadUrl: <REDACTED>
-status: ACTIVE
-timeout: 60s
-updateTime: '2020-06-06T19:51:43.924Z'
-versionId: '13'
-```
+This is a simple example showing how to use [Google Cloud Functions](https://cloud.google.com/)
