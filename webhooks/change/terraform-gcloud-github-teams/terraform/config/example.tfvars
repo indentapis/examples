@@ -6,3 +6,6 @@ github_username = ""
 
 # GitHub Personal Access Token
 github_token = ""
+
+# Google Cloud Region
+region = "us-central1"
