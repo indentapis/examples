@@ -5,7 +5,7 @@ variable "name" {
 
 variable "root_dir" {
   description = "Root directory path for terraform plan"
-  type = string
+  type        = string
 }
 
 variable "source_dir" {

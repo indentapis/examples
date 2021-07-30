@@ -1,6 +1,6 @@
-locals {
-  svc_account = length(google_service_account.runtime_account) == 0 ? var.service_account_email : google_service_account.runtime_account[0].email
-}
+# locals {
+#   svc_account = length(google_service_account.runtime_account) == 0 ? var.service_account_email : google_service_account.runtime_account[0].email
+# }
 
 // Compress function code into archive
 data "archive_file" "zipped_source" {
@@ -17,13 +17,13 @@ resource "google_storage_bucket_object" "uploaded_source" {
 }
 
 // Create service account for function (if one isn't provided)
-resource "google_service_account" "runtime_account" {
-  count = var.service_account_email == "" ? 1 : 0
+# resource "google_service_account" "runtime_account" {
+#   count = var.service_account_email == "" ? 1 : 0
 
-  account_id   = var.name
-  display_name = "Function runtime account for ${var.name}"
-  description  = "Provides the runtime service account identity for ${var.name}"
-}
+#   account_id   = var.name
+#   display_name = "Function runtime account for ${var.name}"
+#   description  = "Provides the runtime service account identity for ${var.name}"
+# }
 
 // Deploy HTTP function
 resource "google_cloudfunctions_function" "deploy" {
@@ -38,15 +38,15 @@ resource "google_cloudfunctions_function" "deploy" {
   source_archive_bucket = var.bucket
   source_archive_object = google_storage_bucket_object.uploaded_source.name
   trigger_http          = true
-  service_account_email = local.svc_account
+  # service_account_email = local.svc_account
 
   timeout     = var.timeout
   entry_point = var.entry_point
   environment_variables = merge(
     var.environment_variables,
-    {
-      GCP_SVC_ACCT_EMAIL = local.svc_account
-    }
+    #   {
+    #     GCP_SVC_ACCT_EMAIL = local.svc_account
+    #   }
   )
 }
 
@@ -74,7 +74,7 @@ resource "google_cloudfunctions_function" "deploy_pubsub" {
   available_memory_mb   = var.memory
   source_archive_bucket = var.bucket
   source_archive_object = google_storage_bucket_object.uploaded_source.name
-  service_account_email = local.svc_account
+  # service_account_email = local.svc_account
 
   timeout               = var.timeout
   entry_point           = var.entry_point

@@ -9,13 +9,13 @@ EOF
 
 variable "project" {
   description = "Google Cloud Platform project to deploy cluster in."
-  default     = "id-drop-weekly-zkodj"
+  default     = "my-example-project"
   type        = string
 }
 
 variable "bucket" {
   description = "Name of bucket to store function sources in"
-  default     = "indent-gcloud-groups-webhooks"
+  default     = "indent-gcloud-github-teams-change"
   type        = string
 }
 

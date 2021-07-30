@@ -1,9 +1,9 @@
 resource "google_storage_bucket" "function_bucket" {
-  name = "indent-gcloud-groups-webhooks"
+  name = "indent-gcloud-github-teams-change"
 }
 
-module "google-groups" {
-  source     = "/function"
+module "google-github-teams" {
+  source     = "./function"
   root_dir   = "${path.module}/.."
   name       = "indent-gcloud-github-teams"
   region     = var.region
