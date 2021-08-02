@@ -30,9 +30,3 @@ variable "indent_webhook_secret" {
   type        = string
   sensitive   = true
 }
-
-#variable "service_account_email" {
-#  description = "Service account email address for managing Google Groups"
-#  default     = ""
-#  type        = string
-#}

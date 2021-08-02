@@ -3,7 +3,7 @@ resource "google_storage_bucket" "function_bucket" {
 }
 
 module "google-groups" {
-  source     = "../../../../terraform/function"
+  source     = "./function"
   root_dir   = "${path.module}/.."
   name       = "indent-google-groups-webhook"
   region     = var.region
