@@ -4,11 +4,16 @@
 
 ### Requirements
 
-- [Google Group](https://groups.google.com/my-groups)
+- [Google Group](https://groups.google.com/my-groups) whose access you want to manage
 - [Google Cloud SDK CLI](https://cloud.google.com/sdk/docs/install)
-- [Google Cloud Identity API](https://console.cloud.google.com/apis/library/cloudidentity.googleapis.com)
-- [Terraform](https://terraform.io)
+- [Google Cloud Service Account](https://cloud.google.com/iam/docs/creating-managing-service-accounts)
+  - You will also need a JSON [Service Account Key](https://cloud.google.com/iam/docs/creating-managing-service-account-keys)
+  - The new account should have the [Group Admin Role](https://cloud.google.com/iam/docs/understanding-roles#service-accounts-roles)
+  - The account should be a Group Owner in Google Groups
+- Enable [Google Cloud Identity API](https://console.cloud.google.com/apis/library/cloudidentity.googleapis.com)
 - [Google Cloud Customer ID](https://support.google.com/a/answer/10070793?hl=en)
+- [Terraform](https://terraform.io)
+  - Optional: Review [Terraform's guide to working with the Google Provider](https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/getting_started)
 
 ### Download
 
@@ -51,9 +56,14 @@ mv terraform/config/example.tfvars terraform/config/terraform.tfvars
 # Indent Webhook Secret is used to verify messages from Indent
 indent_webhook_secret = "wks0asdfghjkliqwertyuiop"
 
-# Google Customer ID
-google_customer_id = "C0qwertyui"
+# The project name for your deployment
+project = "my-example-project"
+
+# The region for your deployment
+region = "us-central1"
 ```
+
+Add the Service Account Key at `terrafomr/secrets/terraform-deploy-key.json`
 
 ### Deployment
 
