@@ -63,7 +63,7 @@ project = "my-example-project"
 region = "us-central1"
 ```
 
-Add the Service Account Key at `terrafomr/secrets/terraform-deploy-key.json`
+Add the Service Account Key at `terraform/secrets/terraform-deploy-key.json`
 
 ### Deployment
 
