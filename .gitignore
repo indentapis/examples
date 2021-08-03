@@ -1,6 +1,9 @@
-.DS_Store
+data
+dist
+lib
+.env
 node_modules
-
+.DS_Store
 webhooks/**/lib
 webhooks/**/dist
 webhooks/**/.env
