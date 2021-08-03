@@ -4,12 +4,20 @@
 
 ### Requirements
 
-- [Google Cloud SDK CLI](https://cloud.google.com/sdk/gcloud)
-- [Terraform](https://terraform.io)
+- A [GitHub account](https://github.com/signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F&source=header-home)
+- A [GitHub Organization](https://github.com/account/organizations/new)
+- At least one GitHub Team within your organization
 - [Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+- [Google Cloud SDK CLI](https://cloud.google.com/sdk/gcloud)
+- [Google Cloud Service Account](https://cloud.google.com/iam/docs/creating-managing-service-accounts)
+  - You will also need a JSON [Service Account Key](https://cloud.google.com/iam/docs/creating-managing-service-account-keys)
+  - The account needs to have permissions to create Cloud Functions
+  - The Personal Access Token should have access to the `admin:org` permissions in order to make changes to GitHub Teams
 - Enable the required Google APIs:
   - [Google Cloud Functions API](https://cloud.google.com/functions)
   - [Google Cloud Build API](https://console.cloud.google.com/cloud-build)
+- [Terraform](https://terraform.io)
+  - Optional: Review [Terraform's guide to working with the Google Provider](https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/getting_started)
 
 ### Download
 
@@ -34,7 +42,7 @@ npm run deploy:init
 yarn deploy:init
 ```
 
-**Note: If you are using an existing service account you must import the account at this step:**
+**Note: If you are using an existing service account at runtime you must import the account at this step:**
 
 ```bash
 terraform import <Google resource name> serviceaccount@domain.com
