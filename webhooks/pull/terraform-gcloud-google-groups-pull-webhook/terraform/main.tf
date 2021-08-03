@@ -1,5 +1,11 @@
+resource "random_string" "suffix" {
+  length = 4
+  special = false
+  upper = false
+}
+
 resource "google_storage_bucket" "function_bucket" {
-  name = var.bucket
+  name = "indent-pull-google-groups-${random_string.suffix.result}"
 }
 
 module "google-groups" {
