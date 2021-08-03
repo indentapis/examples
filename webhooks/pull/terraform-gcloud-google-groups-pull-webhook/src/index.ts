@@ -29,10 +29,6 @@ async function loadFromGoogleGroups(): Promise<Resource[]> {
     kind,
     displayName: g.displayName,
     labels: {
-      'google/parent': g.parent,
-      'google/createTime': g.createTime,
-      'google/updateTime': g.updateTime,
-      description: g.description,
       ...(g.labels || {}),
     },
   })) as Resource[]
