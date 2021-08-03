@@ -5,7 +5,7 @@
 ### Requirements
 
 - [GitHub Account](https://github.com)
-- A [GitHub Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+  - [GitHub Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)
   - The token should have access to the `repo` permissions on your account
 - [AWS CLI or ~/.aws/credentials](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html)
 - [Terraform](https://terraform.io)
@@ -34,8 +34,24 @@
 - The ACL file should have a commented section that looks like this
 
 ```bash
-//indent:managed start roleName
-//indent:managed end
+"app_roles" = {
+  "admin" = [
+    "engineer1@example.com",
+    "engineer2@example.com",
+
+    //indent:managed start admin
+    //indent:managed end
+  ]
+
+  "engOnCall" = [
+    "engineer2@example.com",
+
+    //indent:managed start engOnCall
+    //indent:managed end
+  ]
+
+  "superAdmin" = ["engineering@example.com"]
+}
 ```
 
 - The webhook can only make changes inside this section
