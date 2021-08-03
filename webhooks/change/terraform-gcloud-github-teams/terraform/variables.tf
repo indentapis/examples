@@ -3,7 +3,7 @@ variable "google_creds_path" {
 File containing JSON credentials used to authenticate with Google Cloud and create a cluster.
 Credentials can be downloaded at https://console.cloud.google.com/apis/credentials/serviceaccountkey.
 EOF
-  default     = "./secrets/terraform-deploy-key.json"
+  default     = "./secrets/id-drop-weekly-zkodj-3070d8855f51.json"
   type        = string
 }
 

@@ -1,4 +1,4 @@
-import { OctokitResponse } from '@octokit/plugin-paginate-rest/dist-types/types'
+import { AxiosResponse } from 'axios'
 import { Event } from '@indent/types'
 import { verify } from '@indent/webhook'
 import { Request, Response } from 'express'
@@ -37,7 +37,7 @@ exports['webhook'] = async function handle(req: IRequest, res: Response) {
   try {
     await Promise.all(
       events.map(
-        (auditEvent: Event): Promise<void | OctokitResponse<any> | Status> => {
+        (auditEvent: Event): Promise<void | AxiosResponse<any> | Status> => {
           let { actor, event, resources } = auditEvent
 
           console.log(
