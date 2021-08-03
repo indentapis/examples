@@ -1,5 +1,5 @@
 locals {
-  name          = "indent-github-webhook-${random_string.suffix.result}"
+  name          = "indent-aws-github-file-webhook-${random_string.suffix.result}"
   lambda_memory = 128
 
   tags = {
