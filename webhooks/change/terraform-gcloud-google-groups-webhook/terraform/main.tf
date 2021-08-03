@@ -1,5 +1,11 @@
+resource "random_string" "suffix" {
+  length = 4
+  upper = false
+  special = false
+}
+
 resource "google_storage_bucket" "function_bucket" {
-  name = var.bucket
+  name = "indent-google-groups-webhook-${random_string.suffix.result}"
 }
 
 module "google-groups" {
