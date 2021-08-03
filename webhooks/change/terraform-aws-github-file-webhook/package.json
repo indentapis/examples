@@ -1,5 +1,5 @@
 {
-  "name": "@indent/terraform-aws-github-webhook",
+  "name": "@indent/terraform-aws-github-file-webhook",
   "version": "0.0.0",
   "description": "A Node.js starter for Terraform on AWS with Indent and GitHub.",
   "main": "index.js",
