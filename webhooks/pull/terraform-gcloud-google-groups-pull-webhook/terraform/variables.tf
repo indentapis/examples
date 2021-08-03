@@ -12,6 +12,15 @@ variable "project" {
   type        = string
 }
 
+<<<<<<< HEAD
+=======
+variable "bucket" {
+  description = "Name of bucket to store function sources in"
+  default     = "indent-gcloud-groups-webhooks"
+  type        = string
+}
+
+>>>>>>> 9cc442805cfadb85b1b8c04a2ab65026322d2cf2
 variable "region" {
   description = "Region to run functions in"
   default     = "us-central1"
