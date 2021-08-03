@@ -9,7 +9,6 @@ EOF
 
 variable "project" {
   description = "Google Cloud Platform project to deploy cluster in."
-  default     = "id-drop-weekly-zkodj"
   type        = string
 }
 
