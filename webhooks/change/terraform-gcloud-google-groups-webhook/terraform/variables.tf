@@ -9,7 +9,6 @@ EOF
 
 variable "project" {
   description = "Google Cloud Platform project to deploy cluster in."
-  default     = "id-drop-weekly-zkodj"
   type        = string
 }
 
@@ -30,9 +29,3 @@ variable "indent_webhook_secret" {
   type        = string
   sensitive   = true
 }
-
-#variable "service_account_email" {
-#  description = "Service account email address for managing Google Groups"
-#  default     = ""
-#  type        = string
-#}
