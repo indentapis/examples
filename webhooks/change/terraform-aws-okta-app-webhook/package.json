@@ -1,0 +1,19 @@
+{
+  "name": "@indent/terraform-aws-okta-app-webhook",
+  "version": "0.0.0",
+  "description": "A Node.js starter for Terraform on AWS with Indent and Okta using Okta's app based authentication.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/indentapis/examples.git"
+  },
+  "author": "Indent Inc <open@indent.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/indentapis/examples/issues"
+  },
+  "homepage": "https://github.com/indentapis/examples#readme"
+}
