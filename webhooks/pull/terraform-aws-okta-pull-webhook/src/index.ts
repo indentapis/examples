@@ -7,7 +7,7 @@ const OKTA_DOMAIN = process.env.OKTA_DOMAIN
 const OKTA_TOKEN = process.env.OKTA_TOKEN
 
 // Okta Slack App ID - used to link okta `managerId` to slack users
-const APP_ID = ''
+// const APP_ID = ''
 
 async function loadFromOkta({
   path = '',
@@ -74,78 +74,15 @@ export const handle: APIGatewayProxyHandler = async function handle(event) {
   if (pull && pull.kinds) {
     console.log('pullUpdate: attempt: ' + pull.kinds)
     try {
-      const timestamp = new Date().toISOString()
       const resourcesAsync = await Promise.all(
-        pull.kinds.map(async (_kind: string): Promise<Indent.Resource[]> => {
-          const oktaUserResources = await loadFromOkta({
-            path: '/users',
-            transform: (user) => ({
-              id: [OKTA_DOMAIN, user.id].join('/api/v1/users/'),
-              kind: 'okta.v1.User',
-              email: user.profile.email,
-              displayName: [user.profile.firstName, user.profile.lastName]
-                .filter(Boolean)
-                .join(' '),
-              labels: {
-                oktaId: user.id,
-                managerId: user.profile.managerId || '',
-                timestamp,
-              },
-            }),
-          })
-          const oktaUserMapById = oktaUserResources.reduce(
-            (acc, r) => ({
-              ...acc,
-              [r.labels.oktaId]: r,
-              [r.email]: r,
-            }),
-            {}
-          )
-          oktaUserResources.forEach(user => {
-            // check if managerId is an email, then update to okta id for uniqueness
-            if (user.labels.managerId && user.labels.managerId.includes('@')) {
-              if (oktaUserMapById[user.labels.managerId]) {
-                user.labels.managerId = oktaUserMapById[user.labels.managerId].labels.oktaId
-              }
-            }
-          })
-          const appUserResources = await loadFromOkta({
-            path: `/apps/${APP_ID}/users`,
-            transform: (appuser) => ({
-              id: [OKTA_DOMAIN, appuser.id].join(
-                `/api/v1/apps/${APP_ID}/users/`
-              ),
-              kind: 'okta.v1.AppUser',
-              email: appuser.profile.email,
-              displayName: [appuser.profile.firstName, appuser.profile.lastName]
-                .filter(Boolean)
-                .join(' '),
-              labels: {
-                oktaAppId: APP_ID,
-                oktaId: appuser.id,
-                slackId: appuser.externalId,
-                managerId: oktaUserMapById[appuser.id] ? oktaUserMapById[appuser.id].labels.managerId : '',
-                slackUsername: appuser.profile.slackUsername,
-                timestamp,
-              },
-            }),
-          })
-          const slackUserResources = appUserResources.map(
-            (r) =>
-              ({
-                id: r.labels.slackId,
-                displayName: r.displayName,
-                kind: 'slack/user',
-                email: r.email,
-                labels: { oktaId: r.labels.oktaId, managerId: r.labels.managerId, timestamp },
-              } as Indent.Resource)
-          )
-
-          return [
-            ...oktaUserResources,
-            ...appUserResources,
-            ...slackUserResources,
-          ]
+        pull.kinds.map(async (kind: string): Promise<Indent.Resource[]> => {
+          if (kind.toLowerCase().includes('user')) {
+            return await pullUsers()
+          } else if (kind.toLowerCase().includes('group')) {
+            return await pullGroups()
+          }
+      
+          return []
         })
       )
       const resources = resourcesAsync.flat()
@@ -169,6 +106,100 @@ export const handle: APIGatewayProxyHandler = async function handle(event) {
     statusCode: 200,
     body: '{}',
   }
+}
+
+async function pullGroups(): Indent.Resource[] {
+  const timestamp = new Date().toISOString()
+  const oktaGroupResources = await loadFromOkta({
+    path: '/groups',
+    transform: (group) => ({
+      id: [OKTA_DOMAIN, group.id].join('/api/v1/groups/'),
+      kind: 'okta.v1.Group',
+      email: group.profile.email,
+      displayName: group.profile.name,
+      labels: {
+        oktaId: group.id,
+        description: group.profile.description || '',
+        timestamp,
+      },
+    }),
+  })
+  
+  return oktaGroupResources
+}
+
+async function pullUsers(): Indent.Resource[] {
+  const timestamp = new Date().toISOString()
+  const oktaUserResources = await loadFromOkta({
+    path: '/users',
+    transform: (user) => ({
+      id: [OKTA_DOMAIN, user.id].join('/api/v1/users/'),
+      kind: 'okta.v1.User',
+      email: user.profile.email,
+      displayName: [user.profile.firstName, user.profile.lastName]
+        .filter(Boolean)
+        .join(' '),
+      labels: {
+        oktaId: user.id,
+        managerId: user.profile.managerId || '',
+        timestamp,
+      },
+    }),
+  })
+  const oktaUserMapById = oktaUserResources.reduce(
+    (acc, r) => ({
+      ...acc,
+      [r.labels.oktaId]: r,
+      [r.email]: r,
+    }),
+    {}
+  )
+  oktaUserResources.forEach(user => {
+    // check if managerId is an email, then update to okta id for uniqueness
+    if (user.labels.managerId && user.labels.managerId.includes('@')) {
+      if (oktaUserMapById[user.labels.managerId]) {
+        user.labels.managerId = oktaUserMapById[user.labels.managerId].labels.oktaId
+      }
+    }
+  })
+  // const appUserResources = await loadFromOkta({
+  //   path: `/apps/${APP_ID}/users`,
+  //   transform: (appuser) => ({
+  //     id: [OKTA_DOMAIN, appuser.id].join(
+  //       `/api/v1/apps/${APP_ID}/users/`
+  //     ),
+  //     kind: 'okta.v1.AppUser',
+  //     email: appuser.profile.email,
+  //     displayName: [appuser.profile.firstName, appuser.profile.lastName]
+  //       .filter(Boolean)
+  //       .join(' '),
+  //     labels: {
+  //       oktaAppId: APP_ID,
+  //       oktaId: appuser.id,
+  //       slackId: appuser.externalId,
+  //       managerId: oktaUserMapById[appuser.id] ? oktaUserMapById[appuser.id].labels.managerId : '',
+  //       slackUsername: appuser.profile.slackUsername,
+  //       timestamp,
+  //     },
+  //   }),
+  // })
+  const slackUserResources = oktaUserResources.map(
+    (r) =>
+      ({
+        // Due to missing slack app ID this pull webhook resolves based on email
+        // id: r.labels.slackId,
+        displayName: r.displayName,
+        kind: 'slack/user',
+        email: r.email,
+        labels: { oktaId: r.labels.oktaId, managerId: r.labels.managerId, timestamp },
+      } as Indent.Resource)
+  )
+
+  return [
+    ...oktaUserResources,
+    // ...appUserResources,
+    ...slackUserResources,
+  ]
 }
 
 function parseLinkHeader(s: string): { next?: string } {
