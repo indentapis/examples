@@ -1,8 +1,6 @@
 import { Event, Resource } from '@indent/types'
 import axios from 'axios'
 
-// Indent Operator Agent will use access token from app installed with client id/secret
-// Interested in the Indent Agent early access program? Let us know at https://indent.com/support
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN
 
 export function matchEvent(event: Event) {
@@ -36,7 +34,7 @@ export async function addUserToGroup({ user, org, team }) {
       Accept: 'application/vnd.github.v3+json',
       'Content-Type': 'application/json',
     },
-  }).catch((err) => console.error(`Add User Error: ${err}`))
+  })
 }
 
 export async function removeUserFromGroup({ user, org, team }) {

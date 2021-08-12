@@ -8,11 +8,11 @@
 - A [GitHub Organization](https://github.com/account/organizations/new)
 - At least one GitHub Team within your organization
 - [Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+  - The Personal Access Token should have access to the `admin:org` permissions in order to make changes to GitHub Teams
 - [Google Cloud SDK CLI](https://cloud.google.com/sdk/gcloud)
 - [Google Cloud Service Account](https://cloud.google.com/iam/docs/creating-managing-service-accounts)
   - You will also need a JSON [Service Account Key](https://cloud.google.com/iam/docs/creating-managing-service-account-keys)
   - The account needs to have permissions to create Cloud Functions
-  - The Personal Access Token should have access to the `admin:org` permissions in order to make changes to GitHub Teams
 - Enable the required Google APIs:
   - [Google Cloud Functions API](https://cloud.google.com/functions)
   - [Google Cloud Build API](https://console.cloud.google.com/cloud-build)
