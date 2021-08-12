@@ -7,7 +7,7 @@ const OKTA_DOMAIN = process.env.OKTA_DOMAIN
 const OKTA_TOKEN = process.env.OKTA_TOKEN
 
 // Okta Slack App ID - used to link okta `managerId` to slack users
-// const APP_ID = ''
+const APP_ID = ''
 
 async function loadFromOkta({
   path = '',
@@ -81,7 +81,7 @@ export const handle: APIGatewayProxyHandler = async function handle(event) {
           } else if (kind.toLowerCase().includes('group')) {
             return await pullGroups()
           }
-      
+
           return []
         })
       )
@@ -124,7 +124,7 @@ async function pullGroups(): Indent.Resource[] {
       },
     }),
   })
-  
+
   return oktaGroupResources
 }
 
@@ -154,52 +154,53 @@ async function pullUsers(): Indent.Resource[] {
     }),
     {}
   )
-  oktaUserResources.forEach(user => {
+  oktaUserResources.forEach((user) => {
     // check if managerId is an email, then update to okta id for uniqueness
     if (user.labels.managerId && user.labels.managerId.includes('@')) {
       if (oktaUserMapById[user.labels.managerId]) {
-        user.labels.managerId = oktaUserMapById[user.labels.managerId].labels.oktaId
+        user.labels.managerId =
+          oktaUserMapById[user.labels.managerId].labels.oktaId
       }
     }
   })
-  // const appUserResources = await loadFromOkta({
-  //   path: `/apps/${APP_ID}/users`,
-  //   transform: (appuser) => ({
-  //     id: [OKTA_DOMAIN, appuser.id].join(
-  //       `/api/v1/apps/${APP_ID}/users/`
-  //     ),
-  //     kind: 'okta.v1.AppUser',
-  //     email: appuser.profile.email,
-  //     displayName: [appuser.profile.firstName, appuser.profile.lastName]
-  //       .filter(Boolean)
-  //       .join(' '),
-  //     labels: {
-  //       oktaAppId: APP_ID,
-  //       oktaId: appuser.id,
-  //       slackId: appuser.externalId,
-  //       managerId: oktaUserMapById[appuser.id] ? oktaUserMapById[appuser.id].labels.managerId : '',
-  //       slackUsername: appuser.profile.slackUsername,
-  //       timestamp,
-  //     },
-  //   }),
-  // })
+  const appUserResources = await loadFromOkta({
+    path: `/apps/${APP_ID}/users`,
+    transform: (appuser) => ({
+      id: [OKTA_DOMAIN, appuser.id].join(`/api/v1/apps/${APP_ID}/users/`),
+      kind: 'okta.v1.AppUser',
+      email: appuser.profile.email,
+      displayName: [appuser.profile.firstName, appuser.profile.lastName]
+        .filter(Boolean)
+        .join(' '),
+      labels: {
+        oktaAppId: APP_ID,
+        oktaId: appuser.id,
+        slackId: appuser.externalId,
+        managerId: oktaUserMapById[appuser.id]
+          ? oktaUserMapById[appuser.id].labels.managerId
+          : '',
+        slackUsername: appuser.profile.slackUsername,
+        timestamp,
+      },
+    }),
+  })
   const slackUserResources = oktaUserResources.map(
     (r) =>
       ({
         // Due to missing slack app ID this pull webhook resolves based on email
-        // id: r.labels.slackId,
+        id: r.labels.slackId,
         displayName: r.displayName,
         kind: 'slack/user',
         email: r.email,
-        labels: { oktaId: r.labels.oktaId, managerId: r.labels.managerId, timestamp },
+        labels: {
+          oktaId: r.labels.oktaId,
+          managerId: r.labels.managerId,
+          timestamp,
+        },
       } as Indent.Resource)
   )
 
-  return [
-    ...oktaUserResources,
-    // ...appUserResources,
-    ...slackUserResources,
-  ]
+  return [...oktaUserResources, ...appUserResources, ...slackUserResources]
 }
 
 function parseLinkHeader(s: string): { next?: string } {
