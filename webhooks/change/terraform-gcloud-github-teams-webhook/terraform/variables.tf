@@ -1,3 +1,4 @@
+
 variable "google_creds_path" {
   description = <<EOF
 File containing JSON credentials used to authenticate with Google Cloud and create a cluster.
@@ -10,12 +11,6 @@ EOF
 variable "project" {
   description = "Google Cloud Platform project to deploy cluster in."
   default     = "granite-functions"
-  type        = string
-}
-
-variable "bucket" {
-  description = "Name of bucket to store function sources in"
-  default     = "indent-gcloud-github-teams-change"
   type        = string
 }
 
