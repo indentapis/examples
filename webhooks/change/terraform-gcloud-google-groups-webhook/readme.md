@@ -1,4 +1,4 @@
-# Terraform GCloud + Google Groups Webhook
+# Terraform Google Groups Change Webhook
 
 ## How to Use
 
@@ -14,13 +14,12 @@
 Download the example:
 
 ```bash
-curl https://codeload.github.com/indentapis/examples/tar.gz/main | tar -xz --strip=2 examples-main/webhooks/change/terraform-gcloud-google-groups-webhook
+curl https://codeload.github.com/indentapis/examples/tar.gz/main | tar -xz --strip=3 examples-main/webhooks/change/terraform-gcloud-google-groups-webhook
 cd terraform-gcloud-google-groups-webhook
 ```
 
 Install the dependencies
 
-```bash
 npm run deploy:init # initializes terraform GCloud provider
 ```
 
