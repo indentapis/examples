@@ -47,13 +47,13 @@ exports['indent-okta-webhook'] = async function handle(req, res) {
   return res.status(200).json({})
 }
 
-const OKTA_TENANT = process.env.OKTA_TENANT
+const OKTA_DOMAIN = process.env.OKTA_DOMAIN
 const OKTA_TOKEN = process.env.OKTA_TOKEN
 
 async function addUserToGroup({ user, group }) {
   return await axios({
     method: 'put',
-    url: `https://${OKTA_TENANT}/api/v1/groups/${group}/users/${user}`,
+    url: `https://${OKTA_DOMAIN}/api/v1/groups/${group}/users/${user}`,
     headers: {
       Accept: 'application/json',
       Authorization: `SSWS ${OKTA_TOKEN}`,
@@ -65,7 +65,7 @@ async function addUserToGroup({ user, group }) {
 async function removeUserFromGroup({ user, group }) {
   return await axios({
     method: 'delete',
-    url: `https://${OKTA_TENANT}/api/v1/groups/${group}/users/${user}`,
+    url: `https://${OKTA_DOMAIN}/api/v1/groups/${group}/users/${user}`,
     headers: {
       Accept: 'application/json',
       Authorization: `SSWS ${OKTA_TOKEN}`,

@@ -36,7 +36,7 @@ mv terraform/config/example.tfvars terraform/config/terraform.tfvars
 # Indent Webhook Secret is used to verify messages from Indent
 indent_webhook_secret = "wks0example-secret"
 # Okta Tenant is used to route requests to your Okta environment
-okta_tenant = "example.okta.com"
+okta_domain = "example.okta.com"
 # Okta Token is used to authorize requests to your Okta environment
 okta_token = "eXaMpLeOkTaToKeN"
 ```

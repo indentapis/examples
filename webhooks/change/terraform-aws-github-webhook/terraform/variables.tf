@@ -13,7 +13,7 @@ variable "indent_webhook_secret" {
   sensitive = true
 }
 
-variable "okta_tenant" {
+variable "okta_domain" {
   type      = string
   sensitive = true
 }

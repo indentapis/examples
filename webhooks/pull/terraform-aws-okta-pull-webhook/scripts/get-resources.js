@@ -4,10 +4,10 @@ const assert = require('assert')
 const fs = require('fs').promises
 const { unparse } = require('papaparse')
 
-const OKTA_TENANT = process.env.OKTA_TENANT
+const OKTA_DOMAIN = process.env.OKTA_DOMAIN
 const OKTA_TOKEN = process.env.OKTA_TOKEN
 
-assert(OKTA_TENANT, 'required env var missing: `OKTA_TENANT`')
+assert(OKTA_DOMAIN, 'required env var missing: `OKTA_DOMAIN`')
 assert(OKTA_TOKEN, 'required env var missing: `OKTA_TOKEN`')
 
 const defaultColumns = 'kind,displayName,id,email'.split(',')
@@ -40,7 +40,7 @@ async function loadFromOkta({ path = '', limit = 200, transform = r => r }) {
     method: 'get',
     url: /http/.test(path)
       ? path
-      : `https://${OKTA_TENANT}/api/v1${path}?limit=${limit}`,
+      : `https://${OKTA_DOMAIN}/api/v1${path}?limit=${limit}`,
     headers: {
       Accept: 'application/json',
       Authorization: `SSWS ${OKTA_TOKEN}`,

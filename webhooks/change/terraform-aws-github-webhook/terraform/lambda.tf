@@ -25,7 +25,7 @@ resource "aws_lambda_function" "lambda" {
   environment {
     variables = {
       "INDENT_WEBHOOK_SECRET" = var.indent_webhook_secret
-      "OKTA_TENANT"           = var.okta_tenant
+      "OKTA_DOMAIN"           = var.okta_domain
       "OKTA_TOKEN"            = var.okta_token
     }
   }
