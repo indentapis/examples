@@ -40,7 +40,7 @@ export const createOktaServiceApp = async function (): Promise<any> {
 export const grantScopes =
   async function (): Promise<void | AxiosPromise<any>> {
     const data = await createOktaServiceApp
-    const { client_id } = data
+    console.log(data)
     return await axios({
       method: 'post',
       url: `https://${process.env.OKTA_DOMAIN}/api/v1/apps/${client_id}/grants`,
