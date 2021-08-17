@@ -57,7 +57,6 @@ export const handle: APIGatewayProxyHandler = async function handle(event) {
 }
 
 const OKTA_DOMAIN = process.env.OKTA_DOMAIN
-const OKTA_TOKEN = process.env.OKTA_TOKEN
 
 async function addUserToGroup({ user, group }) {
   const { Authorization } = await getToken()
@@ -95,7 +94,6 @@ async function grantPermission(auditEvent: Indent.Event) {
     getOktaIdFromResources(resources, 'group')
 
   let result = await okta.addUserToGroup({ user, group })
-
   console.log({
     event,
     actor,

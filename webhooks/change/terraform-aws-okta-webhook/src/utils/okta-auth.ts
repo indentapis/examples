@@ -1,6 +1,6 @@
 import { default as axios } from 'axios'
-import { constants } from 'crypto'
 import { Jwt, create } from 'njwt'
+import crypto from 'crypto'
 
 const OKTA_DOMAIN = process.env.OKTA_DOMAIN
 // Service account-based authentication
@@ -18,7 +18,7 @@ export async function getToken(): Promise<TokenResponse> {
   if (OKTA_TOKEN) {
     return {
       Authorization: `SSWS ${OKTA_TOKEN}`,
-      token: OKTA_TOKEN
+      token: OKTA_TOKEN,
     }
   } else if (!OKTA_PRIVATE_KEY) {
     throw new Error('utils/okta-auth: missing env var: OKTA_PRIVATE_KEY')
@@ -29,7 +29,7 @@ export async function getToken(): Promise<TokenResponse> {
 
   return {
     Authorization: `Bearer ${token}`,
-    token
+    token,
   }
 }
 
@@ -39,14 +39,9 @@ async function getOktaSigningToken(): Promise<string> {
     sub: `${OKTA_CLIENT_ID}`,
     aud: `https://${OKTA_DOMAIN}/oauth2/v1/token`,
   }
+  const signingKey = OKTA_PRIVATE_KEY.toString()
 
-  const signingKey = {
-    key: OKTA_PRIVATE_KEY,
-    passphrase: '',
-    padding: constants.RSA_PKCS1_PADDING,
-  }
-
-  const jwt: Jwt = create(claims, signingKey)
+  const jwt: Jwt = create(claims, signingKey, 'RS256')
   return jwt.compact()
 }
 
@@ -66,7 +61,9 @@ async function getOktaAccessToken(signingToken: string): Promise<string> {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
     data: urlParams,
-  }).then(r => r.data)
+  }).then((r) => r.data)
+
+  console.log(res)
 
   return res.access_token
 }

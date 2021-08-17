@@ -16,7 +16,7 @@
     "destroy:all": "npm run tf:destroy -auto-approve",
     "tf:plan": "cd terraform; terraform plan -var-file ./config/terraform.tfvars",
     "tf:apply": "cd terraform; terraform apply -compact-warnings -var-file ./config/terraform.tfvars",
-    "tf:destroy": "cd terraform; terraform destroy -auto-approve -var-file ./config/terraform.tfvars",
+    "tf:destroy": "cd terraform; terraform destroy -auto-approve -var-file ./config/terraform.tfvars"
   },
   "author": "Indent Inc <open@indent.com>",
   "license": "Apache-2.0",
@@ -37,10 +37,8 @@
     "@indent/webhook": "latest",
     "aws-lambda": "^1.0.6",
     "axios": "^0.21.1",
-    "dotenv": "^10.0.0",
+    "env-cmd": "^10.1.0",
     "njwt": "^1.1.0",
-    "object-assign": "^4.1.1",
-    "rsa-unpack": "^0.0.6",
     "ts-node": "^8.5.4"
   }
 }
