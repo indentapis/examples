@@ -1,6 +1,5 @@
 import { default as axios } from 'axios'
 import { Jwt, create } from 'njwt'
-import crypto from 'crypto'
 
 const OKTA_DOMAIN = process.env.OKTA_DOMAIN
 // Service account-based authentication
