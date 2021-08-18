@@ -8,7 +8,7 @@
     "build": "tsc",
     "clean:dist": "rm -rf dist; rm -rf lib",
     "clean:modules": "rm -rf node_modules",
-    "clean:tf": "rm -rf teraform/.terraform && rm -rf terraform/terraform.tfstate*",
+    "clean:tf": "rm -rf terraform/.terraform && rm -rf terraform/terraform.tfstate* ",
     "clean:all": "npm run clean:dist; npm run clean:tf; npm run clean:modules",
     "create:all": "npm run deploy:init; npm run deploy:all",
     "deploy:init": "cd terraform; terraform init",
