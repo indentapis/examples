@@ -11,7 +11,7 @@ resource "google_storage_bucket" "function_bucket" {
 module "google-github-teams" {
   source     = "./function"
   root_dir   = "${path.module}/.."
-  name       = "indent-gcloud-github-teams"
+  name       = "indent-gcloud-github-teams-${random_string.suffix.result}"
   region     = var.region
   bucket     = google_storage_bucket.function_bucket.name
   source_dir = "/dist"
