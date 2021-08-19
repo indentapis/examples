@@ -61,8 +61,8 @@
 Download the example:
 
 ```bash
-curl https://codeload.github.com/indentapis/examples/tar.gz/main | tar -xz --strip=3 examples-main/webhooks/change/terraform-aws-github-file-webhook
-cd terraform-aws-github-file-webhook
+curl https://codeload.github.com/indentapis/examples/tar.gz/main | tar -xz --strip=3 examples-main/webhooks/change/terraform-aws-github-files-webhook
+cd terraform-aws-github-files-webhook
 ```
 
 Install the dependencies:
@@ -91,11 +91,7 @@ github_token = "ghp_eXaMpLeGithubToKeN"
 
 Deploy it to the cloud with [Terraform](https://terraform.io) ([Documentation](https://terraform.io/docs/)) and [AWS Lambda](https://aws.amazon.com/lambda/).
 
-This will take a few minutes to run the first time as Terraform sets up the resources in the AWS Account. You should see an output similar to below:
-
-```bash
-$ npm run deploy:all
-```
+This will take a few minutes to run the first time as Terraform sets up the resources in the AWS Account.
 
 ## About Example
 
