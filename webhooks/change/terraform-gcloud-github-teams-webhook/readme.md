@@ -24,8 +24,8 @@
 Download the example:
 
 ```bash
-curl https://codeload.github.com/indentapis/examples/tar.gz/main | tar -xz --strip=3 examples-main/webhooks/terraform-gcloud-github-teams
-cd terraform-gcloud-github-teams
+curl https://codeload.github.com/indentapis/examples/tar.gz/main | tar -xz --strip=3 examples-main/webhooks/terraform-gcloud-github-teams-webhook
+cd terraform-gcloud-github-teams-webhook
 ```
 
 Install the dependencies:
