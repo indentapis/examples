@@ -61,8 +61,8 @@
 Download the example:
 
 ```bash
-curl https://codeload.github.com/indentapis/examples/tar.gz/main | tar -xz --strip=3 examples-main/webhooks/change/terraform-github-file-webhook
-cd terraform-github-file-webhook
+curl https://codeload.github.com/indentapis/examples/tar.gz/main | tar -xz --strip=3 examples-main/webhooks/change/terraform-aws-github-file-webhook
+cd terraform-aws-github-file-webhook
 ```
 
 Install the dependencies:
