@@ -1,0 +1,41 @@
+{
+  "name": "@indent/gcloud-github-teams-pull-webhook",
+  "version": "0.0.0",
+  "description": "A Node.js starter for Google Cloud Functions with Indent and GitHub Teams.",
+  "main": "index.js",
+  "scripts": {
+    "bundle": "ncc build lib/index.js -m -o dist",
+    "build": "tsc",
+    "clean:dist": "rm -rf dist; rm -rf lib",
+    "clean:modules": "rm -rf node_modules",
+    "clean:tf": "rm -rf terraform/.terraform && rm -rf terraform/terraform.tfstate* ",
+    "clean:all": "npm run clean:dist; npm run clean:modules",
+    "create:all": "npm run deploy:init; npm run deploy:all",
+    "deploy:init": "cd terraform; terraform init",
+    "deploy:all": "npm install; npm run build; npm run bundle; npm run tf:apply -auto-approve",
+    "destroy:all": "npm run tf:destroy -auto-approve; npm run clean:all",
+    "tf:plan": "cd terraform; terraform plan -var-file ./config/terraform.tfvars",
+    "tf:apply": "cd terraform; terraform apply -compact-warnings -var-file ./config/terraform.tfvars",
+    "tf:destroy": "cd terraform; terraform destroy -auto-approve -var-file ./config/terraform.tfvars"
+  },
+  "author": "Indent Inc <open@indent.com>",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/indentapis/examples.git"
+  },
+  "dependencies": {
+    "@indent/webhook": "^0.1.5",
+    "axios": "^0.21.1"
+  },
+  "devDependencies": {
+    "@google-cloud/functions-framework": "^1.6.0",
+    "@indent/types": "^0.1.5",
+    "@types/express": "^4.17.7",
+    "@types/node": "^14.0.27",
+    "@types/node-fetch": "^2.5.5",
+    "@vercel/ncc": "^0.29.1",
+    "env-cmd": "^10.1.0",
+    "typescript": "^4.0.5"
+  }
+}
