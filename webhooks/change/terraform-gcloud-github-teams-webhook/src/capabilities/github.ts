@@ -8,20 +8,11 @@ export function matchEvent(event: Event) {
 }
 
 export async function grantPermission(auditEvent: Event) {
-  const { event, actor, resources } = auditEvent
+  const { resources } = auditEvent
   const user = getIdFromResources(resources, 'user')
   const { team, org } = getTeamFromResources(resources, 'team')
 
-  let result = await addUserToGroup({ user, org, team })
-
-  console.log({
-    event,
-    actor,
-    resources,
-    success: result.status >= 200 && result.status < 300,
-  })
-
-  return result
+  return await addUserToGroup({ user, team, org })
 }
 
 export async function revokePermission(auditEvent: Event) {
