@@ -1,4 +1,3 @@
-// import indent types and verify
 import axios from 'axios'
 import { verify } from '@indent/webhook'
 import { Request, Response } from 'express'
@@ -8,7 +7,6 @@ const INDENT_WEBHOOK_SECRET = process.env.INDENT_WEBHOOK_SECRET
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN
 const GITHUB_ORG = process.env.GITHUB_ORG
 
-// auth to GitHub
 async function loadFromGitHubTeams(
   path = '',
   resultsPerPage = 100
@@ -29,26 +27,29 @@ async function loadFromGitHubTeams(
     },
   })
 
-  const kind = 'github.team'
+  const kind = 'github.v1.Team'
 
   const { data: results } = response
   console.log(results)
-
   return results.map((r: GitHubTeam) => ({
     id: r.id,
     kind,
     displayName: r.name,
-    org: GITHUB_ORG,
     labels: {
-      ...(r || {}),
+      'github/org': GITHUB_ORG,
+      'github/id': r.id,
+      'github/slug': r.slug,
+      'github/description': r.description,
+      'github/privacy': r.privacy,
+      'github/permission': r.permission,
+      'github/parent': r.parent ? r.parent : '',
     },
   })) as Resource[]
 }
-// pull webhook requires `read:org`
+
 exports['webhook'] = async function handle(req: IRequest, res: Response) {
   const { headers, rawBody } = req
 
-  // verify boilerplate
   try {
     await verify({
       secret: INDENT_WEBHOOK_SECRET,
@@ -63,7 +64,7 @@ exports['webhook'] = async function handle(req: IRequest, res: Response) {
 
   const body = JSON.parse(rawBody.toString())
   const pull = body as { kinds: string[] }
-  // function - load from GitHub Teams
+
   if (pull && pull.kinds) {
     console.log('pullUpdate: attempt: ' + pull.kinds)
     try {
@@ -86,17 +87,17 @@ exports['webhook'] = async function handle(req: IRequest, res: Response) {
 
 type GitHubTeam = {
   name: string
-  id: string
+  id: number
   node_id?: string
   slug?: string
-  description
-  privacy
-  url
-  html_url
-  members_url
-  repositories_url
-  permission
-  parent?: string
+  description?: string
+  privacy?: 'secret' | 'closed'
+  url?: string
+  html_url?: string
+  members_url?: string
+  repositories_url?: string
+  permission?: 'pull' | 'push' | 'admin'
+  parent?: string | null
 }
 
 type IRequest = Request & { rawBody: string }
