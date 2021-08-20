@@ -75,6 +75,9 @@ exports['webhook'] = async function handle(req: IRequest, res: Response) {
     } else {
       console.error(err)
     }
+    return res
+      .status(500)
+      .json({ message: '@indent/webhook: failed to provision, check logs' })
   }
 
   return res.status(200).json({})
@@ -94,7 +97,10 @@ async function grantPermission(auditEvent: Event) {
 
 async function revokePermission(auditEvent: Event) {
   if (github.matchEvent(auditEvent)) {
-    return await github.revokePermission(auditEvent)
+    return await github.revokePermission(auditEvent).catch((err) => {
+      console.error(`indent/webhook.revokePermission(): failed`)
+      console.error(err)
+    })
   }
 
   return {

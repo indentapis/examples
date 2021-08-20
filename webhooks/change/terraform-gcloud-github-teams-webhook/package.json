@@ -1,5 +1,5 @@
 {
-  "name": "@indent/gcloud-github-teams-webhook",
+  "name": "@indent/gcloud-github-teams-change-webhook",
   "version": "0.0.0",
   "description": "A Node.js starter for Google Cloud Functions with Indent and GitHub Teams.",
   "main": "index.js",
@@ -9,7 +9,7 @@
     "clean:dist": "rm -rf dist; rm -rf lib",
     "clean:modules": "rm -rf node_modules",
     "clean:tf": "rm -rf terraform/.terraform && rm -rf terraform/terraform.tfstate* ",
-    "clean:all": "npm run clean:dist; npm run clean:modules",
+    "clean:all": "npm run clean:dist; npm run clean:tf; npm run clean:modules",
     "create:all": "npm run deploy:init; npm run deploy:all",
     "deploy:init": "cd terraform; terraform init",
     "deploy:all": "npm install; npm run build; npm run bundle; npm run tf:apply -auto-approve",
@@ -26,7 +26,6 @@
   },
   "dependencies": {
     "@indent/webhook": "^0.1.5",
-    "@octokit/rest": "^18.8.0",
     "axios": "^0.21.1"
   },
   "devDependencies": {
