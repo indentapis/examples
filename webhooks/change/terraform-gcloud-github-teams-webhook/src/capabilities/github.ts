@@ -4,14 +4,13 @@ import axios from 'axios'
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN
 
 export function matchEvent(event: Event) {
-  return event.resources.filter((r) => r.kind?.includes('team')).length > 0
+  return event.resources.filter((r) => r.kind?.includes('Team')).length > 0
 }
 
 export async function grantPermission(auditEvent: Event) {
   const { resources } = auditEvent
   const user = getIdFromResources(resources, 'user')
-  const org = getOrgFromResources(resources, 'team')
-  const team = getTeamFromResources(resources, 'team')
+  const { team, org } = getTeamFromResources(resources, 'team')
 
   return await addUserToGroup({ user, org, team })
 }
@@ -19,8 +18,7 @@ export async function grantPermission(auditEvent: Event) {
 export async function revokePermission(auditEvent: Event) {
   const { resources } = auditEvent
   const user = getIdFromResources(resources, 'user')
-  const org = getOrgFromResources(resources, 'team')
-  const team = getTeamFromResources(resources, 'team')
+  const { team, org } = getTeamFromResources(resources, 'team')
 
   return await removeUserFromGroup({ user, org, team })
 }
@@ -50,19 +48,28 @@ export async function removeUserFromGroup({ user, org, team }) {
 }
 
 function getIdFromResources(resources: Resource[], kind: string) {
+  resources
+    .filter((r) => r.kind?.toLowerCase().includes(kind.toLowerCase()))
+    .map((r) => console.log(`github/id: ${r.labels['github/id']}\nid: ${r.id}`))
+
   return resources
     .filter((r) => r.kind?.toLowerCase().includes(kind.toLowerCase()))
-    .map((r) => r.labels?.githubId || r.id)[0]
+    .map((r) => r.labels['github/id'] || r.id)[0]
 }
 
 function getTeamFromResources(resources: Resource[], kind: string) {
-  return resources
+  resources
     .filter((r) => r.kind?.toLowerCase().includes(kind.toLowerCase()))
-    .map((r) => r.displayName)[0]
-}
+    .map((r) =>
+      console.log(
+        `github/slug: ${r.labels['github/slug']}\ngithub/org: ${r.labels['github/org']}`
+      )
+    )
 
-function getOrgFromResources(resources: Resource[], kind: string) {
   return resources
     .filter((r) => r.kind?.toLowerCase().includes(kind.toLowerCase()))
-    .map((r) => r.labels?.org)[0]
+    .map((r) => ({
+      team: r.labels['github/slug'],
+      org: r.labels['github/org'],
+    }))[0]
 }
