@@ -257,7 +257,7 @@ async function getAndUpdateACL(
   const newContentBody = fileContent.replace(sourceACL, updatedACL)
   const newContent = Buffer.from(newContentBody, 'ascii').toString('base64')
 
-  if (newContent === file.content) {q
+  if (newContent === file.content) {
     console.warn('No changes to be applied')
     return { sourceACL, fileContent, newContent }
   }
