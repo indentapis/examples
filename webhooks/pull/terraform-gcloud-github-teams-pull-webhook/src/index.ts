@@ -28,21 +28,23 @@ async function loadFromGitHubTeams(
   })
 
   const kind = 'github.v1.Team'
+  const timestamp = new Date().toISOString()
 
   const { data: results } = response
-  console.log(results)
+
   return results.map((r: GitHubTeam) => ({
-    id: r.id,
+    id: r.id.toString(),
     kind,
     displayName: r.name,
     labels: {
       'github/org': GITHUB_ORG,
-      'github/id': r.id,
+      'github/id': r.id.toString(),
       'github/slug': r.slug,
       'github/description': r.description,
       'github/privacy': r.privacy,
       'github/permission': r.permission,
       'github/parent': r.parent ? r.parent : '',
+      timestamp,
     },
   })) as Resource[]
 }
@@ -69,6 +71,7 @@ exports['webhook'] = async function handle(req: IRequest, res: Response) {
     console.log('pullUpdate: attempt: ' + pull.kinds)
     try {
       const resources = await loadFromGitHubTeams()
+      console.log('My Resource: ' + resources[0])
       console.log('pullUpdate: success: ' + pull.kinds)
       return res.status(200).json({ resources })
     } catch (err) {
