@@ -48,24 +48,12 @@ export async function removeUserFromGroup({ user, org, team }) {
 }
 
 function getIdFromResources(resources: Resource[], kind: string) {
-  resources
-    .filter((r) => r.kind?.toLowerCase().includes(kind.toLowerCase()))
-    .map((r) => console.log(`github/id: ${r.labels['github/id']}\nid: ${r.id}`))
-
   return resources
     .filter((r) => r.kind?.toLowerCase().includes(kind.toLowerCase()))
     .map((r) => r.labels['github/id'] || r.id)[0]
 }
 
 function getTeamFromResources(resources: Resource[], kind: string) {
-  resources
-    .filter((r) => r.kind?.toLowerCase().includes(kind.toLowerCase()))
-    .map((r) =>
-      console.log(
-        `github/slug: ${r.labels['github/slug']}\ngithub/org: ${r.labels['github/org']}`
-      )
-    )
-
   return resources
     .filter((r) => r.kind?.toLowerCase().includes(kind.toLowerCase()))
     .map((r) => ({
