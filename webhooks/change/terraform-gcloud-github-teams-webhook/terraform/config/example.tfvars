@@ -6,3 +6,6 @@ github_username = ""
 
 # GitHub Personal Access Token
 github_token = ""
+
+# Project - name of the Google Cloud Project where the webhook will be deployed
+project = ""
