@@ -11,7 +11,7 @@
     "clean:all": "npm run clean:dist; npm run clean:modules",
     "create:all": "npm run deploy:init; npm run deploy:prepare && npm run deploy:all",
     "deploy:init": "cd terraform; terraform init",
-    "deploy:prepare": "npm run clean:all; npm install --production; ./scripts/build-layers.sh",
+    "deploy:prepare": "npm install --production; ./scripts/build-layers.sh",
     "deploy:all": "npm install; npm run build && npm run tf:apply -- -auto-approve",
     "destroy:all": "npm run tf:destroy -auto-approve",
     "script:jira-get-roles": "ts-node scripts/get-jira-roles",
