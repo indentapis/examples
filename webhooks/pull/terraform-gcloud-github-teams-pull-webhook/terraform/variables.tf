@@ -10,7 +10,6 @@ EOF
 
 variable "project" {
   description = "Google Cloud Platform project to deploy cluster in."
-  default     = "granite-functions"
   type        = string
 }
 
