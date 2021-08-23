@@ -5,33 +5,31 @@
 ### Requirements
 
 - [GitHub Account](https://github.com)
-  - [GitHub Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)
-  - The token should have access to the `repo` permissions on your account
-- [AWS CLI or ~/.aws/credentials](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html)
-- [Terraform](https://terraform.io)
-  - Optional: Review [Get Started with AWS](https://learn.hashicorp.com/collections/terraform/aws-get-started) documentation from HashiCorp
+  - [GitHub Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) with the following scopes:
+  - `repo`
+- [AWS Account](https://aws.amazon.com)
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html)
+- [Terraform](https://learn.hashicorp.com/collections/terraform/aws-get-started)
+  - Optional: [Terraform's guide to working with the AWS Provider](https://learn.hashicorp.com/collections/terraform/aws-get-started).
 
 ### Create an Indent Resource for the ACL file
 
 1. Sign into your [Indent Space](https://indent.com/spaces).
 1. Go to your [Resources](https://indent.com/spaces?next=/manage/spaces/[space]/resources/new).
 1. Click "New" and create a new Resource.
-
    - Under resource kind, type in "customApp.v1.Role"
-   - Enter the name of your Resource
-   - Enter the ID of your Resource
+   - Enter the name of your Custom App
+   - Enter the ID of your Custom App
+   - Add these labels to your resource:
+     - `githubRepo` &mdash; path to the repo, e.g. `org/repo_name`
+     - `githubPath` &mdash; path to the file, e.g. `conf/prod.conf`
+     - `role` &mdash; Name of the role, e.g. `admin`
 
-1. Add these required labels to your Resource
+### Create the ACL file
 
-   - githubRepo: organization/repoName
-   - githubPath: /repo/path/to/acl/file
-   - role: name of the role to change
+Create an ACL file in the GitHub Repo you want Indent to manage. Include each role as an entry in the file. Note, Indent can only manage roles inside the comment blocks in your ACL file.
 
-**Note:** You will need to create a separate Resource for each Role you plan to manage.
-
-### Configure your ACL file
-
-- The ACL file should have a commented section that looks like this
+Example:
 
 ```bash
 "app_roles" = {
@@ -44,8 +42,6 @@
   ]
 }
 ```
-
-- The webhook can only make changes inside this section
 
 ### Download
 
