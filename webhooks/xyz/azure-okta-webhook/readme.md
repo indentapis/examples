@@ -45,6 +45,6 @@ The Indent Webhook Secret should then be set as an environment variable along wi
 
 ```yaml
 INDENT_WEBHOOK_SECRET: wks012m1d127f10dj483elkfjw
-OKTA_TENANT: example.okta.com
+OKTA_DOMAIN: example.okta.com
 OKTA_TOKEN: 00QQ9jmcw101dlf07_emXMA12QrFHt
 ```

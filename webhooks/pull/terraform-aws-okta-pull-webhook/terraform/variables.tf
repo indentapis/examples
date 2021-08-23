@@ -20,5 +20,18 @@ variable "okta_domain" {
 
 variable "okta_token" {
   type      = string
+  default   = ""
+  sensitive = true
+}
+
+variable "okta_client_id" {
+  type      = string
+  default   = ""
+  sensitive = true
+}
+
+variable "okta_private_key" {
+  type      = string
+  default   = ""
   sensitive = true
 }

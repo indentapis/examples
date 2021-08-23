@@ -2,7 +2,7 @@ import { AzureFunction, Context, HttpRequest } from '@azure/functions'
 import { verify } from '@indent/webhook'
 import axios from 'axios'
 
-const handleIndentWebhook: AzureFunction = async function(
+const handleIndentWebhook: AzureFunction = async function (
   context: Context,
   req: HttpRequest
 ) {
@@ -12,14 +12,14 @@ const handleIndentWebhook: AzureFunction = async function(
     await verify({
       secret: process.env.INDENT_WEBHOOK_SECRET,
       headers: req.headers,
-      body
+      body,
     })
   } catch (err) {
     console.error('@indent/webhook.verify(): failed')
     console.error(err)
     context.res = {
       status: 500,
-      body: JSON.stringify({ error: { message: err.message } })
+      body: JSON.stringify({ error: { message: err.message } }),
     }
     return
   }
@@ -31,13 +31,13 @@ const handleIndentWebhook: AzureFunction = async function(
 
   try {
     const results = await Promise.all(
-      events.map(auditEvent => {
+      events.map((auditEvent) => {
         let { actor, event, resources } = auditEvent
 
         console.log(
           `@indent/webhook: ${event} { actor: ${
             actor.id
-          }, resources: ${JSON.stringify(resources.map(r => r.id))} }`
+          }, resources: ${JSON.stringify(resources.map((r) => r.id))} }`
         )
 
         switch (event) {
@@ -55,41 +55,41 @@ const handleIndentWebhook: AzureFunction = async function(
 
     context.res = {
       status: 200,
-      body: JSON.stringify({})
+      body: JSON.stringify({}),
     }
   } catch (err) {
     console.error(err)
     context.res = {
       status: 500,
-      body: JSON.stringify({ error: { message: 'hello' } })
+      body: JSON.stringify({ error: { message: 'hello' } }),
     }
   }
 }
 
-const OKTA_TENANT = process.env.OKTA_TENANT
+const OKTA_DOMAIN = process.env.OKTA_DOMAIN
 const OKTA_TOKEN = process.env.OKTA_TOKEN
 
 async function addUserToGroup({ user, group }) {
   return await axios({
     method: 'put',
-    url: `https://${OKTA_TENANT}/api/v1/groups/${group}/users/${user}`,
+    url: `https://${OKTA_DOMAIN}/api/v1/groups/${group}/users/${user}`,
     headers: {
       Accept: 'application/json',
       Authorization: `SSWS ${OKTA_TOKEN}`,
-      'Content-Type': 'application/json'
-    }
+      'Content-Type': 'application/json',
+    },
   })
 }
 
 async function removeUserFromGroup({ user, group }) {
   return await axios({
     method: 'delete',
-    url: `https://${OKTA_TENANT}/api/v1/groups/${group}/users/${user}`,
+    url: `https://${OKTA_DOMAIN}/api/v1/groups/${group}/users/${user}`,
     headers: {
       Accept: 'application/json',
       Authorization: `SSWS ${OKTA_TOKEN}`,
-      'Content-Type': 'application/json'
-    }
+      'Content-Type': 'application/json',
+    },
   })
 }
 
@@ -108,7 +108,7 @@ async function grantPermission(auditEvent) {
     event,
     actor,
     resources,
-    success: result.status >= 200 && result.status < 300
+    success: result.status >= 200 && result.status < 300,
   })
 }
 
@@ -125,14 +125,14 @@ async function revokePermission(auditEvent) {
     event,
     actor,
     resources,
-    success: result.status >= 200 && result.status < 300
+    success: result.status >= 200 && result.status < 300,
   })
 }
 
 function getOktaIdFromResources(resources, kind) {
   return resources
-    .filter(r => r.kind && r.kind.toLowerCase().includes(kind.toLowerCase()))
-    .map(r => {
+    .filter((r) => r.kind && r.kind.toLowerCase().includes(kind.toLowerCase()))
+    .map((r) => {
       if (r.labels && r.labels.oktaId) {
         return r.labels.oktaId
       }

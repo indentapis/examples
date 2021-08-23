@@ -45,7 +45,7 @@ The Indent Webhook Secret should then be set as an environment variable along wi
 
 ```yaml
 INDENT_WEBHOOK_SECRET: wks012m1d127f10dj483elkfjw
-OKTA_TENANT: example.okta.com
+OKTA_DOMAIN: example.okta.com
 OKTA_TOKEN: 00QQ9jmcw101dlf07_emXMA12QrFHt
 ```
 
@@ -83,7 +83,7 @@ availableMemoryMb: 256
 entryPoint: indent-okta-webhook
 environmentVariables:
   INDENT_WEBHOOK_SECRET: <REDACTED>
-  OKTA_TENANT: <REDACTED>
+  OKTA_DOMAIN: <REDACTED>
   OKTA_TOKEN: <REDACTED>
 httpsTrigger:
   url: https://us-central1-my-project-123.cloudfunctions.net/indent-okta-webhook
