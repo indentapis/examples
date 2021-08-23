@@ -97,10 +97,7 @@ async function grantPermission(auditEvent: Event) {
 
 async function revokePermission(auditEvent: Event) {
   if (github.matchEvent(auditEvent)) {
-    return await github.revokePermission(auditEvent).catch((err) => {
-      console.error(`indent/webhook.revokePermission(): failed`)
-      console.error(err)
-    })
+    return await github.revokePermission(auditEvent)
   }
 
   return {
