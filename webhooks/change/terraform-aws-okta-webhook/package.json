@@ -14,9 +14,9 @@
     "deploy:prepare": "npm install --production && ./scripts/build-layers.sh",
     "deploy:all": "npm run build && npm run tf:apply -auto-approve",
     "destroy:all": "npm run tf:destroy -auto-approve",
-    "tf:plan": "cd terraform; terraform plan -var-file ./config/terraform.tfvars",
-    "tf:apply": "cd terraform; terraform apply -compact-warnings -var-file ./config/terraform.tfvars",
-    "tf:destroy": "cd terraform; terraform destroy -auto-approve -var-file ./config/terraform.tfvars"
+    "tf:plan": "cd terraform && terraform plan -var-file ./config/terraform.tfvars",
+    "tf:apply": "cd terraform && terraform apply -compact-warnings -var-file ./config/terraform.tfvars",
+    "tf:destroy": "cd terraform && terraform destroy -auto-approve -var-file ./config/terraform.tfvars"
   },
   "author": "Indent Inc <open@indent.com>",
   "license": "Apache-2.0",

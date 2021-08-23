@@ -66,7 +66,6 @@ exports['webhook'] = async function handle(req: IRequest, res: Response) {
 
   const body = JSON.parse(rawBody.toString())
   const pull = body as { kinds: string[] }
-
   if (pull && pull.kinds) {
     console.log('pullUpdate: attempt: ' + pull.kinds)
     try {
