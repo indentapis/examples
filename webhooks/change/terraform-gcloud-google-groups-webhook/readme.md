@@ -28,7 +28,7 @@ npm run deploy:init # initializes terraform GCloud provider
 
 ```bash
 terraform import <Google resource name> serviceaccount@domain.com
-````
+```
 
 Add the environment variables:
 
@@ -54,3 +54,4 @@ This will take a few minutes to run the first time as Terraform sets up the reso
 ## About Example
 
 This is a simple example showing how to use [Google Cloud Functions](https://cloud.google.com/) to deploy an Indent Webhook.
+````
