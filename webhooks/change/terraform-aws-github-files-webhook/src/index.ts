@@ -3,7 +3,6 @@ import { verify } from '@indent/webhook'
 import * as Indent from '@indent/types'
 import { Octokit } from '@octokit/rest'
 import _ from 'lodash'
-import { match } from 'assert/strict'
 
 export const handle: APIGatewayProxyHandler = async function handle(event) {
   try {

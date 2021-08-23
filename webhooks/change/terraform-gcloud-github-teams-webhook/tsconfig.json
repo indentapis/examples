@@ -3,14 +3,14 @@
   "compilerOptions": {
     "module": "commonjs",
     "esModuleInterop": true,
-    "lib": ["es2017", "dom"],
+    "lib": ["esnext", "dom"],
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
-    "noUnusedParameters": false,
-    "noUnusedLocals": false,
+    "noUnusedParameters": true,
+    "noUnusedLocals": true,
     "sourceMap": true,
-    "target": "es2017",
+    "target": "esnext",
     "outDir": "lib"
   },
-  "include": ["./src/**/*", "./scripts/*"]
+  "include": ["./src/**/*"]
 }

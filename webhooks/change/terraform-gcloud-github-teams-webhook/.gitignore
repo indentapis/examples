@@ -4,7 +4,10 @@ lib
 .env
 node_modules
 *.tfstate
+*.tfstate.backup
+*.lock.hcl
 .terraform
 *.tfstate.*
 terraform/config/*.tfvars
 !terraform/config/example.tfvars
+terraform/secrets

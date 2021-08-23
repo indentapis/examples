@@ -9,7 +9,7 @@
     "clean:modules": "rm -rf node_modules",
     "clean:tf": "rm -rf terraform/.terraform && rm -rf terraform/terraform.tfstate*",
     "clean:all": "npm run clean:dist; npm run clean:tf; npm run clean:modules",
-    "create:all": "npm run deploy:init; npm run deploy:prepare && npm run deploy:all",
+    "create:all": "npm run deploy:init; npm run deploy:prepare; npm run deploy:all",
     "deploy:init": "cd terraform; terraform init",
     "deploy:prepare": "npm install --production && ./scripts/build-layers.sh",
     "deploy:all": "npm run build && npm run tf:apply -auto-approve",
