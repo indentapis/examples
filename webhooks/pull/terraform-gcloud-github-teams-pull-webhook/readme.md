@@ -35,12 +35,6 @@ npm run deploy:init
 yarn deploy:init
 ```
 
-**Note: If you are using an existing service account at runtime you must import the account at this step:**
-
-```bash
-terraform import <Google resource name> serviceaccount@domain.com
-```
-
 Add the environment variables:
 
 ```bash
