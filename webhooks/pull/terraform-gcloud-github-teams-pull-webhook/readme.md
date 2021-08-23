@@ -4,30 +4,16 @@
 
 ### Requirements
 
-<<<<<<< HEAD
 - [GitHub account](https://github.com/)
   - [GitHub Organization](https://github.com/account/organizations) with at least one team
   - [Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) with the following scopes:
-    - `admin:org`
-- [Google Cloud Project](https://cloud.google.com/) with these APIs enabled:
-  - [Google Cloud Functions API](https://cloud.google.com/functions)
-  - [Google Cloud Build API](https://console.cloud.google.com/cloud-build)
-=======
-- [GitHub account](https://github.com)
-  - [GitHub Organization](https://github.com/account/organizations) with at least one team
-  - [Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) with the following scopes:
     - `admin:org` _Recommended scope_
     - `read:org` _Minimum scope to use this webhook. You will only be able to pull updates, you will not be able to make any changes with Indent's [GitHub Teams Change Webhook](https://github.com/indentapis/examples/tree/ID-903/webhooks/change/terraform-gcloud-github-teams-webhook)_
-- [Google Cloud SDK CLI](https://cloud.google.com/sdk/gcloud)
-- [Google Cloud Service Account](https://cloud.google.com/iam/docs/creating-managing-service-accounts).
-  - You will also need a JSON [Service Account Key](https://cloud.google.com/iam/docs/creating-managing-service-account-keys).
-  - The account needs to have permissions to create Cloud Functions and manage Cloud Storage.
-- Enable the required Google APIs:
+- [Google Cloud Project](https://cloud.google.com/) with these APIs enabled:
   - [Google Cloud Functions API](https://cloud.google.com/functions)
   - [Google Cloud Build API](https://console.cloud.google.com/cloud-build)
 - [Terraform](https://terraform.io)
   - Optional: [Terraform's guide to working with the Google Provider](https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/getting_started).
->>>>>>> c5a1ad5 (Changes to readme to mention using the terraform-deploy-key.json at the appropriate step)
 
 ### Download
 
@@ -57,8 +43,6 @@ Add the environment variables:
 ```bash
 mv terraform/config/example.tfvars terraform/config/terraform.tfvars
 ```
-
-Save your JSON Service Account Key to `terraform/secrets/terraform-deploy-key.json`
 
 ```hcl
 # Indent Webhook Secret is used to verify messages from Indent
