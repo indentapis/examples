@@ -42,15 +42,6 @@
     //indent:managed start admin
     //indent:managed end
   ]
-
-  "engOnCall" = [
-    "engineer2@example.com",
-
-    //indent:managed start engOnCall
-    //indent:managed end
-  ]
-
-  "superAdmin" = ["engineering@example.com"]
 }
 ```
 
