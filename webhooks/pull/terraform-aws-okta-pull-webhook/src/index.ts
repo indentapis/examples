@@ -3,8 +3,9 @@ import { verify } from '@indent/webhook'
 import * as Indent from '@indent/types'
 import axios from 'axios'
 
+import { getToken } from './utils/okta-auth'
+
 const OKTA_DOMAIN = process.env.OKTA_DOMAIN
-const OKTA_TOKEN = process.env.OKTA_TOKEN
 
 // Okta Slack App ID - used to link okta `managerId` to slack users
 const APP_ID = ''
@@ -15,14 +16,15 @@ async function loadFromOkta({
   transform = (r: any): Indent.Resource => r,
 }): Promise<Indent.Resource[]> {
   console.log(`Loading data from Okta: { path: ${path}, limit: ${limit} }`)
+  const { Authorization } = await getToken()
   const response = await axios({
     method: 'get',
     url: /http/.test(path)
       ? path
       : `https://${OKTA_DOMAIN}/api/v1${path}?limit=${limit}`,
     headers: {
+      Authorization,
       Accept: 'application/json',
-      Authorization: `SSWS ${OKTA_TOKEN}`,
       'Content-Type': 'application/json',
     },
   })
@@ -108,7 +110,7 @@ export const handle: APIGatewayProxyHandler = async function handle(event) {
   }
 }
 
-async function pullGroups(): Indent.Resource[] {
+async function pullGroups(): Promise<Indent.Resource[]> {
   const timestamp = new Date().toISOString()
   const oktaGroupResources = await loadFromOkta({
     path: '/groups',
@@ -128,7 +130,7 @@ async function pullGroups(): Indent.Resource[] {
   return oktaGroupResources
 }
 
-async function pullUsers(): Indent.Resource[] {
+async function pullUsers(): Promise<Indent.Resource[]> {
   const timestamp = new Date().toISOString()
   const oktaUserResources = await loadFromOkta({
     path: '/users',
