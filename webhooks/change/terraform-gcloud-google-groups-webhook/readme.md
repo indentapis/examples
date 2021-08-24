@@ -48,6 +48,6 @@ Deploy it to the cloud with [Terraform](https://terraform.io) ([Documentation](h
 
 This will take a few minutes to run the first time as Terraform sets up the resources in the Google Account.
 
-## About Example
+### About example
 
 This is a simple example showing how to use [Terraform](https://terraform.io) to deploy a function that can add or remove users from Google Groups programatically.
