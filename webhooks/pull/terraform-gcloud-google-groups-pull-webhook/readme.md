@@ -14,8 +14,8 @@
 Download the example:
 
 ```bash
-curl https://codeload.github.com/indentapis/examples/tar.gz/main | tar -xz --strip=2 examples-main/webhooks/change/terraform-gcloud-google-groups-webhook
-cd terraform-gcloud-google-groups-webhook
+curl https://codeload.github.com/indentapis/examples/tar.gz/main | tar -xz --strip=3 examples-main/webhooks/pull/terraform-gcloud-google-groups-pull-webhook
+cd terraform-gcloud-google-groups-pull-webhook
 ```
 
 Install the dependencies:
