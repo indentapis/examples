@@ -21,7 +21,8 @@ cd terraform-gcloud-google-groups-webhook
 Install the dependencies
 
 npm run deploy:init # initializes terraform GCloud provider
-```
+
+````
 
 **Note: If you are using an existing service account import the account at this step:**
 
@@ -29,7 +30,7 @@ npm run deploy:init # initializes terraform GCloud provider
 terraform import <Google resource name> serviceaccount@domain.com
 ```
 
-Add the environment variables
+Add the environment variables:
 
 ```bash
 mv terraform/config/example.tfvars terraform/config/terraform.tfvars
@@ -42,6 +43,8 @@ mv terraform/config/example.tfvars terraform/config/terraform.tfvars
 indent_webhook_secret = "wks0example-secret"
 ```
 
+Save your JSON Service Account Key to `terraform/secrets/terraform-deploy-key.json`
+
 ### Deployment
 
 Deploy it to the cloud with [Terraform](https://terraform.io) ([Documentation](https://terraform.io/docs/)) and [Google Cloud Functions](https://console.cloud.google.com/functions).
@@ -51,3 +54,4 @@ This will take a few minutes to run the first time as Terraform sets up the reso
 ### About example
 
 This is a simple example showing how to use [Terraform](https://terraform.io) to deploy a function that can add or remove users from Google Groups programatically.
+
