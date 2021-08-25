@@ -20,7 +20,7 @@
     "tf:apply": "cd terraform && terraform apply -compact-warnings -var-file ./config/terraform.tfvars",
     "tf:destroy": "cd terraform && terraform destroy -auto-approve -var-file ./config/terraform.tfvars"
   },
-  "repository": "https://github.com/indentapis/indent-js.git",
+  "repository": "https://github.com/indentapis/examples.git",
   "author": "Indent Inc",
   "license": "Apache-2.0",
   "dependencies": {

@@ -15,7 +15,7 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/indentapis/indent-js.git"
+    "url": "https://github.com/indentapis/examples.git"
   },
   "dependencies": {
     "@indent/types": "latest",
