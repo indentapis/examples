@@ -27,7 +27,6 @@ resource "google_service_account" "runtime_account" {
 
 // Deploy HTTP function
 resource "google_cloudfunctions_function" "deploy" {
-  count = length(var.pubsub_topics) == 0 ? 1 : 0
 
   name        = var.name
   description = coalesce(var.description, "${var.name} served using HTTP")
@@ -52,7 +51,6 @@ resource "google_cloudfunctions_function" "deploy" {
 
 // Allow public access to function
 resource "google_cloudfunctions_function_iam_member" "invoker" {
-  count = length(var.pubsub_topics) == 0 ? 1 : 0
 
   project        = google_cloudfunctions_function.deploy[0].project
   region         = google_cloudfunctions_function.deploy[0].region
@@ -60,31 +58,4 @@ resource "google_cloudfunctions_function_iam_member" "invoker" {
 
   role   = "roles/cloudfunctions.invoker"
   member = "allUsers"
-}
-
-// Deploy PubSub function
-resource "google_cloudfunctions_function" "deploy_pubsub" {
-  count = length(var.pubsub_topics) == 0 ? 0 : 1
-
-  name        = var.name
-  description = coalesce(var.description, "${var.name} responding to PubSub notifications")
-  region      = var.region
-  runtime     = var.runtime
-
-  available_memory_mb   = var.memory
-  source_archive_bucket = var.bucket
-  source_archive_object = google_storage_bucket_object.uploaded_source.name
-  service_account_email = local.svc_account
-
-  timeout               = var.timeout
-  entry_point           = var.entry_point
-  environment_variables = var.environment_variables
-
-  dynamic "event_trigger" {
-    for_each = [for p in var.pubsub_topics : p]
-    content {
-      event_type = "google.pubsub.topic.publish"
-      resource   = event_trigger.value
-    }
-  }
 }

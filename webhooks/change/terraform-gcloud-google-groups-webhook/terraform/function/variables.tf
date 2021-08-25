@@ -5,7 +5,7 @@ variable "name" {
 
 variable "root_dir" {
   description = "Root directory path for terraform plan"
-  type = string
+  type        = string
 }
 
 variable "source_dir" {
@@ -64,10 +64,4 @@ variable "service_account_email" {
   description = "Runtime service account function should be run with. If empty new service account will be created"
   default     = ""
   type        = string
-}
-
-variable "pubsub_topics" {
-  description = "List of PubSub topics to subscribe to. Cannot be used with HTTP."
-  default     = []
-  type        = list(string)
 }
