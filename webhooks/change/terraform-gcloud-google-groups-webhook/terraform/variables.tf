@@ -21,7 +21,7 @@ variable "region" {
 }
 
 variable "indent_webhook_secret" {
-  description = "INDENT_WEBHOOK_SECRET for the indent-gcloud-groups-webhook"
+  description = "INDENT_WEBHOOK_SECRET for the indent-google-groups-webhook"
   type        = string
   sensitive   = true
 }

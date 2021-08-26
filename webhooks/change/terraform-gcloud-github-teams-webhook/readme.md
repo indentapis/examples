@@ -17,7 +17,7 @@ This guide will show you how to deploy a webhook for Indent to manage access to 
 Download the example:
 
 ```bash
-curl https://codeload.github.com/indentapis/examples/tar.gz/main | tar -xz --strip=3 examples-main/webhooks/terraform-gcloud-github-teams-webhook
+curl https://codeload.github.com/indentapis/examples/tar.gz/main | tar -xz --strip=3 examples-main/webhooks/change/terraform-gcloud-github-teams-webhook
 cd terraform-gcloud-github-teams-webhook
 ```
 

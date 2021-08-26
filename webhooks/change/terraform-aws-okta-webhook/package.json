@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "description": "A Node.js starter for Terraform on AWS with Indent and Okta.",
   "main": "index.js",
+  "private": true,
   "scripts": {
     "build": "tsc",
     "clean:dist": "rm -rf dist",
