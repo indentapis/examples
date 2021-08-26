@@ -11,7 +11,7 @@ Using a [Webhook](./webhooks), you can...
 - [Pull users and groups from Okta](./webhooks/pull/terraform-aws-okta-pull-webhook)
 - [Create tickets via emails to your service desk](./webhooks/xyz/serverless-aws-ses-webhook)
 
-... or create your own by following the [Webhooks Guide](https://indent.dev/docs/webhooks).
+... or create your own by following the [Webhooks Guide](https://indent.com/docs/webhooks).
 
 [Learn more about Indent &rarr;](https://indent.com)
 
