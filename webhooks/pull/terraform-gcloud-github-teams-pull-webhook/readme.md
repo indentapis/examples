@@ -46,16 +46,16 @@ mv terraform/config/example.tfvars terraform/config/terraform.tfvars
 
 ```hcl
 # Indent Webhook Secret is used to verify messages from Indent
-indent_webhook_secret = "wks0asdfghjkliqwertyuiop"
-
-# GitHub Username
-github_username = "myUsername"
+indent_webhook_secret = ""
 
 # GitHub Personal Access Token
-github_token = "ghp_asdfghjklqwertyuiop"
+github_token = ""
 
-# Name of the project to deploy
-project = "my-project-123"
+# GitHub Organization - The organization you want to get teams from
+github_org = ""
+
+# Project - Google Cloud Project the webhook will be deployed to
+project = ""
 ```
 
 Once you've set up your [Google Cloud credentials](https://indent.com/docs/webhooks/deploy#deploying-on-google-cloud), either with `gcloud auth login` or using a service account key, build and deploy the function:
