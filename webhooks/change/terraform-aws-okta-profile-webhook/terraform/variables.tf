@@ -35,3 +35,8 @@ variable "okta_private_key" {
   sensitive = true
   default   = ""
 }
+
+variable "okta_profile_attribute" {
+  type    = string
+  default = "okta.v1.ProfileAttribute"
+}

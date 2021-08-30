@@ -16,3 +16,5 @@ okta_client_id = ""
 okta_private_key = <<EOT
 
 EOT
+
+okta_profile_attribute = "okta.v1.ProfileAttribute"
