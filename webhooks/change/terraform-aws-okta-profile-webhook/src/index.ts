@@ -1,9 +1,7 @@
 import { APIGatewayProxyHandler } from 'aws-lambda'
 import { verify } from '@indent/webhook'
 import { Event } from '@indent/types'
-import axios from 'axios'
 
-import { getToken } from './utils/okta-auth'
 import * as oktaProfiles from './capabilities/okta-profiles'
 
 export const handle: APIGatewayProxyHandler = async function handle(event) {
@@ -40,9 +38,11 @@ export const handle: APIGatewayProxyHandler = async function handle(event) {
 
       switch (event) {
         case 'access/grant':
-          return grantPermission(auditEvent)
+          return oktaProfiles.grantPermission(auditEvent)
         case 'access/revoke':
-          return revokePermission(auditEvent)
+          return oktaProfiles.revokePermission(auditEvent)
+        case 'access/approve':
+          return Promise.resolve()
         default:
           console.log('received unknown event')
           console.log(auditEvent)
@@ -56,3 +56,27 @@ export const handle: APIGatewayProxyHandler = async function handle(event) {
     body: '{}',
   }
 }
+
+// async function grantPermission(auditEvent: Event) {
+//   if (oktaProfiles.matchEvent(auditEvent)) {
+//     return await oktaProfiles.grantPermission(auditEvent)
+//   }
+
+//   return {
+//     code: 404,
+//     message:
+//       'This resource is not supported by the capabilities of this webhook.',
+//   }
+// }
+
+// async function revokePermission(auditEvent: Event) {
+//   if (oktaProfiles.matchEvent(auditEvent)) {
+//     return await oktaProfiles.revokePermission(auditEvent)
+//   }
+
+//   return {
+//     code: 404,
+//     message:
+//       'This resource is not supported by the capabilities of this webhook.',
+//   }
+// }
