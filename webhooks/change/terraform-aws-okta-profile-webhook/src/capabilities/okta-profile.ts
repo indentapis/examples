@@ -7,7 +7,7 @@ const OKTA_PROFILE_RESOURCE_KIND =
 const OKTA_PROFILE_ATTRIBUTE =
   process.env.OKTA_PROFILE_ATTRIBUTE || 'okta/userProfileAttribute/id'
 const OKTA_PROFILE_ATTRIBUTE_VALUE =
-  process.env.OKTA_PROFILE_ATTRIBUTE || 'okta/userProfileAttribute/value'
+  process.env.OKTA_PROFILE_ATTRIBUTE_VALUE || 'okta/userProfileAttribute/value'
 const OKTA_DOMAIN = process.env.OKTA_DOMAIN
 
 export function matchEvent(event: Event) {
@@ -21,14 +21,14 @@ export function matchEvent(event: Event) {
 export async function grantPermission(auditEvent: Event) {
   try {
     const { event, resources } = auditEvent
-    const user = getResourceByKind(resources, 'user')
+    const oktaUser = getResourceByKind(resources, 'user')
     const attributeResource = getResourceByKind(
       resources,
       process.env.OKTA_PROFILE_RESOURCE_KIND
     )
 
     return await updateUserAttribute({
-      user,
+      oktaUser,
       event,
       attributeResource,
     })
@@ -45,14 +45,14 @@ export async function grantPermission(auditEvent: Event) {
 export async function revokePermission(auditEvent: Event) {
   try {
     const { event, resources } = auditEvent
-    const user = getResourceByKind(resources, 'user')
+    const oktaUser = getResourceByKind(resources, 'user')
     const attributeResource = getResourceByKind(
       resources,
       process.env.OKTA_PROFILE_RESOURCE_KIND
     )
 
     return await updateUserAttribute({
-      user,
+      oktaUser,
       event,
       attributeResource,
     })
@@ -67,16 +67,16 @@ export async function revokePermission(auditEvent: Event) {
 }
 
 async function updateUserAttribute({
-  user,
+  oktaUser,
   attributeResource,
   event,
 }: {
-  user: Resource
+  oktaUser: Resource
   attributeResource: Resource
   event: string
 }) {
-  const oktaUserId = user.labels['oktaId'] || user.id
-  const userProfile = await getOktaUser({ id: oktaUserId })
+  const oktaUserId = oktaUser.labels['oktaId'] || oktaUser.id
+  const user = await getOktaUser({ id: oktaUserId })
 
   const attributeKey = attributeResource?.labels?.[OKTA_PROFILE_ATTRIBUTE]
   const attributeValue =
@@ -84,8 +84,8 @@ async function updateUserAttribute({
     attributeResource.id
   const updatedUser = { profile: {} }
 
-  if (userProfile.profile) {
-    let currAttrValue = userProfile.profile[attributeKey]
+  if (user.profile) {
+    let currAttrValue = user.profile[attributeKey]
     if (currAttrValue) {
       if (event === 'access/grant') {
         if (currAttrValue.includes(attributeValue)) {
@@ -110,7 +110,6 @@ async function updateUserAttribute({
   return await updateOktaUser({ id: oktaUserId, user: updatedUser })
 }
 
-// GET from OKTA api based on user info
 async function getOktaUser({ id }: { id: string }) {
   const { Authorization } = await getToken()
   return await axios({
@@ -124,10 +123,9 @@ async function getOktaUser({ id }: { id: string }) {
   }).then((r) => r.data)
 }
 
-// POST to OKTA api based on user info - must be a POST and not a PUT or it will overwrite
 async function updateOktaUser({ id, user }: { id: string; user: any }) {
   const { Authorization } = await getToken()
-  const { profile } = user.profile
+  const { profile } = user
   return await axios({
     method: 'POST',
     url: `https://${OKTA_DOMAIN}/api/v1/users/${id}`,
@@ -142,99 +140,8 @@ async function updateOktaUser({ id, user }: { id: string; user: any }) {
   }).then((r) => r.data)
 }
 
-// get values from resources
 const getResourceByKind = (resources: Resource[], kind: string): Resource => {
   return resources.filter(
     (r) => r.kind && r.kind.toLowerCase().includes(kind.toLowerCase())
   )[0]
 }
-
-// No longer necessary:
-
-// update Okta user profile
-// async function getAndUpdateOktaProfileAttribute({
-//   oktaUserId,
-//   profileAttribute,
-//   profileValue,
-// }: {
-//   oktaUserId: string
-//   profileAttribute: string
-//   profileValue: string
-// }) {
-//   // Get user profile from Okta API
-//   const user = await getOktaUser({ oktaUserId })
-//   console.log(`Okta User Response: ${JSON.stringify(profile)}}`)
-//   // get user profile info
-//   let { profile } = user
-//   console.log(`Okta Profile ${JSON.stringify(profile)}`)
-//   let customProfileAttribute = profile[profileAttribute]
-//   // check if value exists in profile
-//   if (!customProfileAttribute) {
-//     console.error('@indent/webhook.getAndUpdateOktaProfileAttribute(): failed')
-//     console.error(
-//       JSON.stringify({
-//         user,
-//         customProfileAttribute,
-//       })
-//     )
-//     throw new Error('no profileAttribute found')
-//   }
-
-//   if (customProfileAttribute.includes(profileValue)) {
-//     console.warn(
-//       'profileAttribute already includes new value, no changes will be made'
-//     )
-//     return await updateOktaUser({ oktaUserId, profile })
-//   }
-//   // check our value is an array
-//   if (Array.isArray(customProfileAttribute)) {
-//     let newProfileAttribute = customProfileAttribute.push(profileValue)
-//     profile[profileAttribute] = newProfileAttribute
-//   } else {
-//     profile[profileAttribute] = [profileValue]
-//   }
-
-//   return await updateOktaUser({ oktaUserId, profile })
-// }
-
-// async function getAndRemoveOktaProfileAttribute({
-//   oktaUserId,
-//   profileAttribute,
-//   profileValue,
-// }: {
-//   oktaUserId: string
-//   profileAttribute: string
-//   profileValue: string
-// }) {
-//   // Get user profile from Okta API
-//   const user = await getOktaUser({ oktaUserId })
-//   // get user profile info
-//   let { profile } = user
-//   let customProfileAttribute = profile[profileAttribute]
-//   // check if value exists in profile
-//   if (!customProfileAttribute) {
-//     console.error('@indent/webhook.getAndRemoveOktaProfileAttribute(): failed')
-//     console.error(
-//       JSON.stringify({
-//         user,
-//         customProfileAttribute,
-//       })
-//     )
-//     throw new Error('no profileAttribute found')
-//   }
-
-//   if (!customProfileAttribute.includes(profileValue)) {
-//     console.warn(
-//       'profileAttribute does not include value, no changes will be made'
-//     )
-//     return await updateOktaUser({ oktaUserId, profile })
-//   }
-//   // remove value from our array
-//   let newProfileAttribute = customProfileAttribute.filter(
-//     (c) => !c.includes(profileValue)
-//   )
-
-//   profile[profileAttribute] = newProfileAttribute
-
-//   return await updateOktaUser({ oktaUserId, profile })
-// }
