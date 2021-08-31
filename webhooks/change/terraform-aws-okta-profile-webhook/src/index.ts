@@ -3,6 +3,7 @@ import { verify } from '@indent/webhook'
 import { Event } from '@indent/types'
 
 import * as oktaProfile from './capabilities/okta-profile'
+// import * as oktaGroups from './capabilities/okta-groups'
 
 export const handle: APIGatewayProxyHandler = async function handle(event) {
   try {
@@ -51,7 +52,7 @@ export const handle: APIGatewayProxyHandler = async function handle(event) {
     })
   )
 
-  const errors = results.filter(r => r.statusCode && r.statusCode > 200)
+  const errors = results.filter((r) => r?.statusCode && r?.statusCode > 200)
   if (errors.length > 0) {
     console.error('@indent/webhook.handle: non-200 status code')
     console.error(errors[0])
@@ -65,6 +66,10 @@ export const handle: APIGatewayProxyHandler = async function handle(event) {
 }
 
 async function grantPermission(auditEvent: Event) {
+  // if (oktaGroups.matchEvent(auditEvent)) {
+  //   return await oktaGroups.grantPermission(auditEvent)
+  // }
+
   if (oktaProfile.matchEvent(auditEvent)) {
     return await oktaProfile.grantPermission(auditEvent)
   }
@@ -77,6 +82,10 @@ async function grantPermission(auditEvent: Event) {
 }
 
 async function revokePermission(auditEvent: Event) {
+  // if (oktaGroups.matchEvent(auditEvent)) {
+  //   return await oktaGroups.revokePermission(auditEvent)
+  // }
+
   if (oktaProfile.matchEvent(auditEvent)) {
     return await oktaProfile.revokePermission(auditEvent)
   }

@@ -38,5 +38,15 @@ variable "okta_private_key" {
 
 variable "okta_profile_attribute" {
   type    = string
-  default = "okta.v1.ProfileAttribute"
+  default = "okta/userProfileAttribute/id"
+}
+
+variable "okta_profile_attribute_value" {
+  type    = string
+  default = "okta/userProfileAttribute/value"
+}
+
+variable "okta_profile_resource_kind" {
+  type    = string
+  default = "ProfileAttribute"
 }

@@ -17,4 +17,8 @@ okta_private_key = <<EOT
 
 EOT
 
-okta_profile_attribute = "okta.v1.ProfileAttribute"
+# Okta Profile custom attributes, these should also exist in your Indent resources
+
+okta_profile_resource_kind   = "ProfileAttribute"
+okta_profile_attribute       = "okta/userProfileAttribute/id"
+okta_profile_attribute_value = "okta/userProfileAttribute/value"

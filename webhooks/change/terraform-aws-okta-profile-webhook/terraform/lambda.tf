@@ -25,12 +25,14 @@ resource "aws_lambda_function" "lambda" {
 
   environment {
     variables = {
-      "INDENT_WEBHOOK_SECRET"  = var.indent_webhook_secret
-      "OKTA_DOMAIN"            = var.okta_domain
-      "OKTA_TOKEN"             = var.okta_token
-      "OKTA_CLIENT_ID"         = var.okta_client_id
-      "OKTA_PRIVATE_KEY"       = var.okta_private_key
-      "OKTA_PROFILE_ATTRIBUTE" = var.okta_profile_attribute
+      "INDENT_WEBHOOK_SECRET"        = var.indent_webhook_secret
+      "OKTA_DOMAIN"                  = var.okta_domain
+      "OKTA_TOKEN"                   = var.okta_token
+      "OKTA_CLIENT_ID"               = var.okta_client_id
+      "OKTA_PRIVATE_KEY"             = var.okta_private_key
+      "OKTA_PROFILE_RESOURCE_KIND"   = var.okta_profile_resource_kind
+      "OKTA_PROFILE_ATTRIBUTE"       = var.okta_profile_attribute
+      "OKTA_PROFILE_ATTRIBUTE_VALUE" = var.okta_profile_attribute_value
     }
   }
 }
