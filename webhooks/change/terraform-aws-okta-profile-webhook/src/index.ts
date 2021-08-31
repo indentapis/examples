@@ -38,9 +38,9 @@ export const handle: APIGatewayProxyHandler = async function handle(event) {
 
       switch (event) {
         case 'access/grant':
-          return oktaProfiles.grantPermission(auditEvent)
+          return grantPermission(auditEvent)
         case 'access/revoke':
-          return oktaProfiles.revokePermission(auditEvent)
+          return revokePermission(auditEvent)
         case 'access/approve':
           return Promise.resolve()
         default:
@@ -57,26 +57,26 @@ export const handle: APIGatewayProxyHandler = async function handle(event) {
   }
 }
 
-// async function grantPermission(auditEvent: Event) {
-//   if (oktaProfiles.matchEvent(auditEvent)) {
-//     return await oktaProfiles.grantPermission(auditEvent)
-//   }
+async function grantPermission(auditEvent: Event) {
+  if (oktaProfiles.matchEvent(auditEvent)) {
+    return await oktaProfiles.grantPermission(auditEvent)
+  }
 
-//   return {
-//     code: 404,
-//     message:
-//       'This resource is not supported by the capabilities of this webhook.',
-//   }
-// }
+  return {
+    code: 404,
+    message:
+      'This resource is not supported by the capabilities of this webhook.',
+  }
+}
 
-// async function revokePermission(auditEvent: Event) {
-//   if (oktaProfiles.matchEvent(auditEvent)) {
-//     return await oktaProfiles.revokePermission(auditEvent)
-//   }
+async function revokePermission(auditEvent: Event) {
+  if (oktaProfiles.matchEvent(auditEvent)) {
+    return await oktaProfiles.revokePermission(auditEvent)
+  }
 
-//   return {
-//     code: 404,
-//     message:
-//       'This resource is not supported by the capabilities of this webhook.',
-//   }
-// }
+  return {
+    code: 404,
+    message:
+      'This resource is not supported by the capabilities of this webhook.',
+  }
+}
