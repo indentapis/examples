@@ -2,7 +2,7 @@ import { APIGatewayProxyHandler } from 'aws-lambda'
 import { verify } from '@indent/webhook'
 import { Event } from '@indent/types'
 
-import * as oktaProfiles from './capabilities/okta-profiles'
+import * as oktaProfile from './capabilities/okta-profile'
 
 export const handle: APIGatewayProxyHandler = async function handle(event) {
   try {
@@ -26,7 +26,7 @@ export const handle: APIGatewayProxyHandler = async function handle(event) {
   console.log(`@indent/webhook: received ${events.length} events`)
   console.log(JSON.stringify(events, null, 2))
 
-  await Promise.all(
+  const results = await Promise.all(
     events.map((auditEvent: Event) => {
       let { actor, event, resources } = auditEvent
 
@@ -51,6 +51,13 @@ export const handle: APIGatewayProxyHandler = async function handle(event) {
     })
   )
 
+  const errors = results.filter(r => r.statusCode && r.statusCode > 200)
+  if (errors.length > 0) {
+    console.error('@indent/webhook.handle: non-200 status code')
+    console.error(errors[0])
+    return errors[0]
+  }
+
   return {
     statusCode: 200,
     body: '{}',
@@ -58,8 +65,8 @@ export const handle: APIGatewayProxyHandler = async function handle(event) {
 }
 
 async function grantPermission(auditEvent: Event) {
-  if (oktaProfiles.matchEvent(auditEvent)) {
-    return await oktaProfiles.grantPermission(auditEvent)
+  if (oktaProfile.matchEvent(auditEvent)) {
+    return await oktaProfile.grantPermission(auditEvent)
   }
 
   return {
@@ -70,8 +77,8 @@ async function grantPermission(auditEvent: Event) {
 }
 
 async function revokePermission(auditEvent: Event) {
-  if (oktaProfiles.matchEvent(auditEvent)) {
-    return await oktaProfiles.revokePermission(auditEvent)
+  if (oktaProfile.matchEvent(auditEvent)) {
+    return await oktaProfile.revokePermission(auditEvent)
   }
 
   return {
