@@ -4,7 +4,10 @@ import axios from 'axios'
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN
 
 export function matchEvent(event: Event) {
-  return event.resources.filter((r) => r.kind?.includes('Team')).length > 0
+  return (
+    event.resources.filter((r) => r.kind?.toLowerCase().includes('team'))
+      .length > 0
+  )
 }
 
 export async function grantPermission(auditEvent: Event) {

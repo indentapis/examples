@@ -25,12 +25,6 @@ variable "indent_webhook_secret" {
   sensitive   = true
 }
 
-variable "github_username" {
-  description = "GITHUB_USERNAME from the indent-gcloud-github-teams webhook"
-  type        = string
-  sensitive   = true
-}
-
 variable "github_token" {
   description = "GITHUB_TOKEN for the indent-gcloud-github-teams webhook"
   type        = string
