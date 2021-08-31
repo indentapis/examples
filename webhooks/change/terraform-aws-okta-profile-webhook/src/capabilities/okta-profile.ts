@@ -98,12 +98,14 @@ async function updateUserAttribute({
     } else {
       currAttrValue = [attributeValue]
     }
-    console.log(`Current Attribute Value: ${currAttrValue.toString()}`)
+    console.log(`Current Attribute Value: ${currAttrValue}`)
     updatedUser.profile[attributeKey] = currAttrValue
   } else {
     console.warn(`No user profile found on Okta User response`)
   }
-
+  console.log(
+    `attributeKey: ${attributeKey}; attributeValue: ${attributeValue}`
+  )
   console.log(`Updated user: ${JSON.stringify(updatedUser)}`)
   return await updateOktaUser({ id: oktaUserId, user: updatedUser })
 }
