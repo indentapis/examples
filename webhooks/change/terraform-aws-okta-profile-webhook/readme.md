@@ -5,16 +5,32 @@
 ### Requirements
 
 - [Okta Account](https://okta.com)
-  - One of these authentication methods:
-    - An [Okta API Token](https://help.okta.com/en/prod/Content/Topics/Security/API.htm?cshid=Security_API#)
-    - [Okta OAuth 2.0 Service App](https://developer.okta.com/docs/guides/implement-oauth-for-okta-serviceapp/create-serviceapp-grantscopes/)
-      - Service App requires the `okta.users.manage` scope for all groups you want to manage with Indent.
-      - Use the RSA Private Key you used when setting up your Service App.
-- [AWS CLI or ~/.aws/credentials](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html)
+  - [Okta API Token](https://help.okta.com/en/prod/Content/Topics/Security/API.htm?cshid=Security_API#)
+  - [Okta OAuth 2.0 Service App](https://developer.okta.com/docs/guides/implement-oauth-for-okta-serviceapp/create-serviceapp-grantscopes/) with the following scopes:
+    - `okta.users.manage`
+    - Use the RSA Private Key you used when setting up your Service App.
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html)
 - [Terraform](https://terraform.io)
-  - Optional: Review [Get Started with AWS](https://learn.hashicorp.com/collections/terraform/aws-get-started) documentation from HashiCorp.
+  - [Terraform's guide to getting started with AWS](https://learn.hashicorp.com/collections/terraform/aws-get-started)
 
-### Download
+### How to use
+
+#### Import profile attributes manually
+
+1. Sign in to your [Indent Space](https://indent.com/spaces).
+1. Go to your [Resources](https://indent.com/spaces?next=/manage/spaces/[space]/resources/new).
+1. Click "New" and create a new Resource.
+   - Under resource kind, type in the kind you want to use, e.g. `example.v1.Customer`.
+   - Enter the name of your Profile Attribute
+   - Enter the ID of your Profile Attribute
+   - Add three labels to your resource:
+     - `key` &mdash; name of the custom Okta User Profile Attribute, e.g. `okta/userProfileAttribute/key`
+     - `value` &mdash; value of the custom Okta User Profile Attribute, e.g. `okta/userProfileAttribute/value`
+1. Note down these values for use with the deployment steps.
+
+If you have a lot of custom profile attributes, you can [create a list of resources](https://indent.com/manage/spaces?next=/manage/spaces/[space]/resources/bulk?action=import) and upload them in bulk.
+
+#### Deploy the change webhook
 
 Download the example:
 
@@ -44,17 +60,23 @@ mv terraform/config/example.tfvars terraform/config/terraform.tfvars
 
 ```hcl
 # Indent Webhook Secret is used to verify messages from Indent
-indent_webhook_secret = "wks0example-secret"
-# Okta Tenant is used to route requests to your Okta environment
-okta_domain = "example.okta.com"
-# Okta Token is used to authorize requests to your Okta environment
-okta_token = "eXaMpLeOkTaToKeN"
+indent_webhook_secret = ""
+# Okta Domain - This is your Okta URL
+okta_domain = ""
+# Okta Token - Your Okta administration token
+okta_token = ""
 # Okta Client ID - The client ID for your Okta Service App
 okta_client_id = ""
-# Okta Private Key = This is an RSA private key used to generate a signed Bearer token for OAuth 2.0 access
+# Okta Private Key - This is an RSA private key used to generate a signed Bearer token for OAuth 2.0 access
 okta_private_key = <<EOT
-
 EOT
+
+# Okta Profile Resource Kind - the kind of Indent Resource that uses a custom Okta User Profile Attribute
+okta_profile_resource_kind = "ProfileAttribute"
+# Okta Profile Custom Attribute - the label for the name of your custom profile attribute
+okta_profile_attribute = "okta/userProfileAttribute/key"
+# Okta Profile Custom Attribute Value - the label for the value of your custom profile attribute
+okta_profile_attribute_value = "okta/userProfileAttribute/value"
 ```
 
 ### Deployment
@@ -63,6 +85,6 @@ Deploy it to the cloud with [Terraform](https://terraform.io) ([Documentation](h
 
 This will take a few minutes to run the first time as Terraform sets up the resources in the AWS Account.
 
-## About Example
+### About Example
 
-This is a simple example showing how to use [Terraform](https://terraform.io) to deploy a function that can add or remove users from Okta Groups programatically.
+This is a simple example showing how to use [AWS Lambda](https://console.aws.amazon.com/lambda/home?=/functions) to deploy an Indent webhook for managing access to custom Okta Profile Attributes.
