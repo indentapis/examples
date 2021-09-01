@@ -23,7 +23,7 @@
    - Under resource kind, type in the kind you want to use, e.g. `example.v1.Customer`.
    - Enter the name of your Profile Attribute
    - Enter the ID of your Profile Attribute
-   - Add three labels to your resource:
+   - Add these labels to your resource:
      - `key` &mdash; name of the custom Okta User Profile Attribute, e.g. `okta/userProfileAttribute/key`
      - `value` &mdash; value of the custom Okta User Profile Attribute, e.g. `okta/userProfileAttribute/value`
 1. Note down these values for use with the deployment steps.
