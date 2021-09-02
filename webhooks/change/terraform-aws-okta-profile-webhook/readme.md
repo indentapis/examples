@@ -24,8 +24,8 @@
    - Enter the name of your Profile Attribute
    - Enter the ID of your Profile Attribute
    - Add these labels to your resource:
-     - `key` &mdash; name of the custom Okta User Profile Attribute, e.g. `okta/userProfileAttribute/key`
-     - `value` &mdash; value of the custom Okta User Profile Attribute, e.g. `okta/userProfileAttribute/value`
+     - `okta/userProfileAttribute/key` &mdash; name of the custom Okta User Profile Attribute, e.g. `assigned_customers`
+     - `okta/userProfileAttribute/value` &mdash; value of the custom Okta User Profile Attribute, e.g. `cust_123`
 1. Note down these values for use with the deployment steps.
 
 If you have a lot of custom profile attributes, you can [create a list of resources](https://indent.com/manage/spaces?next=/manage/spaces/[space]/resources/bulk?action=import) and upload them in bulk.
@@ -72,7 +72,7 @@ okta_private_key = <<EOT
 EOT
 
 # Okta Profile Resource Kind - the kind of Indent Resource that uses a custom Okta User Profile Attribute
-okta_profile_resource_kind = "ProfileAttribute"
+okta_profile_resource_kind = "example.v1.Customer"
 # Okta Profile Custom Attribute - the label for the name of your custom profile attribute
 okta_profile_attribute = "okta/userProfileAttribute/key"
 # Okta Profile Custom Attribute Value - the label for the value of your custom profile attribute

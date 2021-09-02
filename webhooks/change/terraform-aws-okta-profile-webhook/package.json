@@ -1,7 +1,7 @@
 {
   "name": "@indent/terraform-aws-okta-profile-webhook",
   "version": "0.0.0",
-  "description": "A Node.js starter for Terraform on AWS with Indent and Okta Profiles.",
+  "description": "A Node.js starter for Terraform on AWS with Indent and Okta Profile Attributes.",
   "main": "index.js",
   "private": true,
   "scripts": {
