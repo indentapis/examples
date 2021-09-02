@@ -20,7 +20,7 @@
 1. Sign in to your [Indent Space](https://indent.com/spaces).
 1. Go to your [Resources](https://indent.com/spaces?next=/manage/spaces/[space]/resources/new).
 1. Click "New" and create a new Resource.
-   - Under resource kind, type in the kind you want to use, e.g. `example.v1.Customer`.
+   - Under resource kind, type in the kind you want to use, e.g. `example.v1.Customer`
    - Enter the name of your Profile Attribute
    - Enter the ID of your Profile Attribute
    - Add these labels to your resource:
