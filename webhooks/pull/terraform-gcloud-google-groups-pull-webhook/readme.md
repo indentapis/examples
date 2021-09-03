@@ -27,7 +27,7 @@ npm run deploy:init # initializes terraform GCloud provider
 **Note: If you are using an existing service account import the account at this step:**
 
 ```bash
-terraform import <Google resource name> my-service-accountt@my-project.iam.gserviceaccount.com
+terraform import <Google resource name> my-service-account@my-project.iam.gserviceaccount.com
 ```
 
 Add the environment variables:

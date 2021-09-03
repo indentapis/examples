@@ -21,5 +21,4 @@ webhooks/**/local.settings.json
 webhooks/**/.terraform.lock.hcl
 webhooks/**/terraform/config/*.tfvars
 !webhooks/**/terraform/config/example.tfvars
-webhooks/**/secrets
 webhooks/**/*.pem
