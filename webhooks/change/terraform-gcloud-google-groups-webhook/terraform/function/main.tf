@@ -18,7 +18,7 @@ resource "google_storage_bucket_object" "uploaded_source" {
 
 // Create service account for function (if one isn't provided)
 resource "google_service_account" "runtime_account" {
-  count = var.service_account_email == "" ? 1 : 0
+  count = length(var.service_account_email) == 0 ? 1 : 0
 
   account_id   = var.name
   display_name = "Function runtime account for ${var.name}"
@@ -52,9 +52,9 @@ resource "google_cloudfunctions_function" "deploy" {
 // Allow public access to function
 resource "google_cloudfunctions_function_iam_member" "invoker" {
 
-  project        = google_cloudfunctions_function.deploy[0].project
-  region         = google_cloudfunctions_function.deploy[0].region
-  cloud_function = google_cloudfunctions_function.deploy[0].name
+  project        = google_cloudfunctions_function.deploy.project
+  region         = google_cloudfunctions_function.deploy.region
+  cloud_function = google_cloudfunctions_function.deploy.name
 
   role   = "roles/cloudfunctions.invoker"
   member = "allUsers"
