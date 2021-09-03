@@ -9,7 +9,7 @@ const readFile = promisify(fs.readFile).bind(fs)
 export function matchEvent(event: Event) {
   return (
     event.resources.filter((r) =>
-      r.kind?.toLowerCase().includes('google.v1.Group')
+      r.kind?.toLowerCase().includes('google.v1.group')
     ).length > 0
   )
 }
@@ -17,7 +17,7 @@ export function matchEvent(event: Event) {
 export async function grantPermission(auditEvent: Event) {
   const { resources } = auditEvent
   const user = getEmailFromResources(resources, 'user')
-  const group = getIdFromResources(resources, 'google.v1.Group')
+  const group = getIdFromResources(resources, 'google.v1.group')
 
   return await addUserToGroup({ user, group })
 }
