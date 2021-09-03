@@ -15,7 +15,7 @@
     "deploy:all": "npm install && npm run build && npm run bundle && npm run tf:apply -- -auto-approve",
     "destroy:all": "npm run tf:destroy -auto-approve",
     "tf:plan": "cd terraform && terraform plan -var-file ./config/terraform.tfvars",
-    "tf:apply": "cd terraform && terraform apply -compact-warnings -var-file ./config/terraform.tfvars",
+    "tf:apply": "cd terraform && terraform apply -compact-warnings -var-file ./config/terraform.tfvars -auto-approve",
     "tf:destroy": "cd terraform && terraform destroy -auto-approve -var-file ./config/terraform.tfvars"
   },
   "repository": "https://github.com/indentapis/examples.git",
