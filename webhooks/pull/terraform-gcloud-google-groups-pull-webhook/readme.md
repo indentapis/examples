@@ -27,7 +27,7 @@ npm run deploy:init # initializes terraform GCloud provider
 **Note: If you are using an existing service account import the account at this step:**
 
 ```bash
-terraform import <Google resource name> serviceaccount@domain.com
+terraform import <Google resource name> my-service-accountt@my-project.iam.gserviceaccount.com
 ```
 
 Add the environment variables:
@@ -45,8 +45,11 @@ indent_webhook_secret = "wks0asdfghjkliqwertyuiop"
 # Google Customer ID
 google_customer_id = "C0qwertyui"
 
-# Project name
+# Project name - The name of your Google Cloud Project
 project = "my-project"
+
+# Service Account - The GCloud service account with access to execute this Function and manage your Google Groups
+service_account_email = "my-service-account@my-project.iam.gserviceaccount.com"
 ```
 
 Save your JSON Service Account Key to `terraform/secrets/terraform-deploy-key.json`
@@ -59,5 +62,4 @@ This will take a few minutes to run the first time as Terraform sets up the reso
 
 ### About example
 
-This is a simple example showing how to use [Terraform](https://terraform.io) to deploy a function that can pull Google Groups programatically.
-
+[Google Cloud Functions](https://cloud.google.com/) to deploy an Indent Webhook to pull Google Groups programatically.
