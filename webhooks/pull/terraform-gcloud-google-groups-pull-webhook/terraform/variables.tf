@@ -30,3 +30,9 @@ variable "google_customer_id" {
   type        = string
   sensitive   = true
 }
+
+variable "service_account_email" {
+  description = "Runtime service account function should be run with. If empty new service account will be created"
+  default     = ""
+  type        = string
+}

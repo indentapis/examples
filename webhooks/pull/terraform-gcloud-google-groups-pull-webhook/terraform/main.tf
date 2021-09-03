@@ -9,12 +9,13 @@ resource "google_storage_bucket" "function_bucket" {
 }
 
 module "google-groups" {
-  source     = "./function"
-  root_dir   = "${path.module}/.."
-  name       = "indent-google-groups-pull-webhook-${random_string.suffix.result}"
-  region     = var.region
-  bucket     = google_storage_bucket.function_bucket.name
-  source_dir = "/dist"
+  source                = "./function"
+  root_dir              = "${path.module}/.."
+  name                  = "indent-google-groups-pull"
+  region                = var.region
+  bucket                = google_storage_bucket.function_bucket.name
+  source_dir            = "/dist"
+  service_account_email = var.service_account_email
 
   environment_variables = {
     INDENT_WEBHOOK_SECRET = var.indent_webhook_secret
