@@ -9,7 +9,7 @@ const readFile = promisify(fs.readFile).bind(fs)
 export function matchEvent(event: Event) {
   return (
     event.resources.filter((r) =>
-      r.kind?.toLowerCase().includes('google.v1.group')
+      r.kind?.toLowerCase().includes('google.v1.Group')
     ).length > 0
   )
 }
@@ -17,7 +17,7 @@ export function matchEvent(event: Event) {
 export async function grantPermission(auditEvent: Event) {
   const { resources } = auditEvent
   const user = getEmailFromResources(resources, 'user')
-  const group = getIdFromResources(resources, 'google.v1.group')
+  const group = getIdFromResources(resources, 'google.v1.Group')
 
   return await addUserToGroup({ user, group })
 }
@@ -84,9 +84,6 @@ export async function getAuth() {
     if (!token) {
       throw new Error('getAuth: getAccessToken: token not found')
     }
-
-    let tokenInfo = await auth.getTokenInfo(token)
-    console.log(JSON.stringify({ tokenInfo }))
 
     return auth
   }
