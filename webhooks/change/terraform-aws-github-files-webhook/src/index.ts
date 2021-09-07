@@ -161,6 +161,7 @@ async function grantPermission(
     })
   } catch (err) {
     console.error(err)
+    throw new Error(`indent.grantPermission(): failed ${err}`)
   }
 }
 
@@ -192,6 +193,7 @@ async function revokePermission(auditEvent: Indent.Event) {
     })
   } catch (err) {
     console.error(err)
+    throw new Error(`indent.grantPermission(): failed ${err}`)
   }
 }
 
