@@ -4,7 +4,7 @@ import { Event, Resource } from '@indent/types'
 
 const OKTA_DOMAIN = process.env.OKTA_DOMAIN
 
-export async function matchEvent(event: Event) {
+export function matchEvent(event: Event) {
   return (
     event.resources.filter((r) =>
       r.kind?.toLowerCase().includes('okta.v1.group')
