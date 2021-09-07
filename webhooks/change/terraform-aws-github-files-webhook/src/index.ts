@@ -65,46 +65,50 @@ const octokit = new Octokit({
 })
 
 async function getFile({ owner, repo, path }) {
-  const { data } = await octokit.repos.getContent({
-    owner,
-    repo,
-    path,
-  })
+  return await octokit.repos
+    .getContent({
+      owner,
+      repo,
+      path,
+    })
+    .then((r) => {
+      if (!Array.isArray(r.data)) {
+        const file = r.data as GetFileContentResponseType
 
-  if (!Array.isArray(data)) {
-    const file = data as GetFileContentResponseType
-
-    if (typeof file.content !== undefined) {
-      return file
-    }
-  }
+        if (typeof file.content !== undefined) {
+          return file
+        }
+      }
+    })
 }
 
 async function updateFile({ owner, repo, path, sha, newContent }) {
-  const { data } = await octokit.repos.createOrUpdateFileContents({
-    owner,
-    repo,
-    path,
-    sha,
-    content: newContent,
-    message: 'chore(acl): update roles',
-    committer: {
-      name: 'Indent Bot',
-      email: 'github-bot@noreply.indentapis.com',
-    },
-    author: {
-      name: 'Indent Bot',
-      email: 'github-bot@noreply.indentapis.com',
-    },
-  })
+  return await octokit.repos
+    .createOrUpdateFileContents({
+      owner,
+      repo,
+      path,
+      sha,
+      content: newContent,
+      message: 'chore(acl): update roles',
+      committer: {
+        name: 'Indent Bot',
+        email: 'github-bot@noreply.indentapis.com',
+      },
+      author: {
+        name: 'Indent Bot',
+        email: 'github-bot@noreply.indentapis.com',
+      },
+    })
+    .then((r) => {
+      if (!Array.isArray(r.data)) {
+        const response = r.data as CreateOrUpdateFileContentsType
 
-  if (!Array.isArray(data)) {
-    const response = data as CreateOrUpdateFileContentsType
-
-    if (typeof response.content.sha !== undefined) {
-      return response
-    }
-  }
+        if (typeof response.content.sha !== undefined) {
+          return response
+        }
+      }
+    })
 }
 
 const github = { getFile, updateFile }
@@ -242,7 +246,6 @@ async function getAndUpdateACL(
 ) {
   const [owner, repo] = githubRepo.split('/')
   const file = await github.getFile({ owner, repo, path })
-  // fix for build error
   const fileContent = Buffer.from(file.content, 'base64').toString('ascii')
   const sourceACL = getACLBlock(fileContent, resolvedLabel)
   const updatedACL = updater(sourceACL)
