@@ -2,6 +2,7 @@ import { APIGatewayProxyHandler } from 'aws-lambda'
 import { verify } from '@indent/webhook'
 import * as Indent from '@indent/types'
 import { Octokit } from '@octokit/rest'
+import { components } from '@octokit/openapi-types'
 import _ from 'lodash'
 
 export const handle: APIGatewayProxyHandler = async function handle(event) {
@@ -64,34 +65,46 @@ const octokit = new Octokit({
 })
 
 async function getFile({ owner, repo, path }) {
-  return await octokit.repos
-    .getContent({
-      owner,
-      repo,
-      path,
-    })
-    .then((r) => r.data)
+  const { data } = await octokit.repos.getContent({
+    owner,
+    repo,
+    path,
+  })
+
+  if (!Array.isArray(data)) {
+    const file = data as GetFileContentResponseType
+
+    if (typeof file.content !== undefined) {
+      return file
+    }
+  }
 }
 
 async function updateFile({ owner, repo, path, sha, newContent }) {
-  return await octokit.repos
-    .createOrUpdateFileContents({
-      owner,
-      repo,
-      path,
-      sha,
-      content: newContent,
-      message: 'chore(acl): update roles',
-      committer: {
-        name: 'Indent Bot',
-        email: 'github-bot@noreply.indentapis.com',
-      },
-      author: {
-        name: 'Indent Bot',
-        email: 'github-bot@noreply.indentapis.com',
-      },
-    })
-    .then((r) => r.data)
+  const { data } = await octokit.repos.createOrUpdateFileContents({
+    owner,
+    repo,
+    path,
+    sha,
+    content: newContent,
+    message: 'chore(acl): update roles',
+    committer: {
+      name: 'Indent Bot',
+      email: 'github-bot@noreply.indentapis.com',
+    },
+    author: {
+      name: 'Indent Bot',
+      email: 'github-bot@noreply.indentapis.com',
+    },
+  })
+
+  if (!Array.isArray(data)) {
+    const response = data as CreateOrUpdateFileContentsType
+
+    if (typeof response.content.sha !== undefined) {
+      return response
+    }
+  }
 }
 
 const github = { getFile, updateFile }
@@ -229,6 +242,7 @@ async function getAndUpdateACL(
 ) {
   const [owner, repo] = githubRepo.split('/')
   const file = await github.getFile({ owner, repo, path })
+  // fix for build error
   const fileContent = Buffer.from(file.content, 'base64').toString('ascii')
   const sourceACL = getACLBlock(fileContent, resolvedLabel)
   const updatedACL = updater(sourceACL)
@@ -285,3 +299,6 @@ function getResourceByKind(
 function getIndentationPrefix(str: string) {
   return str.match(/^[\s\uFEFF\xA0]+/g)
 }
+
+type GetFileContentResponseType = components['schemas']['content-file']
+type CreateOrUpdateFileContentsType = components['schemas']['file-commit']

@@ -26,11 +26,12 @@
     "url": "https://github.com/indentapis/examples.git"
   },
   "devDependencies": {
+    "@indent/types": "latest",
+    "@octokit/openapi-types": "^10.1.1",
     "@types/aws-lambda": "^8.10.39",
     "@types/lodash": "^4.14.170",
     "@types/node": "^15.6.1",
     "@types/node-fetch": "^2.5.5",
-    "@indent/types": "latest",
     "ts-loader": "^6.2.2",
     "typescript": "^3.8.3",
     "webpack": "^4.42.1"
