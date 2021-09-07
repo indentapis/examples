@@ -3,7 +3,6 @@ import { Event } from '@indent/types'
 import { AxiosResponse } from 'axios'
 import { Request, Response } from 'express'
 import * as oktaGroups from './capabilities/okta-groups'
-import * as oktaProfile from './capabilities/okta-profile'
 
 exports['webhook'] = async function handle(req: IRequest, res: Response) {
   const { headers, rawBody } = req
@@ -76,8 +75,6 @@ exports['webhook'] = async function handle(req: IRequest, res: Response) {
 async function grantPermission(auditEvent: Event) {
   if (oktaGroups.matchEvent(auditEvent)) {
     return await oktaGroups.grantPermission(auditEvent)
-  } else if (oktaProfile.matchEvent(auditEvent)) {
-    return await oktaProfile.grantPermission(auditEvent)
   }
 
   return {
@@ -90,8 +87,6 @@ async function grantPermission(auditEvent: Event) {
 async function revokePermission(auditEvent: Event) {
   if (oktaGroups.matchEvent(auditEvent)) {
     return await oktaGroups.revokePermission(auditEvent)
-  } else if (oktaProfile.matchEvent(auditEvent)) {
-    return await oktaProfile.revokePermission(auditEvent)
   }
 
   return {

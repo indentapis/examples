@@ -20,12 +20,3 @@ okta_client_id = ""
 okta_private_key = <<EOT
 
 EOT
-
-# Okta Profile Resource Kind - the kind of Indent Resource that uses a custom Okta User Profile Attribute
-okta_profile_resource_kind = "example.v1.Customer"
-
-# Okta Profile Custom Attribute - the label for the name of your custom profile attribute
-okta_profile_attribute = "okta/userProfileAttribute/key"
-
-# Okta Profile Custom Attribute Value - the label for the value of your custom profile attribute
-okta_profile_attribute_value = "okta/userProfileAttribute/value"

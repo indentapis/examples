@@ -51,21 +51,3 @@ variable "okta_private_key" {
   sensitive   = true
   default     = ""
 }
-
-variable "okta_profile_attribute" {
-  description = "OKTA_PROFILE_ATTRIBUTE for the indent-gcloud-okta-webhook"
-  type        = string
-  default     = "okta/userProfileAttribute/id"
-}
-
-variable "okta_profile_attribute_value" {
-  description = "OKTA_PROFILE_ATTRIBUTE_VALUE for the indent-gcloud-okta-webhook"
-  type        = string
-  default     = "okta/userProfileAttribute/value"
-}
-
-variable "okta_profile_resource_kind" {
-  description = "OKTA_PROFILE_RESOURCE_KIND for the indent-gcloud-okta-webhook"
-  type        = string
-  default     = "ProfileAttribute"
-}
