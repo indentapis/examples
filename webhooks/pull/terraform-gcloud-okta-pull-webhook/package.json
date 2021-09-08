@@ -1,0 +1,43 @@
+{
+  "name": "@indent/terraform-gcloud-okta-pull-webhook",
+  "version": "0.0.0",
+  "description": "A Node.js starter for Terraform on Google Cloud with Indent and Okta.",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "bundle": "ncc build lib/index.js -m -o dist",
+    "clean:dist": "rm -rf dist && rm -rf lib",
+    "clean:modules": "rm -rf node_modules",
+    "clean:tf": "rm -rf terraform/.terraform && rm -rf terraform/terraform.tfstate*",
+    "clean:all": "npm run clean:dist && npm run clean:tf && npm run clean:modules",
+    "create:all": "npm run deploy:init && npm run deploy:all",
+    "deploy:init": "cd terraform && terraform init",
+    "deploy:all": "npm install && npm run build && npm run bundle && npm run tf:apply -auto-approve",
+    "destroy:all": "npm run tf:destroy -auto-approve && npm run clean:all",
+    "tf:plan": "cd terraform && terraform plan -var-file ./config/terraform.tfvars",
+    "tf:apply": "cd terraform && terraform apply -auto-approve -compact-warnings -var-file ./config/terraform.tfvars",
+    "tf:destroy": "cd terraform && terraform destroy -auto-approve -var-file ./config/terraform.tfvars"
+  },
+  "author": "Indent Inc <open@indent.com>",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/indentapis/examples.git"
+  },
+  "devDependencies": {
+    "@google-cloud/functions-framework": "^1.6.0",
+    "@indent/types": "latest",
+    "@types/express": "^4.17.7",
+    "@types/node": "^14.0.27",
+    "@vercel/ncc": "^0.29.1",
+    "typescript": "^4.0.5"
+  },
+  "dependencies": {
+    "@indent/webhook": "latest",
+    "axios": "^0.21.1",
+    "env-cmd": "^10.1.0",
+    "njwt": "^1.1.0",
+    "ts-node": "^8.5.4"
+  }
+}

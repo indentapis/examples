@@ -54,6 +54,6 @@ npm run deploy:all
 
 Deploy it to the cloud with [Terraform](https://terraform.io/) ([Documentation](https://terraform.io/docs/)) and [Google Cloud Functions](https://console.cloud.google.com/functions). This will take a few minutes to run the first time as Terraform sets up the resources in the Google Account.
 
-## About Example
+### About Example
 
 This is a simple example showing how to use [Google Cloud Functions](https://cloud.google.com/) to deploy an Indent webhook for managing access in GitHub Teams.
