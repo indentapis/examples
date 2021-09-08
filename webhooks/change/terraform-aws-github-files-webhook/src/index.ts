@@ -76,19 +76,21 @@ async function getFile({
 }) {
   const repoContents = await octokit.repos.getContent({ owner, repo, path })
   if ('content' in repoContents.data) {
-    if (Array.isArray(repoContents.data.content)) {
+    if (Array.isArray(repoContents.data)) {
       throw new Error(
         `@indent/webhook.getFile(): failed. Returned a directory instead of a single file`
       )
     }
 
-    if (repoContents.data.type === 'symlink') {
-      throw new Error(
-        `@indent/webhook.getFile(): failed. Returned a symlink instead of a single file`
-      )
+    const responseType = repoContents.data.type
+    switch (responseType) {
+      case 'file':
+        return repoContents.data
+      default:
+        throw new Error(
+          `@indent/webhook.getFile(): failed. Returned repoContents of type ${responseType}`
+        )
     }
-
-    return repoContents.data
   }
 }
 
