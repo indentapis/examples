@@ -22,7 +22,7 @@ async function loadFromGoogleGroups(): Promise<Resource[]> {
     view: 'FULL',
   })
 
-  const kind = 'google.v1.group'
+  const kind = 'google.v1.Group'
 
   return groups.map((g) => ({
     id: g.name.split('/')[1],

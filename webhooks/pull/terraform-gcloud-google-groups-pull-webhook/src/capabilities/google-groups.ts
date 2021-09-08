@@ -19,9 +19,6 @@ export async function getAuth() {
       throw new Error('getAuth: getAccessToken: token not found')
     }
 
-    let tokenInfo = await auth.getTokenInfo(token)
-    console.log(JSON.stringify({ tokenInfo }))
-
     return auth
   }
 

@@ -9,4 +9,3 @@ node_modules
 terraform/config/*.tfvars
 !terraform/config/example.tfvars
 *.log
-secrets
