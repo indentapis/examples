@@ -2,7 +2,6 @@ import { APIGatewayProxyHandler, APIGatewayProxyEvent } from 'aws-lambda'
 import { verify } from '@indent/webhook'
 import { Event, Resource } from '@indent/types'
 import { Octokit } from '@octokit/rest'
-import { components } from '@octokit/openapi-types'
 import _ from 'lodash'
 
 export const handle: APIGatewayProxyHandler = async function handle(

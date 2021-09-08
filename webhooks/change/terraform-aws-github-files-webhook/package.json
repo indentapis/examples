@@ -13,7 +13,7 @@
     "create:all": "npm run deploy:init && npm run deploy:prepare && npm run deploy:all",
     "deploy:init": "cd terraform && terraform init",
     "deploy:prepare": "npm install --production && ./scripts/build-layers.sh",
-    "deploy:all": "npm install && npm run build && npm run tf:apply -auto-approve",
+    "deploy:all": "npm install && npm run build && npm run tf:apply -- -auto-approve",
     "destroy:all": "npm run tf:destroy -auto-approve",
     "tf:plan": "cd terraform && terraform plan -var-file ./config/terraform.tfvars",
     "tf:apply": "cd terraform && terraform apply -compact-warnings -var-file ./config/terraform.tfvars",
@@ -27,7 +27,6 @@
   },
   "devDependencies": {
     "@indent/types": "latest",
-    "@octokit/openapi-types": "^10.1.1",
     "@types/aws-lambda": "^8.10.39",
     "@types/lodash": "^4.14.170",
     "@types/node": "^15.6.1",
