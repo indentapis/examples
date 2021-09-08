@@ -50,7 +50,13 @@ export async function revokePermission(auditEvent: Event) {
   return result
 }
 
-async function addUserToGroup({ user, group }) {
+async function addUserToGroup({
+  user,
+  group,
+}: {
+  user: string
+  group: string
+}) {
   const { Authorization } = await getToken()
   return await axios({
     method: 'put',
@@ -63,7 +69,13 @@ async function addUserToGroup({ user, group }) {
   })
 }
 
-async function removeUserFromGroup({ user, group }) {
+async function removeUserFromGroup({
+  user,
+  group,
+}: {
+  user: string
+  group: string
+}) {
   const { Authorization } = await getToken()
   return await axios({
     method: 'delete',
