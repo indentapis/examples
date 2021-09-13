@@ -8,7 +8,7 @@ import { getToken } from './utils/okta-auth'
 const OKTA_DOMAIN = process.env.OKTA_DOMAIN
 
 // Okta Slack App ID - used to link okta `managerId` to slack users
-const APP_ID = ''
+const APP_ID = process.env.OKTA_SLACK_APP_ID || ''
 
 async function loadFromOkta({
   path = '',
@@ -165,42 +165,47 @@ async function pullUsers(): Promise<Indent.Resource[]> {
       }
     }
   })
-  const appUserResources = await loadFromOkta({
-    path: `/apps/${APP_ID}/users`,
-    transform: (appuser) => ({
-      id: [OKTA_DOMAIN, appuser.id].join(`/api/v1/apps/${APP_ID}/users/`),
-      kind: 'okta.v1.AppUser',
-      email: appuser.profile.email,
-      displayName: [appuser.profile.firstName, appuser.profile.lastName]
-        .filter(Boolean)
-        .join(' '),
-      labels: {
-        oktaAppId: APP_ID,
-        oktaId: appuser.id,
-        slackId: appuser.externalId,
-        managerId: oktaUserMapById[appuser.id]
-          ? oktaUserMapById[appuser.id].labels.managerId
-          : '',
-        slackUsername: appuser.profile.slackUsername,
-        timestamp,
-      },
-    }),
-  })
-  const slackUserResources = oktaUserResources.map(
-    (r) =>
-      ({
-        // Due to missing slack app ID this pull webhook resolves based on email
-        id: r.labels.slackId,
-        displayName: r.displayName,
-        kind: 'slack/user',
-        email: r.email,
-        labels: {
-          oktaId: r.labels.oktaId,
-          managerId: r.labels.managerId,
-          timestamp,
-        },
-      } as Indent.Resource)
-  )
+  const appUserResources = !APP_ID
+    ? []
+    : await loadFromOkta({
+        path: `/apps/${APP_ID}/users`,
+        transform: (appuser) => ({
+          id: [OKTA_DOMAIN, appuser.id].join(`/api/v1/apps/${APP_ID}/users/`),
+          kind: 'okta.v1.AppUser',
+          email: appuser.profile.email,
+          displayName: [appuser.profile.firstName, appuser.profile.lastName]
+            .filter(Boolean)
+            .join(' '),
+          labels: {
+            oktaAppId: APP_ID,
+            oktaId: appuser.id,
+            slackId: appuser.externalId,
+            managerId: oktaUserMapById[appuser.id]
+              ? oktaUserMapById[appuser.id].labels.managerId
+              : '',
+            slackUsername: appuser.profile.slackUsername,
+            timestamp,
+          },
+        }),
+      })
+  const slackUserResources =
+    appUserResources.length > 0
+      ? appUserResources
+      : oktaUserResources.map(
+          (r) =>
+            ({
+              // Due to missing slack app ID this pull webhook resolves based on email
+              id: r.labels.slackId,
+              displayName: r.displayName,
+              kind: 'slack/user',
+              email: r.email,
+              labels: {
+                oktaId: r.labels.oktaId,
+                managerId: r.labels.managerId,
+                timestamp,
+              },
+            } as Indent.Resource)
+        )
 
   return [...oktaUserResources, ...appUserResources, ...slackUserResources]
 }

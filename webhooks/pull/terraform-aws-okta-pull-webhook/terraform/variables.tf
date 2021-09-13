@@ -24,6 +24,12 @@ variable "okta_token" {
   sensitive = true
 }
 
+variable "okta_slack_app_id" {
+  type      = string
+  default   = ""
+  sensitive = true
+}
+
 variable "okta_client_id" {
   type      = string
   default   = ""
