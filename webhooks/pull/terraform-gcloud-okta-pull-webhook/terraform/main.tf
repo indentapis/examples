@@ -20,6 +20,7 @@ module "google-github-teams" {
     INDENT_WEBHOOK_SECRET = var.indent_webhook_secret
     OKTA_DOMAIN           = var.okta_domain
     OKTA_TOKEN            = var.okta_token
+    OKTA_SLACK_APP_ID     = var.okta_slack_app_id
     OKTA_CLIENT_ID        = var.okta_client_id
     OKTA_PRIVATE_KEY      = var.okta_private_key
   }

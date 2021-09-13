@@ -7,6 +7,9 @@ okta_domain = ""
 # Okta Token - Your Okta administration token
 okta_token = ""
 
+# Okta Slack App ID - Your Slack App ID if you use Slack with Okta
+okta_slack_app_id = ""
+
 ## Note: If you plan to use an Okta Service App for deployment, you do not need to include an Okta API token but you must include your Service App Client ID and your private RSA key so the webhook can create a signed Bearer token.
 
 # Okta Client ID (Optional) - The client ID for your Okta Service App

@@ -38,6 +38,12 @@ variable "okta_token" {
   default     = ""
 }
 
+variable "okta_slack_app_id" {
+  type      = string
+  default   = ""
+  sensitive = true
+}
+
 variable "okta_client_id" {
   description = "OKTA_CLIENT_ID for the indent-gcloud-okta-webhook"
   type        = string
