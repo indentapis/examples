@@ -55,7 +55,13 @@ export const handle: APIGatewayProxyHandler = async function handle(event) {
   if (errors.length > 0) {
     console.error('@indent/webhook.handle: non-200 status code')
     console.error(errors[0])
-    return errors[0]
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        code: 2,
+        message: errors[0].toString(),
+      }),
+    }
   }
 
   return {
