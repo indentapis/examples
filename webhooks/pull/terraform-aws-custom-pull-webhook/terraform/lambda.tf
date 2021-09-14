@@ -15,7 +15,7 @@ resource "aws_lambda_function" "lambda" {
   function_name    = local.name
   role             = aws_iam_role.lambda_role.arn
   filename         = data.archive_file.function_archive.output_path
-  source_code_hash = filesha256("${path.module}/../dist/function.zip")
+  source_code_hash = data.archive_file.function_archive.output_base64sha256
   memory_size      = local.lambda_memory
   handler          = "index.handle"
   runtime          = "nodejs12.x"
