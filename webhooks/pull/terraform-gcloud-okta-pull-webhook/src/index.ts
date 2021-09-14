@@ -117,6 +117,7 @@ async function pullGroups(): Promise<Resource[]> {
         oktaId: group.id,
         description: group.profile.description || '',
         timestamp,
+        oktaGroupType: group.type,
       },
     }),
   })
@@ -185,7 +186,6 @@ async function pullUsers(): Promise<Resource[]> {
           },
         }),
       })
-
   const slackUserResources =
     appUserResources.length > 0
       ? appUserResources

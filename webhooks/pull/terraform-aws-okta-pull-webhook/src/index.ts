@@ -123,6 +123,7 @@ async function pullGroups(): Promise<Indent.Resource[]> {
         oktaId: group.id,
         description: group.profile.description || '',
         timestamp,
+        oktaGroupType: group.type,
       },
     }),
   })
