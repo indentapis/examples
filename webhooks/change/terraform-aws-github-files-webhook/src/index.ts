@@ -1,10 +1,12 @@
-import { APIGatewayProxyHandler } from 'aws-lambda'
+import { APIGatewayProxyHandler, APIGatewayProxyEvent } from 'aws-lambda'
 import { verify } from '@indent/webhook'
-import * as Indent from '@indent/types'
+import { Event, Resource } from '@indent/types'
 import { Octokit } from '@octokit/rest'
 import _ from 'lodash'
 
-export const handle: APIGatewayProxyHandler = async function handle(event) {
+export const handle: APIGatewayProxyHandler = async function handle(
+  event: APIGatewayProxyEvent
+) {
   try {
     await verify({
       secret: process.env.INDENT_WEBHOOK_SECRET,
@@ -27,7 +29,7 @@ export const handle: APIGatewayProxyHandler = async function handle(event) {
   console.log(JSON.stringify(events))
 
   await Promise.all(
-    events.map((auditEvent: Indent.Event) => {
+    events.map((auditEvent: Event) => {
       let { actor, event, resources } = auditEvent
 
       console.log(
@@ -63,43 +65,69 @@ const octokit = new Octokit({
   auth: GITHUB_TOKEN,
 })
 
-async function getFile({ owner, repo, path }) {
-  return await octokit.repos
-    .getContent({
-      owner,
-      repo,
-      path,
-    })
-    .then((r) => r.data)
+async function getFile({
+  owner,
+  repo,
+  path,
+}: {
+  owner: string
+  repo: string
+  path: string
+}) {
+  const repoContents = await octokit.repos.getContent({ owner, repo, path })
+  if ('content' in repoContents.data) {
+    if (Array.isArray(repoContents.data)) {
+      throw new Error(
+        `@indent/webhook.getFile(): failed. Returned a directory instead of a single file`
+      )
+    }
+
+    const responseType = repoContents.data.type
+    switch (responseType) {
+      case 'file':
+        return repoContents.data
+      default:
+        throw new Error(
+          `@indent/webhook.getFile(): failed. Returned repoContents of type ${responseType}`
+        )
+    }
+  }
 }
 
-async function updateFile({ owner, repo, path, sha, newContent }) {
-  return await octokit.repos
-    .createOrUpdateFileContents({
-      owner,
-      repo,
-      path,
-      sha,
-      content: newContent,
-      message: 'chore(acl): update roles',
-      committer: {
-        name: 'Indent Bot',
-        email: 'github-bot@noreply.indentapis.com',
-      },
-      author: {
-        name: 'Indent Bot',
-        email: 'github-bot@noreply.indentapis.com',
-      },
-    })
-    .then((r) => r.data)
+async function updateFile({
+  owner,
+  repo,
+  path,
+  sha,
+  newContent,
+}: {
+  owner: string
+  repo: string
+  path: string
+  sha: string
+  newContent: string
+}) {
+  return await octokit.repos.createOrUpdateFileContents({
+    owner,
+    repo,
+    path,
+    sha,
+    content: newContent,
+    message: 'chore(acl): update roles',
+    committer: {
+      name: 'Indent Bot',
+      email: 'github-bot@noreply.indentapis.com',
+    },
+    author: {
+      name: 'Indent Bot',
+      email: 'github-bot@noreply.indentapis.com',
+    },
+  })
 }
 
 const github = { getFile, updateFile }
 
-async function grantPermission(
-  auditEvent: Indent.Event,
-  allEvents: Indent.Event[]
-) {
+async function grantPermission(auditEvent: Event, allEvents: Event[]) {
   try {
     const { resources } = auditEvent
     const recipient = getResourceByKind(resources, 'user')
@@ -113,7 +141,7 @@ async function grantPermission(
         path: githubPath,
         resolvedLabel,
       },
-      (aclText) => {
+      (aclText: string) => {
         const aclByLine = aclText.split('\n')
         const aclPrefix = getIndentationPrefix(aclByLine[0])
         const entries = aclByLine.filter((a) => !a.includes('//indent:managed'))
@@ -144,10 +172,11 @@ async function grantPermission(
     })
   } catch (err) {
     console.error(err)
+    throw new Error(`indent.grantPermission(): failed ${err}`)
   }
 }
 
-async function revokePermission(auditEvent: Indent.Event) {
+async function revokePermission(auditEvent: Event) {
   try {
     const { resources } = auditEvent
     const recipient = getResourceByKind(resources, 'user')
@@ -161,7 +190,7 @@ async function revokePermission(auditEvent: Indent.Event) {
         path: githubPath,
         resolvedLabel,
       },
-      (aclText) =>
+      (aclText: string) =>
         aclText
           .split('\n')
           .filter((e) => !e.includes(recipient.email))
@@ -175,6 +204,7 @@ async function revokePermission(auditEvent: Indent.Event) {
     })
   } catch (err) {
     console.error(err)
+    throw new Error(`indent.grantPermission(): failed ${err}`)
   }
 }
 
@@ -273,10 +303,7 @@ async function getAndUpdateACL(
   return { updateResult, sourceACL, updatedACL }
 }
 
-function getResourceByKind(
-  resources: Indent.Resource[],
-  kind: string
-): Indent.Resource {
+function getResourceByKind(resources: Resource[], kind: string): Resource {
   return resources.filter(
     (r) => r.kind && r.kind.toLowerCase().includes(kind.toLowerCase())
   )[0]
