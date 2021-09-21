@@ -82,3 +82,22 @@ resource "aws_api_gateway_deployment" "api_gateway_deployment" {
   rest_api_id = aws_api_gateway_rest_api.api_gateway_rest_api.id
   stage_name  = "dev"
 }
+
+resource "aws_api_gateway_usage_plan" "deploy-api-gw-usage-plan" {
+  name = var.api_name
+
+  api_stages {
+    api_id = aws_api_gateway_rest_api.api-gateway.id
+    stage  = aws_api_gateway_deployment.api-gateway-deployment.stage_name
+  }
+
+  # quota_settings {
+  #   limit  = var.quota_limit
+  #   period = var.quota_period
+  # }
+
+  # throttle_settings {
+  #   burst_limit = var.throttle_burst_limit
+  #   rate_limit  = var.throttle_rate_limit
+  # }
+}
