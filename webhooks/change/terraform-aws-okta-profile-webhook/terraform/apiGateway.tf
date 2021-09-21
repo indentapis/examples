@@ -6,15 +6,15 @@ resource "aws_api_gateway_usage_plan" "ApiKey" {
   name = var.api_key_name
 
   api_stages {
-    api_id = aws_api_gateway_rest_api.api-gateway.id
-    stage  = aws_api_gateway_deployment.api-gateway-deployment.stage_name
+    api_id = aws_api_gateway_rest_api.api_gateway_rest_api.id
+    stage  = aws_api_gateway_deployment.api_gateway_deployment.stage_name
   }
 }
 
-resource "aws_api_gateway_usage_plan_key" "deploy-apigw-usage-plan-key" {
+resource "aws_api_gateway_usage_plan_key" "deploy_api_gw_usage_plan_key" {
   key_id        = aws_api_gateway_api_key.ApiKey.id
   key_type      = "API_KEY"
-  usage_plan_id = aws_api_gateway_usage_plan.deploy-api-gw-usage-plan.id
+  usage_plan_id = aws_api_gateway_usage_plan.deploy_api_gw_usage_plan.id
 }
 resource "aws_api_gateway_rest_api" "api_gateway_rest_api" {
   name           = "api_gateway"
@@ -83,12 +83,12 @@ resource "aws_api_gateway_deployment" "api_gateway_deployment" {
   stage_name  = "dev"
 }
 
-resource "aws_api_gateway_usage_plan" "deploy-api-gw-usage-plan" {
-  name = var.api_name
+resource "aws_api_gateway_usage_plan" "deploy_api_gw_usage_plan" {
+  name = local.name
 
   api_stages {
-    api_id = aws_api_gateway_rest_api.api-gateway.id
-    stage  = aws_api_gateway_deployment.api-gateway-deployment.stage_name
+    api_id = aws_api_gateway_rest_api.api_gateway_rest_api.id
+    stage  = aws_api_gateway_deployment.api_gateway_deployment.stage_name
   }
 
   # quota_settings {
