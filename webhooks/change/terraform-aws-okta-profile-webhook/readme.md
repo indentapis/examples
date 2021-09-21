@@ -46,11 +46,14 @@ npm run deploy:init # initializes terraform aws provider with ~/.aws/config
 npm run deploy:prepare # builds AWS Lambda layers
 ```
 
+#### Optional configuration items
+
+- **Note:** If you plan to use an Okta Service App for deployment, you do not need an Okta API token, but you must include your Service App Client ID and your private RSA key so the webhook can create signed Bearer tokens.
+  - If you plan to use an Okta API token you can leave the Okta Client ID and Okta Private Key variables empty
+- You can configure this webhook to use an AWS API Gateway Token by setting `create_api_key` to `true` in terraform.tfvars
+  - Note down your auto-generated API key during the deployment step
+
 Add the environment variables:
-
-    **Note:** If you plan to use an Okta Service App for deployment, you do not need to include an Okta API token but you must include your Service App Client ID and your private RSA key so the webhook can create a signed Bearer token.
-
-    If you plan to use an Okta API token you can leave the Okta Client ID and Okta Private Key variables empty
 
 ```bash
 mv terraform/config/example.tfvars terraform/config/terraform.tfvars
@@ -77,6 +80,11 @@ okta_profile_resource_kind = "example.v1.Customer"
 okta_profile_attribute = "okta/userProfileAttribute/key"
 # Okta Profile Custom Attribute Value - the label for the value of your custom profile attribute
 okta_profile_attribute_value = "okta/userProfileAttribute/value"
+
+# Toggle whether to use an AWS API Key with the API Gateway for this webhook
+# When you update your Indent Space, set an additional header
+# "x-api-key" = abcdefghjilkmnop
+create_api_key = false
 ```
 
 ### Deployment

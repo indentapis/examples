@@ -51,27 +51,16 @@ variable "okta_profile_resource_kind" {
   default = "ProfileAttribute"
 }
 
+
+# Create an API Key for use with AWS API Gateway
 variable "api_key_name" {
   description = "Name of the API Key attached to API Gateway"
   default     = "indent-api-credential"
 }
 
-# variable "quota_limit" {
-#   description = "Maximum number of api calls for the usage plan"
-#   default     = 10000
-# }
+variable "create_api_key" {
+  description = "Toggle using an AWS API Key for this webhook's API Gateway"
+  type        = bool
+  default     = false
+}
 
-# variable "quota_period" {
-#   description = "Period in which the limit is accumulated, eg DAY, WEEK, MONTH"
-#   default     = "DAY"
-# }
-
-# variable "throttle_burst_limit" {
-#   description = "Burst token bucket"
-#   default     = 5
-# }
-
-# variable "throttle_rate_limit" {
-#   description = "Rate at which burst tokens are added to bucket"
-#   default     = 10
-# }

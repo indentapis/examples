@@ -25,3 +25,8 @@ okta_profile_attribute = "okta/userProfileAttribute/key"
 
 # Okta Profile Custom Attribute Value - the label for the value of your custom profile attribute
 okta_profile_attribute_value = "okta/userProfileAttribute/value"
+
+# Toggle whether to use an AWS API Key with the API Gateway for this webhook
+# When you update your Indent Space, set an additional header
+# "x-api-key" = abcdefghjilkmnop
+create_api_key = false
