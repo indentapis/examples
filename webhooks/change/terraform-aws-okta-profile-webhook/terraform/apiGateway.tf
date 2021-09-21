@@ -1,6 +1,25 @@
+resource "aws_api_gateway_api_key" "ApiKey" {
+  name = var.api_key_name
+}
+
+resource "aws_api_gateway_usage_plan" "ApiKey" {
+  name = var.api_key_name
+
+  api_stages {
+    api_id = aws_api_gateway_rest_api.api-gateway.id
+    stage  = aws_api_gateway_deployment.api-gateway-deployment.stage_name
+  }
+}
+
+resource "aws_api_gateway_usage_plan_key" "deploy-apigw-usage-plan-key" {
+  key_id        = aws_api_gateway_api_key.ApiKey.id
+  key_type      = "API_KEY"
+  usage_plan_id = aws_api_gateway_usage_plan.deploy-api-gw-usage-plan.id
+}
 resource "aws_api_gateway_rest_api" "api_gateway_rest_api" {
-  name        = "api_gateway"
-  description = "Api Gateway for Lambda"
+  name           = "api_gateway"
+  description    = "Api Gateway for Lambda"
+  api_key_source = "HEADER"
 }
 
 resource "aws_api_gateway_resource" "api_gateway" {
@@ -10,11 +29,11 @@ resource "aws_api_gateway_resource" "api_gateway" {
 }
 
 resource "aws_api_gateway_method" "api_gateway_method" {
-  rest_api_id   = aws_api_gateway_rest_api.api_gateway_rest_api.id
-  resource_id   = aws_api_gateway_resource.api_gateway.id
-  http_method   = "ANY"
-  authorization = "NONE"
-
+  rest_api_id      = aws_api_gateway_rest_api.api_gateway_rest_api.id
+  resource_id      = aws_api_gateway_resource.api_gateway.id
+  http_method      = "ANY"
+  authorization    = "NONE"
+  api_key_required = "true"
   request_parameters = {
     "method.request.header.x-indent-signature" = true
     "method.request.header.x-indent-timestamp" = true
@@ -32,10 +51,11 @@ resource "aws_api_gateway_integration" "api_gateway_integration" {
 }
 
 resource "aws_api_gateway_method" "api_gateway_root_method" {
-  rest_api_id   = aws_api_gateway_rest_api.api_gateway_rest_api.id
-  resource_id   = aws_api_gateway_rest_api.api_gateway_rest_api.root_resource_id
-  http_method   = "ANY"
-  authorization = "NONE"
+  rest_api_id      = aws_api_gateway_rest_api.api_gateway_rest_api.id
+  resource_id      = aws_api_gateway_rest_api.api_gateway_rest_api.root_resource_id
+  http_method      = "ANY"
+  authorization    = "NONE"
+  api_key_required = "true"
 
   request_parameters = {
     "method.request.header.x-indent-signature" = true
