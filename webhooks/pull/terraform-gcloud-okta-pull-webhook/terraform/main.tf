@@ -23,5 +23,6 @@ module "google-github-teams" {
     OKTA_SLACK_APP_ID     = var.okta_slack_app_id
     OKTA_CLIENT_ID        = var.okta_client_id
     OKTA_PRIVATE_KEY      = var.okta_private_key
+    OKTA_SLACK_APP_ID     = var.okta_slack_app_id
   }
 }

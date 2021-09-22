@@ -17,5 +17,4 @@ okta_client_id = ""
 
 # Okta Private Key (Optional) - This is an RSA private key used to generate a signed Bearer token for OAuth 2.0 access
 okta_private_key = <<EOT
-
 EOT
