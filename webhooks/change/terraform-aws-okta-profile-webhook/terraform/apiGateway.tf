@@ -1,7 +1,6 @@
 resource "aws_api_gateway_rest_api" "api_gateway_rest_api" {
   name           = "api_gateway"
   description    = "API Gateway for AWS Lambda"
-  api_key_source = "HEADER" # Uncomment if you are using an AWS API Gateway key
 }
 
 resource "aws_api_gateway_resource" "api_gateway" {
