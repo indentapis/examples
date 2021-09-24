@@ -24,7 +24,7 @@ npm run deploy:init # initializes terraform aws provider with ~/.aws/config
 npm run deploy:prepare # builds AWS Lambda layers
 ```
 
-Add the environment variables...
+Add the environment variables:
 
 ```bash
 mv terraform/config/example.tfvars terraform/config/terraform.tfvars

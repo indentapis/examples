@@ -19,7 +19,7 @@ curl https://codeload.github.com/indentapis/examples/tar.gz/main | tar -xz --str
 cd terraform-gcloud-google-groups-webhook
 ```
 
-Initialize the provider
+Initialize the provider:
 
 ```bash
 npm run deploy:init # initializes terraform GCloud provider

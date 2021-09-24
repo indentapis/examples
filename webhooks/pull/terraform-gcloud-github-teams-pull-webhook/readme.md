@@ -24,7 +24,7 @@ curl https://codeload.github.com/indentapis/examples/tar.gz/main | tar -xz --str
 cd terraform-gcloud-github-teams-pull-webhook
 ```
 
-Initialize the provider
+Initialize the provider:
 
 **NPM**
 
