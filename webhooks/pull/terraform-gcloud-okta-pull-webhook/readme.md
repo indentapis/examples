@@ -28,49 +28,129 @@ Initialize the provider:
 npm run deploy:init # initializes terraform gcloud provider
 ```
 
-Add the environment variables:
-
-    **Note:** If you plan to use an Okta Service App for deployment, you do not need to include an Okta API token but you must include your Service App Client ID and your private RSA key so the webhook can create a signed Bearer token.
-
-    If you plan to use an Okta API token you can leave the Okta Client ID and Okta Private Key variables empty
+Add the environment variables then choose an authentication method:
 
 ```bash
 mv terraform/config/example.tfvars terraform/config/terraform.tfvars
 ```
 
+#### Authenticating to Okta
+
+You have two choices to authenticate this webhook with Okta:
+
+<details><summary>Option 1: Okta Admin API Token</summary>
+<p>
+
+- [Create an Okta Admin API Token](https://indent.com/docs/integrations/okta#option-1-account-with-api-token)
+- Set this variable in `terraform.tfvars`:
+
+```hcl
+okta_token = "0Oabcdefghijklmnopqrs"
+```
+
+- Your final environment variable configuration should look like this:
+
+```hcl
+# Indent Webhook Secret is used to verify messages from Indent
+indent_webhook_secret = "wks0qwertyuiopzxcvbnm"
+# Project - The Google Cloud project you want to deploy this webhook to
+project = "my-project-123"
+# Okta Domain - This is your Okta URL
+okta_domain = "example.okta.com"
+# Okta Token - Your Okta administration token
+okta_token = "0Oabcdefghijklmnopqrs"
+```
+
+</p>
+</details>
+
+<details><summary>Option 2: Okta Service App</summary>
+<p>
+
+- [Create an Okta Service App with API Scopes](https://indent.com/docs/integrations/okta#option-2-service-app-with-api-scopes)
+- Set these environment variables in `terraform.tfvars`
+
+```hcl
+# Okta Client ID - The client ID for your Okta Service App
+okta_client_id = "0oasdfghjklqwertyuiop"
+# Okta Private Key - This is an RSA private key used to generate a signed Bearer token for OAuth 2.0 access
+okta_private_key = <<EOT
+----BEGIN RSA PUBLIC KEY-----
+asdfghjklzxcvbnmqwertyuiopzxcvbnm,./asdfghj
+kl;'qwertyuiop[]asdfghjklzxcvbnmqwertyuiopz
+xcvbnm,./asdfghjkl;'qwertyuiop[]asdfghjklzx
+cvbnmqwertyuiopzxcvbnm,./asdfghjkl;'qwertyu
+iop[]asdfghjklzxcvbnmqwertyuiopzxcvbnm,./as
+dfghjkl;'qwertyuiop[]asdfghjklzxcvbnmqwerty
+uiopzxcvbnm,./asdfghjkl;'qwertyuiop[]asdfgh
+jklzxcvbnmqwertyuiopzxcvbnm,./asdfghjkl;'qw
+ertyuiop[]asdfghjklzxcvbnmqwertyuiopzxcvbnm
+,./asdfghjkl;'qwertyuiop[]asdfghjklzxcvbnmq
+wertyuiopzxcvbnm,./asdfghjkl;'qwertyuiop[]a
+sdfghjklzxcvbnmqwertyuiopzxcvbnm,./asdfghjk
+l;'qwertyuio[]asdfghjklzxcvbnmqwertyuiopzxc
+vbnm,./asdfghjkl;'qwertyuiop[bcdefghijklmno
+----END RSA PUBLIC KEY------
+EOT
+```
+
+- Your final environment variable configuration should look like this:
+
+```hcl
+# Indent Webhook Secret is used to verify messages from Indent
+indent_webhook_secret = "wks0abcdefghijklmnopqrstuv"
+# Project - The Google Cloud project you want to deploy this webhook to
+project = "my-project-123"
+# Okta Domain - This is your Okta URL
+okta_domain = "example.okta.com"
+# Okta Client ID - The client ID for your Okta Service App
+okta_client_id = "0oasdfghjklqwertyuiop"
+# Okta Private Key - This is an RSA private key used to generate a signed Bearer token for OAuth 2.0 access
+okta_private_key = <<EOT
+----BEGIN RSA PUBLIC KEY-----
+asdfghjklzxcvbnmqwertyuiopzxcvbnm,./asdfghj
+kl;'qwertyuiop[]asdfghjklzxcvbnmqwertyuiopz
+xcvbnm,./asdfghjkl;'qwertyuiop[]asdfghjklzx
+cvbnmqwertyuiopzxcvbnm,./asdfghjkl;'qwertyu
+iop[]asdfghjklzxcvbnmqwertyuiopzxcvbnm,./as
+dfghjkl;'qwertyuiop[]asdfghjklzxcvbnmqwerty
+uiopzxcvbnm,./asdfghjkl;'qwertyuiop[]asdfgh
+jklzxcvbnmqwertyuiopzxcvbnm,./asdfghjkl;'qw
+ertyuiop[]asdfghjklzxcvbnmqwertyuiopzxcvbnm
+,./asdfghjkl;'qwertyuiop[]asdfghjklzxcvbnmq
+wertyuiopzxcvbnm,./asdfghjkl;'qwertyuiop[]a
+sdfghjklzxcvbnmqwertyuiopzxcvbnm,./asdfghjk
+l;'qwertyuio[]asdfghjklzxcvbnmqwertyuiopzxc
+vbnm,./asdfghjkl;'qwertyuiop[bcdefghijklmno
+----END RSA PUBLIC KEY------
+EOT
+```
+
+</p>
+</details>
+
+Add all the remaining environment variables:
+
 `terraform/config/terraform.tfvars`
 
 ```hcl
 # Indent Webhook Secret is used to verify messages from Indent
-indent_webhook_secret = "wks0asdfghjklqwertyuiop"
-
+indent_webhook_secret = "wks0abcdefghijklmnopqrstuv"
 # Project - The Google Cloud project you want to deploy this webhook to
 project = "my-project-123"
-
 # Okta Domain - This is your Okta URL
-okta_domain = "my-domain.okta.com"
-
-# Okta Token - Your Okta administration token
-okta_token = "00qwertyuiopzxcvbnmasdfgh"
-
-# Okta Client ID - The client ID for your Okta Service App
-okta_client_id = "asdfghjklqwertyuiop"
-
-# Okta Private Key - This is an RSA private key used to generate a signed Bearer token for OAuth 2.0 access
-okta_private_key = <<EOT
-
-EOT
+okta_domain = "example.okta.com"
 ```
 
-Once you've set up your [Google Cloud credentials](https://indent.com/docs/webhooks/deploy#deploying-on-google-cloud), either with `gcloud auth login` or using a service account key, build and deploy the function:
+Once you've set up your environment variables, configure your [Google Cloud credentials](https://indent.com/docs/webhooks/deploy#deploying-on-google-cloud) with either `gcloud auth login` or via a service account key.
+
+### Deployment
+
+Build and deploy the function to Google Cloud with [Terraform](https://terraform.io) ([Documentation](https://terraform.io/docs/)) and [Google Cloud Functions](https://console.cloud.google.com/functions):
 
 ```bash
 npm run deploy:all
 ```
-
-### Deployment
-
-Deploy it to the cloud with [Terraform](https://terraform.io) ([Documentation](https://terraform.io/docs/)) and [Google Cloud Functions](https://console.cloud.google.com/functions).
 
 This will take a few minutes to run the first time as Terraform sets up the resources in the Google Cloud Project.
 

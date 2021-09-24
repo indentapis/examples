@@ -21,7 +21,7 @@ EOT
 okta_profile_resource_kind = "ProfileAttribute"
 
 # Okta Profile Custom Attribute - the label for the name of your custom profile attribute
-okta_profile_attribute = "okta/userProfileAttribute/key"
+okta_profile_attribute = "okta/userProfileAttribute/id"
 
 # Okta Profile Custom Attribute Value - the label for the value of your custom profile attribute
 okta_profile_attribute_value = "okta/userProfileAttribute/value"
