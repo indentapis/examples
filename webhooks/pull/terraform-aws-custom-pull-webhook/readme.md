@@ -16,7 +16,7 @@ curl https://codeload.github.com/indentapis/examples/tar.gz/main | tar -xz --str
 cd terraform-aws-custom-pull-webhook
 ```
 
-Install the dependencies...
+Initialize the provider:
 
 ```bash
 npm run deploy:init # initializes terraform aws provider with ~/.aws/config
