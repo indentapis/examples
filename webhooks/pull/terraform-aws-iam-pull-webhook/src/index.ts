@@ -72,7 +72,7 @@ async function loadFromAWS(MaxItems = 100): Promise<Resource[]> {
   const { Groups } = response
 
   return Groups.map((g: Group) => ({
-    id: g.GroupId.toString(),
+    id: g.Arn.toString(),
     kind,
     displayName: g.GroupName,
     labels: {
