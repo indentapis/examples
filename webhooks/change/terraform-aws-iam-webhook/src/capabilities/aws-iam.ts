@@ -3,6 +3,8 @@ import {
   IAMClient,
   AddUserToGroupCommand,
   RemoveUserFromGroupCommand,
+  AddUserToGroupCommandOutput,
+  RemoveUserFromGroupCommandOutput,
 } from '@aws-sdk/client-iam'
 
 const region = process.env.AWS_REGION
@@ -26,7 +28,9 @@ export async function grantPermission(auditEvent: Event) {
     UserName: user,
   })
 
-  const response = await iamClient.send(addUserToGroup)
+  const response: AddUserToGroupCommandOutput = await iamClient.send(
+    addUserToGroup
+  )
 
   console.log({ event, actor, resources, response })
 }
@@ -41,7 +45,9 @@ export async function revokePermission(auditEvent: Event) {
     UserName: user,
   })
 
-  const response = await iamClient.send(removeUserFromGroup)
+  const response: RemoveUserFromGroupCommandOutput = await iamClient.send(
+    removeUserFromGroup
+  )
 
   console.log({ event, actor, resources, response })
 }

@@ -2,6 +2,7 @@ import { verify } from '@indent/webhook'
 import { Event } from '@indent/types'
 import { APIGatewayProxyHandler } from 'aws-lambda'
 import * as awsIam from './capabilities/aws-iam'
+
 export const handle: APIGatewayProxyHandler = async function handle(event) {
   try {
     await verify({
