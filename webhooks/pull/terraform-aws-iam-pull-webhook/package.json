@@ -1,19 +1,19 @@
 {
-  "name": "@indent/terraform-aws-iam-webhook",
+  "name": "@indent/terraform-aws-okta-pull-webhook",
   "version": "0.0.0",
-  "description": "A Node.js starter for Terraform on AWS with Indent and AWS IAM.",
+  "description": "A Node.js starter for Terraform on AWS with Indent and Okta.",
   "main": "index.js",
   "private": true,
   "scripts": {
     "build": "tsc",
     "clean:dist": "rm -rf dist",
     "clean:modules": "rm -rf node_modules",
-    "clean:tf": "rm -rf terraform/.terraform && rm -rf terraform/terraform.tfstate*",
-    "clean:all": "npm run clean:dist && npm run clean:tf && npm run clean:modules",
-    "create:all": "npm run deploy:init && npm run deploy:prepare && npm run deploy:all",
-    "deploy:init": "cd terraform && terraform init && terraform fmt -check -diff",
+    "clean:tf": "rm -rf teraform/.terraform && rm -rf terraform/terraform.tfstate*",
+    "clean:all": "npm run clean:dist; npm run clean:tf; npm run clean:modules",
+    "create:all": "npm run deploy:init; npm run deploy:prepare && npm run deploy:all",
+    "deploy:init": "cd terraform && terraform init",
     "deploy:prepare": "npm install --production && ./scripts/build-layers.sh",
-    "deploy:all": "npm install && npm run build && npm run tf:apply -auto-approve",
+    "deploy:all": "npm run build && npm run tf:apply -- -auto-approve",
     "destroy:all": "npm run tf:destroy -auto-approve",
     "tf:plan": "cd terraform && terraform plan -var-file ./config/terraform.tfvars",
     "tf:apply": "cd terraform && terraform apply -compact-warnings -var-file ./config/terraform.tfvars",
@@ -26,17 +26,19 @@
     "url": "https://github.com/indentapis/examples.git"
   },
   "devDependencies": {
-    "@indent/types": "latest",
     "@types/aws-lambda": "^8.10.39",
     "@types/node": "^13.9.8",
     "@types/node-fetch": "^2.5.5",
+    "ts-loader": "^6.2.2",
     "typescript": "^3.8.3"
   },
   "dependencies": {
     "@aws-sdk/client-iam": "^3.34.0",
+    "@indent/types": "latest",
     "@indent/webhook": "latest",
-    "aws-lambda": "^1.0.6",
-    "env-cmd": "^10.1.0",
+    "aws-lambda": "^1.0.5",
+    "axios": "^0.21.1",
+    "njwt": "^1.1.0",
     "ts-node": "^8.5.4"
   }
 }
