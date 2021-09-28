@@ -24,7 +24,14 @@ npm run deploy:init # initializes terraform aws provider with ~/.aws/config
 npm run deploy:prepare # builds AWS Lambda layers
 ```
 
-environment variables copypasta
+Add the environment variables:
+
+`mv terraform/config/example.tfvars terraform/config/terraform.tfvars`
+
+```hcl
+# Indent Webhook Secret is used to verify messages from Indent
+indent_webhook_secret = ""
+```
 
 ### Deployment
 
@@ -34,4 +41,4 @@ This will take a few minutes to run the first time as Terraform sets up the reso
 
 ### About Example
 
-This is a simple example showing how to use [Terraform](https://terraform.io) to deploy a function that can add or remove users from Okta Groups programatically.
+This is a simple example showing how to use [Terraform](https://terraform.io) to deploy a function that can add or remove users from AWS IAM Groups programatically.
