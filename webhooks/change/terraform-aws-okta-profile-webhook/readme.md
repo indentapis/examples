@@ -24,7 +24,7 @@
    - Enter the name of your Profile Attribute
    - Enter the ID of your Profile Attribute
    - Add these labels to your resource:
-     - `okta/userProfileAttribute/key` &mdash; name of the custom Okta User Profile Attribute, e.g. `assigned_customers`
+     - `okta/userProfileAttribute/id` &mdash; name of the custom Okta User Profile Attribute, e.g. `assigned_customers`
      - `okta/userProfileAttribute/value` &mdash; value of the custom Okta User Profile Attribute, e.g. `cust_123`
 1. Note down these values for use with the deployment steps.
 
@@ -39,49 +39,149 @@ curl https://codeload.github.com/indentapis/examples/tar.gz/main | tar -xz --str
 cd terraform-aws-okta-profile-webhook
 ```
 
-Install the dependencies:
+Initialize the provider:
 
 ```bash
 npm run deploy:init # initializes terraform aws provider with ~/.aws/config
 npm run deploy:prepare # builds AWS Lambda layers
 ```
 
-Add the environment variables:
-
-    **Note:** If you plan to use an Okta Service App for deployment, you do not need to include an Okta API token but you must include your Service App Client ID and your private RSA key so the webhook can create a signed Bearer token.
-
-    If you plan to use an Okta API token you can leave the Okta Client ID and Okta Private Key variables empty
+Add the environment variables then choose an authentication method:
 
 ```bash
 mv terraform/config/example.tfvars terraform/config/terraform.tfvars
 ```
 
-`terraform/config/terraform.tfvars`
+#### Authenticating to Okta
+
+You have two choices to authenticate this webhook with Okta:
+
+<details><summary>Option 1: Okta Admin API Token</summary>
+<p>
+
+- [Create an Okta Admin API Token](https://indent.com/docs/integrations/okta#option-1-account-with-api-token)
+- Set this variable in `terraform.tfvars`:
+
+```hcl
+okta_token = "0Oabcdefghijklmnopqrs"
+```
+
+- Your final environment variable configuration should look like this:
 
 ```hcl
 # Indent Webhook Secret is used to verify messages from Indent
-indent_webhook_secret = ""
+indent_webhook_secret = "wks0qwertyuiopzxcvbnm"
 # Okta Domain - This is your Okta URL
-okta_domain = ""
+okta_domain = "example.okta.com"
 # Okta Token - Your Okta administration token
-okta_token = ""
+okta_token = "0Oabcdefghijklmnopqrs"
+
+# Okta Profile Resource Kind - the kind of Indent Resource that uses a custom Okta User Profile Attribute
+okta_profile_resource_kind = "example.v1.Customer"
+# Okta Profile Custom Attribute - the label for the name of your custom profile attribute
+okta_profile_attribute = "okta/userProfileAttribute/id"
+# Okta Profile Custom Attribute Value - the label for the value of your custom profile attribute
+okta_profile_attribute_value = "okta/userProfileAttribute/value"
+```
+
+</p>
+</details>
+
+<details><summary>Option 2: Okta Service App</summary>
+<p>
+
+- [Create an Okta Service App with API Scopes](https://indent.com/docs/integrations/okta#option-2-service-app-with-api-scopes)
+- Set these environment variables in `terraform.tfvars`
+
+```hcl
 # Okta Client ID - The client ID for your Okta Service App
-okta_client_id = ""
+okta_client_id = "0oasdfghjklqwertyuiop"
 # Okta Private Key - This is an RSA private key used to generate a signed Bearer token for OAuth 2.0 access
 okta_private_key = <<EOT
+----BEGIN RSA PUBLIC KEY-----
+asdfghjklzxcvbnmqwertyuiopzxcvbnm,./asdfghj
+kl;'qwertyuiop[]asdfghjklzxcvbnmqwertyuiopz
+xcvbnm,./asdfghjkl;'qwertyuiop[]asdfghjklzx
+cvbnmqwertyuiopzxcvbnm,./asdfghjkl;'qwertyu
+iop[]asdfghjklzxcvbnmqwertyuiopzxcvbnm,./as
+dfghjkl;'qwertyuiop[]asdfghjklzxcvbnmqwerty
+uiopzxcvbnm,./asdfghjkl;'qwertyuiop[]asdfgh
+jklzxcvbnmqwertyuiopzxcvbnm,./asdfghjkl;'qw
+ertyuiop[]asdfghjklzxcvbnmqwertyuiopzxcvbnm
+,./asdfghjkl;'qwertyuiop[]asdfghjklzxcvbnmq
+wertyuiopzxcvbnm,./asdfghjkl;'qwertyuiop[]a
+sdfghjklzxcvbnmqwertyuiopzxcvbnm,./asdfghjk
+l;'qwertyuio[]asdfghjklzxcvbnmqwertyuiopzxc
+vbnm,./asdfghjkl;'qwertyuiop[bcdefghijklmno
+----END RSA PUBLIC KEY------
+EOT
+```
+
+- Your final environment variable configuration should look like this:
+
+```hcl
+# Indent Webhook Secret is used to verify messages from Indent
+indent_webhook_secret = "wks0asdfghjklqwertyuiop"
+# Okta Domain - This is your Okta URL
+okta_domain = "example.okta.com"
+# Okta Client ID - The client ID for your Okta Service App
+okta_client_id = "0oasdfghjklqwertyuiop"
+# Okta Private Key - This is an RSA private key used to generate a signed Bearer token for OAuth 2.0 access
+okta_private_key = <<EOT
+----BEGIN RSA PUBLIC KEY-----
+asdfghjklzxcvbnmqwertyuiopzxcvbnm,./asdfghj
+kl;'qwertyuiop[]asdfghjklzxcvbnmqwertyuiopz
+xcvbnm,./asdfghjkl;'qwertyuiop[]asdfghjklzx
+cvbnmqwertyuiopzxcvbnm,./asdfghjkl;'qwertyu
+iop[]asdfghjklzxcvbnmqwertyuiopzxcvbnm,./as
+dfghjkl;'qwertyuiop[]asdfghjklzxcvbnmqwerty
+uiopzxcvbnm,./asdfghjkl;'qwertyuiop[]asdfgh
+jklzxcvbnmqwertyuiopzxcvbnm,./asdfghjkl;'qw
+ertyuiop[]asdfghjklzxcvbnmqwertyuiopzxcvbnm
+,./asdfghjkl;'qwertyuiop[]asdfghjklzxcvbnmq
+wertyuiopzxcvbnm,./asdfghjkl;'qwertyuiop[]a
+sdfghjklzxcvbnmqwertyuiopzxcvbnm,./asdfghjk
+l;'qwertyuio[]asdfghjklzxcvbnmqwertyuiopzxc
+vbnm,./asdfghjkl;'qwertyuiop[bcdefghijklmno
+----END RSA PUBLIC KEY------
 EOT
 
 # Okta Profile Resource Kind - the kind of Indent Resource that uses a custom Okta User Profile Attribute
 okta_profile_resource_kind = "example.v1.Customer"
 # Okta Profile Custom Attribute - the label for the name of your custom profile attribute
-okta_profile_attribute = "okta/userProfileAttribute/key"
+okta_profile_attribute = "okta/userProfileAttribute/id"
+# Okta Profile Custom Attribute Value - the label for the value of your custom profile attribute
+okta_profile_attribute_value = "okta/userProfileAttribute/value"
+```
+
+</p>
+</details>
+
+Add all the remaining environment variables:
+
+`terraform/config/terraform.tfvars`
+
+```hcl
+# Indent Webhook Secret is used to verify messages from Indent
+indent_webhook_secret = "wks0asdfghjklqwertyuiop"
+# Okta Domain - This is your Okta URL
+okta_domain = "example.okta.com"
+
+# Okta Profile Resource Kind - the kind of Indent Resource that uses a custom Okta User Profile Attribute
+okta_profile_resource_kind = "example.v1.Customer"
+# Okta Profile Custom Attribute - the label for the name of your custom profile attribute
+okta_profile_attribute = "okta/userProfileAttribute/id"
 # Okta Profile Custom Attribute Value - the label for the value of your custom profile attribute
 okta_profile_attribute_value = "okta/userProfileAttribute/value"
 ```
 
 ### Deployment
 
-Deploy it to the cloud with [Terraform](https://terraform.io) ([Documentation](https://terraform.io/docs/)) and [AWS Lambda](https://aws.amazon.com/lambda/).
+Build and deploy the webhook to the cloud with [Terraform](https://terraform.io) ([Documentation](https://terraform.io/docs/)) and [AWS Lambda](https://aws.amazon.com/lambda/):
+
+```bash
+npm run deploy:all
+```
 
 This will take a few minutes to run the first time as Terraform sets up the resources in the AWS Account.
 
