@@ -97,12 +97,7 @@ exports['webhook'] = async function handle(
       const resources = resourcesAsync.flat()
       console.log('pullUpdate: success: ' + pull.kinds)
 
-      return res.status(200).json({
-        resources,
-        status: {
-          message: 'pullUpdate: success: ' + pull.kinds,
-        },
-      })
+      return res.status(200).json({ resources })
     } catch (err) {
       console.log('pullUpdate: error: ' + pull.kinds)
       console.error(err)
@@ -119,11 +114,7 @@ exports['webhook'] = async function handle(
     console.warn(JSON.stringify(body))
   }
 
-  return res.status(200).json({
-    status: {
-      message: 'webhook received unknown payload',
-    },
-  })
+  return res.status(200).json({})
 }
 
 async function pullGroups(): Promise<Resource[]> {
@@ -243,10 +234,12 @@ function parseLinkHeader(s: string): { next?: string } {
 
 type IRequest = Request & { rawBody: string }
 
+type Status = {
+  message: string
+  details?: string | JSON
+}
+
 type PullUpdateResponse = {
-  status: {
-    message: string
-    details?: string | JSON
-  }
+  status: Status
   resources?: Resource[]
 }
