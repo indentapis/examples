@@ -54,7 +54,10 @@ async function loadFromOkta({
     .map(transform)
 }
 
-exports['webhook'] = async function handle(req: IRequest, res: Response) {
+exports['webhook'] = async function handle(
+  req: IRequest,
+  res: Response
+): Promise<Response<PullUpdateResponse>> {
   const { headers, rawBody } = req
 
   try {
@@ -66,7 +69,12 @@ exports['webhook'] = async function handle(req: IRequest, res: Response) {
   } catch (err) {
     console.error('@indent/webhook.verify(): failed')
     console.error(err)
-    return res.status(500).json({ error: { message: err.message } })
+    return res.status(500).json({
+      status: {
+        message: err.message,
+        details: JSON.stringify(err.stack),
+      },
+    })
   }
 
   const body = JSON.parse(rawBody)
@@ -89,11 +97,21 @@ exports['webhook'] = async function handle(req: IRequest, res: Response) {
       const resources = resourcesAsync.flat()
       console.log('pullUpdate: success: ' + pull.kinds)
 
-      return res.status(200).json({ resources })
+      return res.status(200).json({
+        resources,
+        status: {
+          message: 'pullUpdate: success: ' + pull.kinds,
+        },
+      })
     } catch (err) {
       console.log('pullUpdate: error: ' + pull.kinds)
       console.error(err)
-      return res.status(500).json({ error: { message: err.message } })
+      return res.status(500).json({
+        status: {
+          message: err.message,
+          details: JSON.stringify(err.stack),
+        },
+      })
     }
   } else {
     // unknown payload
@@ -101,7 +119,11 @@ exports['webhook'] = async function handle(req: IRequest, res: Response) {
     console.warn(JSON.stringify(body))
   }
 
-  return res.status(200).json({})
+  return res.status(200).json({
+    status: {
+      message: 'webhook received unknown payload',
+    },
+  })
 }
 
 async function pullGroups(): Promise<Resource[]> {
@@ -220,3 +242,11 @@ function parseLinkHeader(s: string): { next?: string } {
 }
 
 type IRequest = Request & { rawBody: string }
+
+type PullUpdateResponse = {
+  status: {
+    message: string
+    details?: string | JSON
+  }
+  resources?: Resource[]
+}
