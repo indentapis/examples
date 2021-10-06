@@ -34,7 +34,10 @@ async function loadFromGoogleGroups(): Promise<Resource[]> {
   })) as Resource[]
 }
 
-exports['webhook'] = async function handle(req: IRequest, res: Response) {
+exports['webhook'] = async function handle(
+  req: IRequest,
+  res: Response
+): Promise<Response<PullUpdateResponse>> {
   const { headers, rawBody } = req
 
   try {
@@ -46,7 +49,12 @@ exports['webhook'] = async function handle(req: IRequest, res: Response) {
   } catch (err) {
     console.error('@indent/webhook.verify(): failed')
     console.error(err)
-    return res.status(500).json({ status: { message: err.message } })
+    return res.status(500).json({
+      status: {
+        message: err.message,
+        details: JSON.stringify(err.stack),
+      },
+    })
   }
 
   const body = JSON.parse(rawBody.toString())
@@ -61,7 +69,12 @@ exports['webhook'] = async function handle(req: IRequest, res: Response) {
     } catch (err) {
       console.log('pullUpdate: error: ' + pull.kinds)
       console.error(err)
-      return res.status(500).json({ status: { message: err.message } })
+      return res.status(500).json({
+        status: {
+          message: err.message,
+          details: JSON.stringify(err.stack),
+        },
+      })
     }
   } else {
     // unknown payload
@@ -73,3 +86,11 @@ exports['webhook'] = async function handle(req: IRequest, res: Response) {
 }
 
 type IRequest = Request & { rawBody: string }
+
+type PullUpdateResponse = {
+  status?: {
+    message: string
+    details?: string | JSON
+  }
+  resources?: Resource[]
+}
