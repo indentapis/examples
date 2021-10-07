@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { verify } from '@indent/webhook'
-import { json, Request, Response } from 'express'
-import { Resource } from '@indent/types'
+import { Request, Response } from 'express'
+import { Resource, PullUpdateResponse } from '@indent/types'
 
 const INDENT_WEBHOOK_SECRET = process.env.INDENT_WEBHOOK_SECRET
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN
@@ -54,6 +54,8 @@ exports['webhook'] = async function handle(
   res: Response
 ): Promise<Response<PullUpdateResponse>> {
   const { headers, rawBody } = req
+  // Log attempt #1
+  console.log(rawBody.toString())
 
   try {
     await verify({
@@ -66,6 +68,7 @@ exports['webhook'] = async function handle(
     console.error(err)
     return res.status(500).json({
       status: {
+        code: 500,
         message: err.message,
         details: JSON.stringify(err.stack),
       },
@@ -74,18 +77,31 @@ exports['webhook'] = async function handle(
 
   const body = JSON.parse(rawBody.toString())
   const pull = body as { kinds: string[] }
+
   if (pull && pull.kinds) {
     console.log('pullUpdate: attempt: ' + pull.kinds)
+    // log attempt #2
+    console.log(JSON.stringify(res))
     try {
-      const resources = await loadFromGitHubTeams()
-      console.log('My Resource: ' + resources[0])
+      const resourcesAsync = await Promise.all(
+        pull.kinds.map(async (kind: string): Promise<Resource[]> => {
+          if (kind.toLowerCase().includes('github.v1.team')) {
+            return await loadFromGitHubTeams()
+          }
+
+          return []
+        })
+      )
+      const resources = resourcesAsync.flat()
       console.log('pullUpdate: success: ' + pull.kinds)
+
       return res.status(200).json({ resources })
     } catch (err) {
       console.log('pullUpdate: error: ' + pull.kinds)
       console.error(err)
       return res.status(500).json({
         status: {
+          code: 500,
           message: err.message,
           details: JSON.stringify(err.stack),
         },
@@ -116,11 +132,3 @@ type GitHubTeam = {
 }
 
 type IRequest = Request & { rawBody: string }
-
-type PullUpdateResponse = {
-  status?: {
-    message: string
-    details?: string | JSON
-  }
-  resources?: Resource[]
-}

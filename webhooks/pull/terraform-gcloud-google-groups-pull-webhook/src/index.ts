@@ -3,7 +3,7 @@ import { google } from 'googleapis'
 import { getAuth } from './capabilities/google-groups'
 import { verify } from '@indent/webhook'
 import { Request, Response } from 'express'
-import { Resource } from '@indent/types'
+import { Resource, PullUpdateResponse } from '@indent/types'
 
 const GOOGLE_CUSTOMER_ID = process.env.GOOGLE_CUSTOMER_ID
 
@@ -86,11 +86,3 @@ exports['webhook'] = async function handle(
 }
 
 type IRequest = Request & { rawBody: string }
-
-type PullUpdateResponse = {
-  status?: {
-    message: string
-    details?: string | JSON
-  }
-  resources?: Resource[]
-}
