@@ -54,8 +54,6 @@ exports['webhook'] = async function handle(
   res: Response
 ): Promise<Response<PullUpdateResponse>> {
   const { headers, rawBody } = req
-  // Log attempt #1
-  console.log(rawBody.toString())
 
   try {
     await verify({
@@ -75,13 +73,11 @@ exports['webhook'] = async function handle(
     })
   }
 
-  const body = JSON.parse(rawBody.toString())
+  const body = JSON.parse(rawBody)
   const pull = body as { kinds: string[] }
 
   if (pull && pull.kinds) {
     console.log('pullUpdate: attempt: ' + pull.kinds)
-    // log attempt #2
-    console.log(JSON.stringify(res))
     try {
       const resourcesAsync = await Promise.all(
         pull.kinds.map(async (kind: string): Promise<Resource[]> => {
