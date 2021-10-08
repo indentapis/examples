@@ -18,7 +18,7 @@
     "url": "https://github.com/indentapis/examples.git"
   },
   "dependencies": {
-    "@indent/types": "latest",
+    "@indent/types": "^0.2.1",
     "@indent/webhook": "latest",
     "@types/node-fetch": "^2.5.5",
     "axios": "^0.21.1",

@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-iam": "^3.34.0",
-    "@indent/types": "latest",
+    "@indent/types": "^0.2.1",
     "@indent/webhook": "latest",
     "aws-lambda": "^1.0.5"
   }

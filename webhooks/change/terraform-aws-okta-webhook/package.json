@@ -29,13 +29,13 @@
     "@types/aws-lambda": "^8.10.39",
     "@types/node": "^13.9.8",
     "@types/node-fetch": "^2.5.5",
+    "@indent/types": "^0.2.1",
     "ts-loader": "^6.2.2",
     "typescript": "^3.8.3",
     "webpack": "^4.42.1"
   },
   "dependencies": {
     "@indent/webhook": "latest",
-    "@indent/types": "latest",
     "aws-lambda": "^1.0.6",
     "axios": "^0.21.1",
     "env-cmd": "^10.1.0",

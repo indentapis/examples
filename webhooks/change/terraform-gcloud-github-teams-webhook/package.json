@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@indent/webhook": "^0.1.5",
-    "@indent/types": "^0.1.5",
+    "@indent/types": "^0.2.1",
     "axios": "^0.21.1"
   },
   "devDependencies": {

@@ -90,7 +90,6 @@ exports['webhook'] = async function handle(
       )
       const resources = resourcesAsync.flat()
       console.log('pullUpdate: success: ' + pull.kinds)
-
       return res.status(200).json({ resources })
     } catch (err) {
       console.log('pullUpdate: error: ' + pull.kinds)
