@@ -1,5 +1,5 @@
 import { verify } from '@indent/webhook'
-import { Resource } from '@indent/types'
+import { Resource, PullUpdateResponse } from '@indent/types'
 import { Request, Response } from 'express'
 import axios from 'axios'
 
@@ -227,13 +227,3 @@ function parseLinkHeader(s: string): { next?: string } {
 }
 
 type IRequest = Request & { rawBody: string }
-
-type Status = {
-  message: string
-  details?: string | JSON
-}
-
-type PullUpdateResponse = {
-  status: Status
-  resources?: Resource[]
-}
