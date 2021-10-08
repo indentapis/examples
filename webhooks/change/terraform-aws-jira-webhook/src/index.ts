@@ -1,27 +1,39 @@
-import { APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda'
+import {
+  APIGatewayProxyHandler,
+  APIGatewayProxyResult,
+  APIGatewayProxyEvent,
+} from 'aws-lambda'
 import { verify } from '@indent/webhook'
-import * as types from '@indent/types'
+import { Event, ApplyUpdateResponse } from '@indent/types'
 
 import * as jiraTicket from './operations/jira-ticket'
 import * as jiraProjectRole from './operations/jira-project-role'
 
 const INDENT_WEBHOOK_SECRET = process.env.INDENT_WEBHOOK_SECRET || ''
 
-export const handle: APIGatewayProxyHandler = async function handle(event) {
+export const handle: APIGatewayProxyHandler = async function handle(
+  event: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> {
   const body = JSON.parse(event.body)
 
   try {
     await verify({
       secret: INDENT_WEBHOOK_SECRET,
       headers: event.headers,
-      body: event.body
+      body: event.body,
     })
   } catch (err) {
     console.error('@indent/webhook.verify(): failed')
     console.error(err)
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: { message: err.message } })
+      body: JSON.stringify({
+        status: {
+          code: 500,
+          message: err.message,
+          details: err.stack,
+        },
+      } as ApplyUpdateResponse),
     }
   }
 
@@ -31,26 +43,29 @@ export const handle: APIGatewayProxyHandler = async function handle(event) {
 
   const responses = (
     await Promise.all(
-      events.map(
-        (auditEvent: types.Event): Promise<APIGatewayProxyResult> => {
-          let { event } = auditEvent
+      events.map((auditEvent: Event): Promise<APIGatewayProxyResult> => {
+        let { event } = auditEvent
 
-          console.log(`@indent/webhook: ${event}`)
-          console.log(JSON.stringify(auditEvent))
+        console.log(`@indent/webhook: ${event}`)
+        console.log(JSON.stringify(auditEvent))
 
-          switch (event) {
-            case 'access/grant':
-              return grantPermission(auditEvent, events)
-            case 'access/revoke':
-              return revokePermission(auditEvent, events)
-            default:
-              return Promise.resolve({
-                statusCode: 200,
-                body: 'Unknown event'
-              })
-          }
+        switch (event) {
+          case 'access/grant':
+            return grantPermission(auditEvent, events)
+          case 'access/revoke':
+            return revokePermission(auditEvent, events)
+          default:
+            return Promise.resolve({
+              statusCode: 200,
+              body: JSON.stringify({
+                status: {
+                  code: 200,
+                  message: 'Received unknown response',
+                },
+              } as ApplyUpdateResponse),
+            })
         }
-      )
+      })
     )
   ).filter(
     (r: APIGatewayProxyResult) => r.statusCode !== 200
@@ -62,11 +77,11 @@ export const handle: APIGatewayProxyHandler = async function handle(event) {
 
   return {
     statusCode: 200,
-    body: '{}'
+    body: '{}',
   }
 }
 
-async function grantPermission(event: types.Event, allEvents: types.Event[]) {
+async function grantPermission(event: Event, allEvents: Event[]) {
   try {
     if (jiraProjectRole.match(event)) {
       return await jiraProjectRole.grantPermission(event, allEvents)
@@ -83,13 +98,22 @@ async function grantPermission(event: types.Event, allEvents: types.Event[]) {
       console.error(err.response.data)
     }
     return {
-      statusCode: 200,
-      body: JSON.stringify({ message: err.toString() })
+      statusCode: 500,
+      body: JSON.stringify({
+        statusCode: 500,
+        body: JSON.stringify({
+          status: {
+            code: 500,
+            message: err.message,
+            details: err.stack,
+          },
+        } as ApplyUpdateResponse),
+      }),
     }
   }
 }
 
-async function revokePermission(event: types.Event, allEvents: types.Event[]) {
+async function revokePermission(event: Event, allEvents: Event[]) {
   try {
     if (jiraProjectRole.match(event)) {
       return await jiraProjectRole.revokePermission(event, allEvents)
@@ -106,8 +130,17 @@ async function revokePermission(event: types.Event, allEvents: types.Event[]) {
       console.error(err.response.data)
     }
     return {
-      statusCode: 200,
-      body: JSON.stringify({ message: err.toString() })
+      statusCode: 500,
+      body: JSON.stringify({
+        statusCode: 500,
+        body: JSON.stringify({
+          status: {
+            code: 500,
+            message: err.message,
+            details: err.stack,
+          },
+        } as ApplyUpdateResponse),
+      }),
     }
   }
 }

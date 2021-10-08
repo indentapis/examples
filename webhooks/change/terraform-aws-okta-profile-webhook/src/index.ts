@@ -1,10 +1,16 @@
-import { APIGatewayProxyHandler } from 'aws-lambda'
+import {
+  APIGatewayProxyHandler,
+  APIGatewayProxyEvent,
+  APIGatewayProxyResult,
+} from 'aws-lambda'
 import { verify } from '@indent/webhook'
-import { Event } from '@indent/types'
+import { Event, ApplyUpdateResponse } from '@indent/types'
 
 import * as oktaProfile from './capabilities/okta-profile'
 
-export const handle: APIGatewayProxyHandler = async function handle(event) {
+export const handle: APIGatewayProxyHandler = async function handle(
+  event: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> {
   try {
     await verify({
       secret: process.env.INDENT_WEBHOOK_SECRET,
@@ -16,7 +22,13 @@ export const handle: APIGatewayProxyHandler = async function handle(event) {
     console.error(err)
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: { message: err.message } }),
+      body: JSON.stringify({
+        status: {
+          code: 500,
+          message: err.message,
+          details: err.stack,
+        },
+      } as ApplyUpdateResponse),
     }
   }
 
@@ -58,9 +70,11 @@ export const handle: APIGatewayProxyHandler = async function handle(event) {
     return {
       statusCode: 500,
       body: JSON.stringify({
-        code: 2,
-        message: errors[0].toString(),
-      }),
+        status: {
+          code: 2,
+          message: errors[0].toString(),
+        },
+      } as ApplyUpdateResponse),
     }
   }
 
@@ -76,9 +90,11 @@ async function grantPermission(auditEvent: Event) {
   }
 
   return {
-    code: 404,
-    message:
-      'This resource is not supported by the capabilities of this webhook.',
+    status: {
+      code: 404,
+      message:
+        'This resource is not supported by the capabilities of this webhook',
+    },
   }
 }
 
@@ -88,8 +104,10 @@ async function revokePermission(auditEvent: Event) {
   }
 
   return {
-    code: 404,
-    message:
-      'This resource is not supported by the capabilities of this webhook.',
+    status: {
+      code: 404,
+      message:
+        'This resource is not supported by the capabilities of this webhook',
+    },
   }
 }
