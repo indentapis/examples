@@ -40,3 +40,7 @@ resource "google_cloudfunctions_function_iam_member" "invoker" {
   role   = "roles/cloudfunctions.invoker"
   member = "allUsers"
 }
+
+output "api_base_url" {
+  value = google_cloudfunctions_function.deploy.https_trigger_url
+}

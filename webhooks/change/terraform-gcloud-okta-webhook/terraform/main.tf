@@ -8,7 +8,7 @@ resource "google_storage_bucket" "function_bucket" {
   name = "indent-gcloud-okta-webhook-${random_string.suffix.result}"
 }
 
-module "google-github-teams" {
+module "gcloud-okta-webhook" {
   source     = "./function"
   root_dir   = "${path.module}/.."
   name       = "indent-gcloud-okta-webhook-${random_string.suffix.result}"
