@@ -105,12 +105,6 @@ export const handle: APIGatewayProxyHandler = async function handle(
     } catch (err) {
       console.log('pullUpdate: error: ' + pull.kinds)
       console.error(err)
-      return {
-        statusCode: 500,
-        body: JSON.stringify({
-          status: { code: 500, message: err.message, details: err.stack },
-        } as PullUpdateResponse),
-      }
     }
   } else {
     // unknown payload

@@ -94,13 +94,6 @@ exports['webhook'] = async function handle(
     } catch (err) {
       console.log('pullUpdate: error: ' + pull.kinds)
       console.error(err)
-      return res.status(500).json({
-        status: {
-          code: 500,
-          message: err.message,
-          details: JSON.stringify(err.stack),
-        },
-      })
     }
   } else {
     // unknown payload

@@ -1,8 +1,8 @@
-import { APIGatewayProxyHandler } from 'aws-lambda'
+import { APIGatewayProxyHandler, APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import { verify } from '@indent/webhook'
-import * as Indent from '@indent/types'
+import { Resource, PullUpdateResponse } from '@indent/types'
 
-export const handle: APIGatewayProxyHandler = async function handle(event) {
+export const handle: APIGatewayProxyHandler = async function handle(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
   try {
     await verify({
       secret: process.env.INDENT_WEBHOOK_SECRET,
@@ -14,7 +14,7 @@ export const handle: APIGatewayProxyHandler = async function handle(event) {
     console.error(err)
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: { message: err.message } }),
+      body: JSON.stringify({ status: { code: 500, message: err.message, details: err.stack } } as PullUpdateResponse),
     }
   }
 
@@ -25,7 +25,7 @@ export const handle: APIGatewayProxyHandler = async function handle(event) {
     console.log('pullUpdate: attempt: ' + pull.kinds)
     try {
       const resourcesAsync = await Promise.all(
-        pull.kinds.map(async (_kind: string): Promise<Indent.Resource[]> => {
+        pull.kinds.map(async (_kind: string): Promise<Resource[]> => {
           // pull resources from custom data source
 
           return [{
@@ -40,11 +40,15 @@ export const handle: APIGatewayProxyHandler = async function handle(event) {
 
       return {
         statusCode: 200,
-        body: JSON.stringify({ resources }),
+        body: JSON.stringify({ resources } as PullUpdateResponse),
       }
     } catch (err) {
       console.log('pullUpdate: error: ' + pull.kinds)
       console.error(err)
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ status: { code: 500, message: err.message, details: err.stack } } as PullUpdateResponse)
+      }
     }
   } else {
     // unknown payload
