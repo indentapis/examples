@@ -62,7 +62,7 @@ async function getOktaAccessToken(signingToken: string): Promise<string> {
     data: urlParams,
   }).then((r) => r.data)
 
-  console.log(res)
+  console.log('okta-auth: got access token')
 
   return res.access_token
 }
