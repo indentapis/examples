@@ -12,7 +12,35 @@ export const matchEvent = (event: Event): boolean => {
   )
 }
 
-export const grantPermission = async (auditEvent: Event) => {
+export async function grantPermission(auditEvent: Event) {
+  try {
+    const { event, resources } = auditEvent
+    const { email } = getResourceByKind(resources, 'user')
+    const { displayName } = getResourceByKind(resources, 'tailscale.v1.group')
+
+    return await updateTailscaleACL({
+      user: email,
+      group: displayName,
+      event,
+      tailnet: TS_TAILNET,
+    })
+  } catch (err) {
+    console.error('@indent/webhook.grantPermission(): failed')
+    console.error(err)
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        status: {
+          code: 500,
+          message: err.message,
+          details: err.stack,
+        },
+      }),
+    }
+  }
+}
+
+export async function revokePermission(auditEvent: Event) {
   try {
     const { event, resources } = auditEvent
     const { email } = getResourceByKind(resources, 'user')
@@ -40,35 +68,7 @@ export const grantPermission = async (auditEvent: Event) => {
   }
 }
 
-export const revokePermission = async (auditEvent: Event) => {
-  try {
-    const { event, resources } = auditEvent
-    const { email } = getResourceByKind(resources, 'user')
-    const { displayName } = getResourceByKind(resources, 'tailscale.v1.group')
-
-    return await updateTailscaleACL({
-      user: email,
-      group: displayName,
-      event,
-      tailnet: TS_TAILNET,
-    })
-  } catch (err) {
-    console.error('@indent/webhook.revokePermission(): failed')
-    console.error(err)
-    return {
-      statusCode: 500,
-      body: JSON.stringify({
-        status: {
-          code: 500,
-          message: err.message,
-          details: err.stack,
-        },
-      }),
-    }
-  }
-}
-
-const updateTailscaleACL = async ({
+async function updateTailscaleACL({
   user,
   group,
   tailnet,
@@ -78,11 +78,12 @@ const updateTailscaleACL = async ({
   group: string
   tailnet: string
   event: string
-}) => {
+}) {
   const tailnetGroup = 'group:' + group
-  const { headers, data: results } = await getTailscaleACL({ tailnet })
-  const { Etag } = headers
-  let currentACL = JSON.parse(results)
+  const { headers, data } = await getTailscaleACL({ tailnet })
+  console.log('GET tailnet headers:', headers)
+  const { etag } = headers
+  let currentACL = data
 
   if (currentACL) {
     let currentGroup = currentACL.groups[tailnetGroup]
@@ -96,27 +97,29 @@ const updateTailscaleACL = async ({
         currentGroup = currentGroup.filter((u) => u !== user)
       }
     } else {
+      console.log(
+        `There are no members of the group ${currentGroup}, adding ${user}...`
+      )
       currentGroup = [user]
     }
-
-    console.log('Current group members', currentGroup)
     currentACL.groups[tailnetGroup] = currentGroup
   } else {
     console.warn('No ACL found on Tailscale response')
   }
 
-  return postTailscaleACL({ tailnet, Etag, ACL: currentACL })
+  return await postTailscaleACL({ tailnet, etag, ACL: currentACL })
 }
 
-const getTailscaleACL = async ({
+async function getTailscaleACL({
   tailnet,
 }: {
   tailnet: string
-}): Promise<AxiosResponse<any>> => {
-  const response = await axios({
+}): Promise<AxiosResponse<any>> {
+  return await axios({
     method: 'get',
-    url: `https://api.tailscale.net/api/v2/tailnet/${tailnet}/acl`,
+    url: `https://api.tailscale.com/api/v2/tailnet/${tailnet}/acl`,
     headers: {
+      'Content-Type': 'application/json',
       Accept: 'application/json',
     },
     auth: {
@@ -124,35 +127,32 @@ const getTailscaleACL = async ({
       password: '',
     },
   })
-  console.log('Headers:', response.headers)
-  console.log('Tailscale response:', response.data)
-  return response
 }
 
-const postTailscaleACL = async ({
+async function postTailscaleACL({
   tailnet,
-  Etag,
+  etag,
   ACL,
 }: {
   tailnet: string
-  Etag: string
+  etag: string
   ACL: any
-}) => {
+}) {
+  console.log(`etag: ${etag}`)
   return await axios({
     method: 'post',
     url: `https://api.tailscale.com/api/v2/tailnet/${tailnet}/acl`,
     headers: {
       Accept: 'application/json',
-      'If-Match': Etag,
+      'If-Match': etag,
+      'Content-Type': 'application/json',
     },
     auth: {
       username: TS_API_KEY,
       password: '',
     },
-    data: {
-      ...ACL,
-    },
-  }).then((r) => r.data)
+    data: ACL,
+  })
 }
 
 const getResourceByKind = (resources: Resource[], kind: string): Resource => {

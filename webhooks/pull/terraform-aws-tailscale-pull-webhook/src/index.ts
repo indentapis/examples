@@ -72,7 +72,7 @@ const pullGroups = async (): Promise<Resource[]> => {
   const timestamp = new Date().toISOString()
   const tailscaleGroupResources = await loadFromTailscale({
     transform: (group) => ({
-      id: [`tailnet/${TS_TAILNET}`, group.split(':')[1]].join('/'),
+      id: [`tailscale/${TS_TAILNET}`, group.split(':')[1]].join('/'),
       kind: 'tailscale.v1.Group',
       displayName: group.split(':')[1],
       labels: {

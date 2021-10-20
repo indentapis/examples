@@ -4,33 +4,33 @@ import {
   APIGatewayProxyResult,
 } from 'aws-lambda'
 import { Event } from '@indent/types'
-import { verify } from '@indent/webhook'
+// import { verify } from '@indent/webhook'
 
 import * as tailscale from './capabilities/tailscale-acl'
 
-export const handle: APIGatewayProxyHandler = async (
+export const handle: APIGatewayProxyHandler = async function handle(
   event: APIGatewayProxyEvent
-): Promise<APIGatewayProxyResult> => {
-  try {
-    await verify({
-      secret: process.env.INDENT_WEBHOOK_SECRET,
-      headers: event.headers,
-      body: event.body,
-    })
-  } catch (err) {
-    console.error('@indent/webhook.verify(): failed')
-    console.error(err)
-    return {
-      statusCode: 500,
-      body: JSON.stringify({
-        status: {
-          code: 500,
-          message: err.message,
-          details: err.stack,
-        },
-      }),
-    }
-  }
+): Promise<APIGatewayProxyResult> {
+  // try {
+  //   await verify({
+  //     secret: process.env.INDENT_WEBHOOK_SECRET,
+  //     headers: event.headers,
+  //     body: event.body,
+  //   })
+  // } catch (err) {
+  //   console.error('@indent/webhook.verify(): failed')
+  //   console.error(err)
+  //   return {
+  //     statusCode: 500,
+  //     body: JSON.stringify({
+  //       status: {
+  //         code: 500,
+  //         message: err.message,
+  //         details: err.stack,
+  //       },
+  //     }),
+  //   }
+  // }
 
   const body = JSON.parse(event.body)
   const { events } = body
