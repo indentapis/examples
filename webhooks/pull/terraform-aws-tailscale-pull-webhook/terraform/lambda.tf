@@ -26,6 +26,8 @@ resource "aws_lambda_function" "lambda" {
   environment {
     variables = {
       "INDENT_WEBHOOK_SECRET" = var.indent_webhook_secret
+      "TS_TAILNET"            = var.ts_tailnet
+      "TS_API_KEY"            = var.ts_api_key
     }
   }
 }

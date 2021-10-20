@@ -1,9 +1,9 @@
 locals {
-  name          = "indent-aws-iam-pull-webhook-${random_string.suffix.result}"
+  name          = "indent-aws-tscale-pull-webhook-${random_string.suffix.result}"
   lambda_memory = 128
 
   tags = {
-    Name       = "Indent + AWS IAM via Terraform"
+    Name       = "Indent + Tailscale on AWS via Terraform"
     GitRepo    = "https://github.com/indentapis/examples"
     ProvidedBy = "Indent"
   }

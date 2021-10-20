@@ -1,6 +1,6 @@
 resource "aws_api_gateway_rest_api" "api_gateway_rest_api" {
   name        = "api_gateway"
-  description = "Api Gateway for indent-aws-iam-pull-webhook"
+  description = "Api Gateway for indent-aws-tailscale-pull-webhook"
 }
 
 resource "aws_api_gateway_resource" "api_gateway" {
