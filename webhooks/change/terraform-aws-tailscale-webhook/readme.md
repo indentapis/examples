@@ -1,4 +1,4 @@
-# Terraform AWS Tailscale Pull Webhook
+# Terraform AWS Tailscale Webhook
 
 ## How To Use
 
@@ -14,7 +14,7 @@
 Download the example:
 
 ```bash
-curl https://codeload.github.com/indentapis/examples/tar.gz/main | tar -xz --strip=3 examples-main/webhooks/pull/terraform-aws-tailscale-pull-webhook
+curl https://codeload.github.com/indentapis/examples/tar.gz/main | tar -xz --strip=3 examples-main/webhooks/change/terraform-aws-tailscale-webhook
 cd terraform-aws-iam-pull-webhook
 ```
 
