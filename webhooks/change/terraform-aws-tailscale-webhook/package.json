@@ -1,9 +1,10 @@
 {
-  "name": "terraform-aws-tailscale-pull-webhook",
+  "name": "terraform-aws-tailscale-webhook",
   "version": "0.0.0",
   "description": "A Node.js starter for Terraform on AWS with Indent and Tailscale",
   "main": "index.js",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "tsc",
     "clean:dist": "rm -rf dist",
@@ -40,6 +41,7 @@
     "@types/aws-lambda": "^8.10.84",
     "@types/axios": "^0.14.0",
     "@types/node": "^16.11.1",
+    "ts-node": "^10.3.1",
     "typescript": "^4.4.4"
   },
   "dependencies": {
