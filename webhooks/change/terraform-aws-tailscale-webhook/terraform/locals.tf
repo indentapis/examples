@@ -1,5 +1,5 @@
 locals {
-  name          = "indent-aws-tscale-pull-webhook-${random_string.suffix.result}"
+  name          = "indent-aws-tscale-webhook-${random_string.suffix.result}"
   lambda_memory = 128
 
   tags = {

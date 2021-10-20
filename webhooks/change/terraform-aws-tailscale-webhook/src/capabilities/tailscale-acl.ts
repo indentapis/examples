@@ -82,7 +82,7 @@ const updateTailscaleACL = async ({
   const tailnetGroup = 'group:' + group
   const { headers, data: results } = await getTailscaleACL({ tailnet })
   const { Etag } = headers
-  const currentACL = JSON.parse(results)
+  let currentACL = JSON.parse(results)
 
   if (currentACL) {
     let currentGroup = currentACL.groups[tailnetGroup]

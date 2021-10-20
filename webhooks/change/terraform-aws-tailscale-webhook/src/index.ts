@@ -75,6 +75,11 @@ export const handle: APIGatewayProxyHandler = async (
       }),
     }
   }
+
+  return {
+    statusCode: 200,
+    body: '{}',
+  }
 }
 
 async function grantPermission(auditEvent: Event) {
