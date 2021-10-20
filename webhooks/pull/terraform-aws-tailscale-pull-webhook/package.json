@@ -1,0 +1,48 @@
+{
+  "name": "terraform-aws-tailscale-pull-webhook",
+  "version": "0.0.0",
+  "description": "A Node.js starter for Terraform on AWS with Indent and Tailscale",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "clean:dist": "rm -rf dist",
+    "clean:modules": "rm -rf node_modules",
+    "clean:tf": "rm -rf teraform/.terraform && rm -rf terraform/terraform.tfstate*",
+    "clean:all": "npm run clean:dist && npm run clean:tf && npm run clean:modules",
+    "create:all": "npm run deploy:init && npm run deploy:prepare && npm run deploy:all",
+    "deploy:init": "cd terraform && terraform init && terraform fmt -check -diff",
+    "deploy:prepare": "npm install --production && ./scripts/build-layers.sh",
+    "deploy:all": "npm install && npm run build && npm run tf:apply -- -auto-approve",
+    "destroy:all": "npm run tf:destroy -auto-approve",
+    "tf:plan": "cd terraform && terraform plan -var-file ./config/terraform.tfvars",
+    "tf:apply": "cd terraform && terraform apply -compact-warnings -var-file ./config/terraform.tfvars",
+    "tf:destroy": "cd terraform && terraform destroy -auto-approve -var-file ./config/terraform.tfvars"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/indentapis/examples.git"
+  },
+  "keywords": [
+    "tailscale",
+    "api",
+    "indent",
+    "webhook"
+  ],
+  "author": "Indent Inc.",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/indentapis/examples/issues"
+  },
+  "homepage": "https://github.com/indentapis/examples#readme",
+  "devDependencies": {
+    "@indent/types": "^0.2.1",
+    "@types/aws-lambda": "^8.10.84",
+    "@types/node": "^16.11.1",
+    "typescript": "^4.4.4"
+  },
+  "dependencies": {
+    "@indent/webhook": "^0.2.1",
+    "aws-lambda": "^1.0.6"
+  }
+}
