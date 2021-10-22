@@ -6,7 +6,7 @@ import {
 import { Event } from '@indent/types'
 import { verify } from '@indent/webhook'
 
-import * as tailscale from './capabilities/tailscale-acl-hujson'
+import * as tailscale from './capabilities/tailscale-acl'
 
 export const handle: APIGatewayProxyHandler = async function handle(
   event: APIGatewayProxyEvent
@@ -50,7 +50,7 @@ export const handle: APIGatewayProxyHandler = async function handle(
 
       switch (event) {
         case 'access/grant':
-          return grantPermission(auditEvent, events)
+          return grantPermission(auditEvent)
         case 'access/revoke':
           return revokePermission(auditEvent)
         case 'access/approve':
@@ -82,9 +82,9 @@ export const handle: APIGatewayProxyHandler = async function handle(
   }
 }
 
-async function grantPermission(auditEvent: Event, allEvents: Event[]) {
+async function grantPermission(auditEvent: Event) {
   if (tailscale.matchEvent(auditEvent)) {
-    return await tailscale.grantPermission(auditEvent, allEvents)
+    return await tailscale.grantPermission(auditEvent)
   }
 
   return {

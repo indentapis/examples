@@ -71,7 +71,6 @@ export async function revokePermission(auditEvent: Event) {
 async function updateTailscaleACL({
   user,
   group,
-  tailnet,
   event,
 }: {
   user: string
@@ -80,7 +79,7 @@ async function updateTailscaleACL({
   event: string
 }) {
   const tailnetGroup = 'group:' + group
-  const { headers, data } = await getTailscaleACL({ tailnet })
+  const { headers, data } = await getTailscaleACL()
   console.log('ACL with comments', data.toString())
   const { etag } = headers
   let currentACL = data
@@ -107,17 +106,13 @@ async function updateTailscaleACL({
     console.warn('No ACL found on Tailscale response')
   }
 
-  return await postTailscaleACL({ tailnet, etag, ACL: currentACL })
+  return await postTailscaleACL({ etag, ACL: currentACL })
 }
 
-async function getTailscaleACL({
-  tailnet,
-}: {
-  tailnet: string
-}): Promise<AxiosResponse<any>> {
+async function getTailscaleACL(): Promise<AxiosResponse<any>> {
   return await axios({
     method: 'get',
-    url: `https://api.tailscale.com/api/v2/tailnet/${tailnet}/acl`,
+    url: `https://api.tailscale.com/api/v2/tailnet/${TS_TAILNET}/acl`,
     headers: {
       'Content-Type': 'application/hujson',
       Accept: 'application/hujson',
@@ -129,19 +124,11 @@ async function getTailscaleACL({
   })
 }
 
-async function postTailscaleACL({
-  tailnet,
-  etag,
-  ACL,
-}: {
-  tailnet: string
-  etag: string
-  ACL: any
-}) {
+async function postTailscaleACL({ etag, ACL }: { etag: string; ACL: any }) {
   console.log(`etag: ${etag}`)
   return await axios({
     method: 'post',
-    url: `https://api.tailscale.com/api/v2/tailnet/${tailnet}/acl`,
+    url: `https://api.tailscale.com/api/v2/tailnet/${TS_TAILNET}/acl`,
     headers: {
       Accept: 'application/hujson',
       'If-Match': etag,
