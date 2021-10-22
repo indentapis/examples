@@ -81,7 +81,7 @@ async function updateTailscaleACL({
 }) {
   const tailnetGroup = 'group:' + group
   const { headers, data } = await getTailscaleACL({ tailnet })
-  console.log('GET tailnet headers:', headers)
+  console.log('ACL with comments', data.toString())
   const { etag } = headers
   let currentACL = data
 
@@ -119,8 +119,8 @@ async function getTailscaleACL({
     method: 'get',
     url: `https://api.tailscale.com/api/v2/tailnet/${tailnet}/acl`,
     headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
+      'Content-Type': 'application/hujson',
+      Accept: 'application/hujson',
     },
     auth: {
       username: TS_API_KEY,
@@ -143,9 +143,8 @@ async function postTailscaleACL({
     method: 'post',
     url: `https://api.tailscale.com/api/v2/tailnet/${tailnet}/acl`,
     headers: {
-      Accept: 'application/json',
+      Accept: 'application/hujson',
       'If-Match': etag,
-      'Content-Type': 'application/json',
     },
     auth: {
       username: TS_API_KEY,

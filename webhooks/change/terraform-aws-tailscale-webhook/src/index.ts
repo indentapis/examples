@@ -4,33 +4,33 @@ import {
   APIGatewayProxyResult,
 } from 'aws-lambda'
 import { Event } from '@indent/types'
-// import { verify } from '@indent/webhook'
+import { verify } from '@indent/webhook'
 
-import * as tailscale from './capabilities/tailscale-acl'
+import * as tailscale from './capabilities/tailscale-acl-hujson'
 
 export const handle: APIGatewayProxyHandler = async function handle(
   event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> {
-  // try {
-  //   await verify({
-  //     secret: process.env.INDENT_WEBHOOK_SECRET,
-  //     headers: event.headers,
-  //     body: event.body,
-  //   })
-  // } catch (err) {
-  //   console.error('@indent/webhook.verify(): failed')
-  //   console.error(err)
-  //   return {
-  //     statusCode: 500,
-  //     body: JSON.stringify({
-  //       status: {
-  //         code: 500,
-  //         message: err.message,
-  //         details: err.stack,
-  //       },
-  //     }),
-  //   }
-  // }
+  try {
+    await verify({
+      secret: process.env.INDENT_WEBHOOK_SECRET,
+      headers: event.headers,
+      body: event.body,
+    })
+  } catch (err) {
+    console.error('@indent/webhook.verify(): failed')
+    console.error(err)
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        status: {
+          code: 500,
+          message: err.message,
+          details: err.stack,
+        },
+      }),
+    }
+  }
 
   const body = JSON.parse(event.body)
   const { events } = body
@@ -50,7 +50,7 @@ export const handle: APIGatewayProxyHandler = async function handle(
 
       switch (event) {
         case 'access/grant':
-          return grantPermission(auditEvent)
+          return grantPermission(auditEvent, events)
         case 'access/revoke':
           return revokePermission(auditEvent)
         case 'access/approve':
@@ -82,9 +82,9 @@ export const handle: APIGatewayProxyHandler = async function handle(
   }
 }
 
-async function grantPermission(auditEvent: Event) {
+async function grantPermission(auditEvent: Event, allEvents: Event[]) {
   if (tailscale.matchEvent(auditEvent)) {
-    return await tailscale.grantPermission(auditEvent)
+    return await tailscale.grantPermission(auditEvent, allEvents)
   }
 
   return {
