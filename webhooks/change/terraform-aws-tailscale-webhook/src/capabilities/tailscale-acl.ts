@@ -4,6 +4,7 @@ import { Event, Resource } from '@indent/types'
 
 const TAILSCALE_API_KEY = process.env.TAILSCALE_API_KEY
 const TAILSCALE_TAILNET = process.env.TAILSCALE_TAILNET
+
 export const matchEvent = (event: Event): boolean => {
   return (
     event.resources.filter((r) =>
