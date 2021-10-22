@@ -88,7 +88,7 @@ const loadFromTailscale = async ({
 }): Promise<Resource[]> => {
   console.log('Loading data from Tailscale...')
 
-  const acl = await axios({
+  const acl = (await axios({
     method: 'get',
     url: `https://api.tailscale.com/api/v2/tailnet/${tailnet}/acl`,
     headers: {
@@ -98,7 +98,7 @@ const loadFromTailscale = async ({
       username: TAILSCALE_API_KEY,
       password: '',
     },
-  }).then((r) => r.data)
+  }).then((r) => r.data)) as any
 
   if (acl?.Groups) {
     return Object.keys(acl.Groups).map(transform)
