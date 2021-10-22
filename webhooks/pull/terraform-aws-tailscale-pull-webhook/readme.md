@@ -34,10 +34,10 @@ Add the environment variables:
 indent_webhook_secret = ""
 
 # Tailscale API Key - Create this in the admin console
-ts_api_key = ""
+tailscale_api_key = ""
 
 # Tailnet - This is usually the email address you used to create your Tailscale account
-ts_tailnet = ""
+tailscale_tailnet = ""
 ```
 
 ### Deployment

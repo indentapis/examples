@@ -2,8 +2,8 @@ import axios from 'axios'
 import { AxiosResponse } from 'axios'
 import { Event, Resource } from '@indent/types'
 
-const TS_API_KEY = process.env.TS_API_KEY
-const TS_TAILNET = process.env.TS_TAILNET
+const TAILSCALE_API_KEY = process.env.TAILSCALE_API_KEY
+const TAILSCALE_TAILNET = process.env.TAILSCALE_TAILNET
 export const matchEvent = (event: Event): boolean => {
   return (
     event.resources.filter((r) =>
@@ -22,7 +22,7 @@ export async function grantPermission(auditEvent: Event) {
       user: email,
       group: displayName,
       event,
-      tailnet: TS_TAILNET,
+      tailnet: TAILSCALE_TAILNET,
     })
   } catch (err) {
     console.error('@indent/webhook.grantPermission(): failed')
@@ -50,7 +50,7 @@ export async function revokePermission(auditEvent: Event) {
       user: email,
       group: displayName,
       event,
-      tailnet: TS_TAILNET,
+      tailnet: TAILSCALE_TAILNET,
     })
   } catch (err) {
     console.error('@indent/webhook.revokePermission(): failed')
@@ -112,13 +112,13 @@ async function updateTailscaleACL({
 async function getTailscaleACL(): Promise<AxiosResponse<any>> {
   return await axios({
     method: 'get',
-    url: `https://api.tailscale.com/api/v2/tailnet/${TS_TAILNET}/acl`,
+    url: `https://api.tailscale.com/api/v2/tailnet/${TAILSCALE_TAILNET}/acl`,
     headers: {
       'Content-Type': 'application/hujson',
       Accept: 'application/hujson',
     },
     auth: {
-      username: TS_API_KEY,
+      username: TAILSCALE_API_KEY,
       password: '',
     },
   })
@@ -128,13 +128,13 @@ async function postTailscaleACL({ etag, ACL }: { etag: string; ACL: any }) {
   console.log(`etag: ${etag}`)
   return await axios({
     method: 'post',
-    url: `https://api.tailscale.com/api/v2/tailnet/${TS_TAILNET}/acl`,
+    url: `https://api.tailscale.com/api/v2/tailnet/${TAILSCALE_TAILNET}/acl`,
     headers: {
       Accept: 'application/hujson',
       'If-Match': etag,
     },
     auth: {
-      username: TS_API_KEY,
+      username: TAILSCALE_API_KEY,
       password: '',
     },
     data: ACL,

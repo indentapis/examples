@@ -65,18 +65,18 @@ export const handle: APIGatewayProxyHandler = async function handle(
   }
 }
 
-const TS_TAILNET = process.env.TS_TAILNET
-const TS_API_KEY = process.env.TS_API_KEY
+const TAILSCALE_TAILNET = process.env.TAILSCALE_TAILNET
+const TAILSCALE_API_KEY = process.env.TAILSCALE_API_KEY
 
 const pullGroups = async (): Promise<Resource[]> => {
   const timestamp = new Date().toISOString()
   const tailscaleGroupResources = await loadFromTailscale({
     transform: (group) => ({
-      id: [`tailscale/${TS_TAILNET}`, group.split(':')[1]].join('/'),
+      id: [`tailscale/${TAILSCALE_TAILNET}`, group.split(':')[1]].join('/'),
       kind: 'tailscale.v1.Group',
       displayName: group.split(':')[1],
       labels: {
-        ['tailscale/tailnet']: TS_TAILNET,
+        ['tailscale/tailnet']: TAILSCALE_TAILNET,
         timestamp,
       },
     }),
@@ -93,12 +93,12 @@ const loadFromTailscale = async ({
   // call to axios
   const response = await axios({
     method: 'get',
-    url: `https://api.tailscale.com/api/v2/tailnet/${TS_TAILNET}/acl`,
+    url: `https://api.tailscale.com/api/v2/tailnet/${TAILSCALE_TAILNET}/acl`,
     headers: {
       Accept: 'application/json',
     },
     auth: {
-      username: TS_API_KEY,
+      username: TAILSCALE_API_KEY,
       password: '',
     },
   })
