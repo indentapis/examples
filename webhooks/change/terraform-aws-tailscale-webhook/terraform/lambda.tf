@@ -26,8 +26,8 @@ resource "aws_lambda_function" "lambda" {
   environment {
     variables = {
       "INDENT_WEBHOOK_SECRET" = var.indent_webhook_secret
-      "TAILSCALE_TAILNET"            = var.tailscale_tailnet
-      "TAILSCALE_API_KEY"            = var.tailscale_api_key
+      "TAILSCALE_TAILNET"     = var.tailscale_tailnet
+      "TAILSCALE_API_KEY"     = var.tailscale_api_key
     }
   }
 }
