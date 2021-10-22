@@ -134,7 +134,7 @@ async function postTailscaleACL({
       username: TAILSCALE_API_KEY,
       password: '',
     },
-    data: ACL,
+    data: JSON.stringify(ACL, null, 2),
   })
 }
 
