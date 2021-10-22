@@ -6,7 +6,7 @@ import {
 import { Event } from '@indent/types'
 import { verify } from '@indent/webhook'
 
-import * as tailscale from './capabilities/tailscale-acl'
+import * as tailscale from './capabilities/tailscale-groups'
 
 export const handle: APIGatewayProxyHandler = async function handle(
   event: APIGatewayProxyEvent
