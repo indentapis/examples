@@ -115,8 +115,8 @@ async function getTailscaleACL(): Promise<AxiosResponse<any>> {
     method: 'get',
     url: `https://api.tailscale.com/api/v2/tailnet/${TAILSCALE_TAILNET}/acl`,
     headers: {
-      'Content-Type': 'application/hujson',
-      Accept: 'application/hujson',
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
     },
     auth: {
       username: TAILSCALE_API_KEY,
@@ -131,7 +131,7 @@ async function postTailscaleACL({ etag, ACL }: { etag: string; ACL: any }) {
     method: 'post',
     url: `https://api.tailscale.com/api/v2/tailnet/${TAILSCALE_TAILNET}/acl`,
     headers: {
-      Accept: 'application/hujson',
+      Accept: 'application/json',
       'If-Match': etag,
     },
     auth: {
