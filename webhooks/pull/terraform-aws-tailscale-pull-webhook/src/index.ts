@@ -44,8 +44,6 @@ export const handle: APIGatewayProxyHandler = async function handle(
         })
       )
       const resources = resourcesAsync.flat()
-      console.log('My Resource: ' + resources[0])
-      console.log('pullUpdate: success: ' + pull.kinds)
       return {
         statusCode: 200,
         body: JSON.stringify({ resources }),
@@ -71,10 +69,10 @@ const TAILSCALE_API_KEY = process.env.TAILSCALE_API_KEY
 const pullGroups = async (): Promise<Resource[]> => {
   const timestamp = new Date().toISOString()
   const tailscaleGroupResources = await loadFromTailscale({
-    transform: (group) => ({
-      id: [`tailscale/${TAILSCALE_TAILNET}`, group.split(':')[1]].join('/'),
+    transform: (id) => ({
+      id,
       kind: 'tailscale.v1.Group',
-      displayName: group.split(':')[1],
+      displayName: id.split(':')[1],
       labels: {
         ['tailscale/tailnet']: TAILSCALE_TAILNET,
         timestamp,
@@ -90,8 +88,7 @@ const loadFromTailscale = async ({
 }): Promise<Resource[]> => {
   console.log('Loading data from Tailscale...')
 
-  // call to axios
-  const response = await axios({
+  const acl = await axios({
     method: 'get',
     url: `https://api.tailscale.com/api/v2/tailnet/${TAILSCALE_TAILNET}/acl`,
     headers: {
@@ -101,13 +98,13 @@ const loadFromTailscale = async ({
       username: TAILSCALE_API_KEY,
       password: '',
     },
-  })
+  }).then(r => r.data)
 
-  const { data: results } = response as any
-  console.log('Tailscale response:', response)
-  console.log('Tailscale groups:', results)
-  // parse response
-  if (results?.groups) {
-    return Object.keys(results.groups).map(transform)
+  if (acl?.Groups) {
+    return Object.keys(acl.Groups).map(transform)
   }
+
+  console.warn('Tailscale ACL missing `.Groups`')
+
+  return []
 }
