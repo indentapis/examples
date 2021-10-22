@@ -47,7 +47,7 @@ async function getOktaSigningToken(): Promise<string> {
 async function getOktaAccessToken(signingToken: string): Promise<string> {
   const urlParams = new URLSearchParams({
     grant_type: 'client_credentials',
-    scope: 'okta.groups.manage',
+    scope: 'okta.groups.manage okta.users.manage',
     client_assertion_type:
       'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
     client_assertion: `${signingToken}`, // bearer token
@@ -62,7 +62,7 @@ async function getOktaAccessToken(signingToken: string): Promise<string> {
     data: urlParams,
   }).then((r) => r.data)
 
-  console.log(res)
+  console.log('okta-auth: got access token')
 
   return res.access_token
 }
