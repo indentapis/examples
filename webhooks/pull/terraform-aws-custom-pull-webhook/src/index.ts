@@ -1,8 +1,14 @@
-import { APIGatewayProxyHandler, APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
+import {
+  APIGatewayProxyHandler,
+  APIGatewayProxyEvent,
+  APIGatewayProxyResult,
+} from 'aws-lambda'
 import { verify } from '@indent/webhook'
 import { Resource, PullUpdateResponse } from '@indent/types'
 
-export const handle: APIGatewayProxyHandler = async function handle(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
+export const handle: APIGatewayProxyHandler = async function handle(
+  event: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> {
   try {
     await verify({
       secret: process.env.INDENT_WEBHOOK_SECRET,
@@ -14,7 +20,9 @@ export const handle: APIGatewayProxyHandler = async function handle(event: APIGa
     console.error(err)
     return {
       statusCode: 500,
-      body: JSON.stringify({ status: { code: 500, message: err.message, details: err.stack } } as PullUpdateResponse),
+      body: JSON.stringify({
+        status: { code: 2, message: err.message, details: err.stack },
+      } as PullUpdateResponse),
     }
   }
 
@@ -28,11 +36,13 @@ export const handle: APIGatewayProxyHandler = async function handle(event: APIGa
         pull.kinds.map(async (_kind: string): Promise<Resource[]> => {
           // pull resources from custom data source
 
-          return [{
-            kind: 'custom.v1.Admin',
-            id: 'example-admin-123',
-            displayName: 'Example Admin 123'
-          }]
+          return [
+            {
+              kind: 'custom.v1.Admin',
+              id: 'example-admin-123',
+              displayName: 'Example Admin 123',
+            },
+          ]
         })
       )
       const resources = resourcesAsync.flat()
@@ -47,7 +57,9 @@ export const handle: APIGatewayProxyHandler = async function handle(event: APIGa
       console.error(err)
       return {
         statusCode: 500,
-        body: JSON.stringify({ status: { code: 500, message: err.message, details: err.stack } } as PullUpdateResponse)
+        body: JSON.stringify({
+          status: { code: 2, message: err.message, details: err.stack },
+        } as PullUpdateResponse),
       }
     }
   } else {

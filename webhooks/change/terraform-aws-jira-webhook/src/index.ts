@@ -29,7 +29,7 @@ export const handle: APIGatewayProxyHandler = async function handle(
       statusCode: 500,
       body: JSON.stringify({
         status: {
-          code: 500,
+          code: 2,
           message: err.message,
           details: err.stack,
         },
@@ -59,7 +59,7 @@ export const handle: APIGatewayProxyHandler = async function handle(
               statusCode: 200,
               body: JSON.stringify({
                 status: {
-                  code: 200,
+                  code: 0,
                   message: 'Received unknown response',
                 },
               } as ApplyUpdateResponse),
@@ -100,14 +100,11 @@ async function grantPermission(event: Event, allEvents: Event[]) {
     return {
       statusCode: 500,
       body: JSON.stringify({
-        statusCode: 500,
-        body: JSON.stringify({
-          status: {
-            code: 500,
-            message: err.message,
-            details: err.stack,
-          },
-        } as ApplyUpdateResponse),
+        status: {
+          code: 2,
+          message: err.message,
+          details: err.stack,
+        } as ApplyUpdateResponse,
       }),
     }
   }
@@ -132,14 +129,11 @@ async function revokePermission(event: Event, allEvents: Event[]) {
     return {
       statusCode: 500,
       body: JSON.stringify({
-        statusCode: 500,
-        body: JSON.stringify({
-          status: {
-            code: 500,
-            message: err.message,
-            details: err.stack,
-          },
-        } as ApplyUpdateResponse),
+        status: {
+          code: 2,
+          message: err.message,
+          details: err.stack,
+        } as ApplyUpdateResponse,
       }),
     }
   }

@@ -51,6 +51,7 @@ exports['webhook'] = async function handle(
     console.error(err)
     return res.status(500).json({
       status: {
+        code: 2,
         message: err.message,
         details: JSON.stringify(err.stack),
       },

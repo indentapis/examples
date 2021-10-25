@@ -24,7 +24,7 @@ export const handle: APIGatewayProxyHandler = async function handle(
       statusCode: 500,
       body: JSON.stringify({
         status: {
-          code: 500,
+          code: 2,
           message: err.message,
           details: err.stack,
         },
@@ -91,7 +91,7 @@ async function grantPermission(auditEvent: Event) {
 
   return {
     status: {
-      code: 404,
+      code: 12,
       message:
         'This resource is not supported by the capabilities of this webhook',
     },
@@ -105,7 +105,7 @@ async function revokePermission(auditEvent: Event) {
 
   return {
     status: {
-      code: 404,
+      code: 12,
       message:
         'This resource is not supported by the capabilities of this webhook',
     },

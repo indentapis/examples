@@ -30,6 +30,7 @@ export const handle: APIGatewayProxyHandler = async function handle(
       statusCode: 500,
       body: JSON.stringify({
         status: {
+          code: 2,
           message: err.message,
           details: err.stack,
         },

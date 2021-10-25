@@ -19,7 +19,7 @@ exports['webhook'] = async function handle(req: IRequest, res: Response) {
     console.error(err)
     return res
       .status(500)
-      .json({ status: { code: 500, message: err.message, details: err.stack } })
+      .json({ status: { code: 2, message: err.message, details: err.stack } })
   }
 
   let events: Array<Event>
@@ -33,7 +33,7 @@ exports['webhook'] = async function handle(req: IRequest, res: Response) {
     console.error(err)
     return res
       .status(500)
-      .json({ status: { code: 500, message: err.message, details: err.stack } })
+      .json({ status: { code: 2, message: err.message, details: err.stack } })
   }
 
   console.log(`@indent/webhook: received ${events.length} events`)
@@ -96,7 +96,7 @@ async function grantPermission(auditEvent: Event) {
 
   return {
     status: {
-      code: 404,
+      code: 12,
       message:
         'This resource is not supported by the capabilities of this webhook.',
     },
@@ -110,7 +110,7 @@ async function revokePermission(auditEvent: Event) {
 
   return {
     status: {
-      code: 404,
+      code: 12,
       message:
         'This resource is not supported by the capabilities of this webhook.',
     },

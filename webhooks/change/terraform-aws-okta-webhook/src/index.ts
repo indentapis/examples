@@ -22,10 +22,10 @@ export const handle: APIGatewayProxyHandler = async function handle(
     console.error('@indent/webhook.verify(): failed')
     console.error(err)
     return {
-      statusCode: 500,
+      statuscode: 2,
       body: JSON.stringify({
         status: {
-          code: 500,
+          code: 2,
           message: err.message,
           details: err.stack,
         },
