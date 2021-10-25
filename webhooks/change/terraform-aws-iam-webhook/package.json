@@ -26,7 +26,7 @@
     "url": "https://github.com/indentapis/examples.git"
   },
   "devDependencies": {
-    "@indent/types": "^0.2.1",
+    "@indent/types": "latest",
     "@types/aws-lambda": "^8.10.39",
     "@types/node": "^13.9.8",
     "@types/node-fetch": "^2.5.5",

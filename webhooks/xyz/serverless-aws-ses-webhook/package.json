@@ -24,7 +24,7 @@
     "webpack": "^4.42.1"
   },
   "dependencies": {
-    "@indent/types": "^0.2.1",
+    "@indent/types": "latest",
     "@indent/webhook": "latest",
     "@types/aws-lambda": "^8.10.46",
     "@types/node-fetch": "^2.5.5",
