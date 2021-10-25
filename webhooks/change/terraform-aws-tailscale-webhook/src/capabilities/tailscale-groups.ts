@@ -102,8 +102,8 @@ async function updateTailscaleACL({
   return await postTailscaleACL({ tailnet, ACL: acl })
 }
 
-async function getTailscaleACL({ tailnet = '' }): Promise<any> {
-  const response = await axios({
+async function getTailscaleACL({ tailnet = '' }): Promise<TailscaleACL> {
+  return (await axios({
     method: 'get',
     url: `https://api.tailscale.com/api/v2/tailnet/${tailnet}/acl`,
     headers: {
@@ -114,16 +114,7 @@ async function getTailscaleACL({ tailnet = '' }): Promise<any> {
       username: TAILSCALE_API_KEY,
       password: '',
     },
-  }).then((r) => r.data)
-
-  if (response) {
-    if (determineReturnType(response)) {
-      return response
-    }
-
-    console.error('@indent/webhook.getTailscaleACL(): failed')
-    console.error('Not a valid ACL')
-  }
+  }).then((r) => r.data)) as TailscaleACL
 }
 
 async function postTailscaleACL({
@@ -152,16 +143,6 @@ const getResourceByKind = (resources: Resource[], kind: string): Resource =>
   resources.filter(
     (r) => r.kind && r.kind.toLowerCase().includes(kind.toLowerCase())
   )[0]
-
-const determineReturnType = (
-  toBeDetermined
-): toBeDetermined is TailscaleACL => {
-  if (toBeDetermined as TailscaleACL) {
-    return true
-  }
-
-  return false
-}
 
 interface TailscaleACL {
   groups: any
