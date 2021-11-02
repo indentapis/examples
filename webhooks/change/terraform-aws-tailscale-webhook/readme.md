@@ -44,6 +44,10 @@ tailscale_tailnet = ""
 
 Deploy it to the cloud with [Terraform](https://terraform.io) ([Documentation](https://terraform.io/docs/)) and [AWS Lambda](https://aws.amazon.com/lambda/).
 
+```bash
+npm run deploy:all 
+```
+
 This will take a few minutes to run the first time as Terraform sets up the resources in the AWS Account.
 
 ### About Example
