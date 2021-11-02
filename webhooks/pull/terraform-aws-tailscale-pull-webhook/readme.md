@@ -15,7 +15,7 @@ Download the example:
 
 ```bash
 curl https://codeload.github.com/indentapis/examples/tar.gz/main | tar -xz --strip=3 examples-main/webhooks/pull/terraform-aws-tailscale-pull-webhook
-cd terraform-aws-iam-pull-webhook
+cd terraform-aws-tailscale-pull-webhook
 ```
 
 Initialize the provider:
