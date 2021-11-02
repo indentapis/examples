@@ -142,6 +142,8 @@ project = "my-project-123"
 okta_domain = "example.okta.com"
 ```
 
+Save your [JSON Service Account Key](https://cloud.google.com/iam/docs/creating-managing-service-account-keys) to `terraform/secrets/terraform-deploy-key.json`
+
 Once you've set up your environment variables, configure your [Google Cloud credentials](https://indent.com/docs/webhooks/deploy#deploying-on-google-cloud) with either `gcloud auth login` or via a [service account key](https://cloud.google.com/iam/docs/creating-managing-service-account-keys).
 
 ### Deployment
