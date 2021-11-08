@@ -40,12 +40,6 @@ tailscale_api_key = ""
 tailscale_tailnet = ""
 ```
 
-Once you've configured the environment variables, deploy the function:
-
-```bash
-npm run deploy:all
-```
-
 ### Deployment
 
 Build and deploy the webhook to the cloud with [Terraform](https://terraform.io) ([Documentation](https://terraform.io/docs/)) and [AWS Lambda](https://aws.amazon.com/lambda/):

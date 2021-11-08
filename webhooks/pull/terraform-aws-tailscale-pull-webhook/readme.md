@@ -40,7 +40,7 @@ tailscale_api_key = ""
 tailscale_tailnet = ""
 ```
 
-## Deployment
+### Deployment
 
 Build and deploy the webhook to the cloud with [Terraform](https://terraform.io) ([Documentation](https://terraform.io/docs/)) and [AWS Lambda](https://aws.amazon.com/lambda/):
 

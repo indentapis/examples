@@ -60,9 +60,13 @@ npm run deploy:all
 
 ### Deployment
 
-Deploy it to the cloud with [Terraform](https://terraform.io) ([Documentation](https://terraform.io/docs/)) and [Google Cloud Functions](https://console.cloud.google.com/functions).
+Once you've set up your [Google Cloud credentials](https://indent.com/docs/webhooks/deploy#deploying-on-google-cloud), either with `gcloud auth login` or using a service account key, build and deploy the function to [Google Cloud Functions](https://console.cloud.google.com/functions) with [Terraform](https://terraform.io/):
 
-This will take a few minutes to run the first time as Terraform sets up the resources in the Google Account.
+```bash
+npm run deploy:all
+```
+
+This will take a few minutes to run the first time as Terraform sets up the resources in the Google Project.
 
 ### About Example
 
