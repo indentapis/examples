@@ -40,12 +40,12 @@ indent_webhook_secret = "wks0example-secret"
 
 Deploy it to the cloud with [Terraform](https://terraform.io) ([Documentation](https://terraform.io/docs/)) and [AWS Lambda](https://aws.amazon.com/lambda/).
 
-This will take a few minutes to run the first time as Terraform sets up the resources in the AWS Account. You should see an output similar to below:
-
 ```bash
 $ npm run deploy:all
 ```
 
-## About Example
+This will take a few minutes to run the first time as Terraform sets up the resources in the AWS Account.
+
+### About Example
 
 This is a simple example showing how to use [Terraform](https://terraform.io) to deploy a function that can pull updates about custom resources programatically.

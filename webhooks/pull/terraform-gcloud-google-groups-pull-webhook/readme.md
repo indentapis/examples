@@ -53,19 +53,17 @@ project = "my-project"
 service_account_email = "my-service-account@my-project.iam.gserviceaccount.com"
 ```
 
-Save your JSON Service Account Key to `terraform/secrets/terraform-deploy-key.json`
+Save your [JSON Service Account Key](https://cloud.google.com/iam/docs/creating-managing-service-account-keys) to `terraform/secrets/terraform-deploy-key.json`
 
-Once you've set up your [Google Cloud credentials](https://indent.com/docs/webhooks/deploy#deploying-on-google-cloud), either with `gcloud auth login` or using a service account key, build and deploy the function:
+### Deployment
+
+Once you've set up your [Google Cloud credentials](https://indent.com/docs/webhooks/deploy#deploying-on-google-cloud), either with `gcloud auth login` or using a service account key, build and deploy the function to [Google Cloud Functions](https://console.cloud.google.com/functions) with [Terraform](https://terraform.io/):
 
 ```bash
 npm run deploy:all
 ```
 
-### Deployment
-
-Deploy it to the cloud with [Terraform](https://terraform.io) ([Documentation](https://terraform.io/docs/)) and [Google Cloud Functions](https://console.cloud.google.com/functions).
-
-This will take a few minutes to run the first time as Terraform sets up the resources in the Google Account.
+This will take a few minutes to run the first time as Terraform sets up the resources in the Google Cloud Project.
 
 ### About example
 

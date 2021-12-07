@@ -142,11 +142,9 @@ project = "my-project-123"
 okta_domain = "example.okta.com"
 ```
 
-Once you've set up your environment variables, configure your [Google Cloud credentials](https://indent.com/docs/webhooks/deploy#deploying-on-google-cloud) with either `gcloud auth login` or via a [service account key](https://cloud.google.com/iam/docs/creating-managing-service-account-keys).
-
 ### Deployment
 
-Build and deploy the function to Google Cloud with [Terraform](https://terraform.io) ([Documentation](https://terraform.io/docs/)) and [Google Cloud Functions](https://console.cloud.google.com/functions):
+Once you've set up your [Google Cloud credentials](https://indent.com/docs/webhooks/deploy#deploying-on-google-cloud), either with `gcloud auth login` or using a service account key, build and deploy the function to [Google Cloud Functions](https://console.cloud.google.com/functions) with [Terraform](https://terraform.io/):
 
 ```bash
 npm run deploy:all

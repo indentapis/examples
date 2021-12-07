@@ -15,7 +15,7 @@ Download the example:
 
 ```bash
 curl https://codeload.github.com/indentapis/examples/tar.gz/main | tar -xz --strip=3 examples-main/webhooks/change/terraform-aws-tailscale-webhook
-cd terraform-aws-iam-pull-webhook
+cd terraform-aws-tailscale-pull-webhook
 ```
 
 Initialize the provider:
@@ -42,7 +42,11 @@ tailscale_tailnet = ""
 
 ### Deployment
 
-Deploy it to the cloud with [Terraform](https://terraform.io) ([Documentation](https://terraform.io/docs/)) and [AWS Lambda](https://aws.amazon.com/lambda/).
+Build and deploy the webhook to the cloud with [Terraform](https://terraform.io) ([Documentation](https://terraform.io/docs/)) and [AWS Lambda](https://aws.amazon.com/lambda/):
+
+```bash
+npm run deploy:all
+```
 
 ```bash
 npm run deploy:all 
