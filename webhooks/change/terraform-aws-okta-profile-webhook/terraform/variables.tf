@@ -50,3 +50,17 @@ variable "okta_profile_resource_kind" {
   type    = string
   default = "ProfileAttribute"
 }
+
+
+# Create an API Key for use with AWS API Gateway
+variable "api_key_name" {
+  description = "Name of the API Key attached to API Gateway"
+  default     = "indent-api-credential"
+}
+
+variable "create_api_key" {
+  description = "Toggle using an AWS API Key for this webhook's API Gateway"
+  type        = bool
+  default     = false
+}
+
