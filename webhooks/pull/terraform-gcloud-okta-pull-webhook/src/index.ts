@@ -1,5 +1,5 @@
 import { verify } from '@indent/webhook'
-import { Resource } from '@indent/types'
+import { Resource, PullUpdateResponse } from '@indent/types'
 import { Request, Response } from 'express'
 import axios from 'axios'
 
@@ -54,7 +54,10 @@ async function loadFromOkta({
     .map(transform)
 }
 
-exports['webhook'] = async function handle(req: IRequest, res: Response) {
+exports['webhook'] = async function handle(
+  req: IRequest,
+  res: Response
+): Promise<Response<PullUpdateResponse>> {
   const { headers, rawBody } = req
 
   try {
@@ -66,7 +69,13 @@ exports['webhook'] = async function handle(req: IRequest, res: Response) {
   } catch (err) {
     console.error('@indent/webhook.verify(): failed')
     console.error(err)
-    return res.status(500).json({ error: { message: err.message } })
+    return res.status(500).json({
+      status: {
+        code: 2,
+        message: err.message,
+        details: JSON.stringify(err.stack),
+      },
+    })
   }
 
   const body = JSON.parse(rawBody)
@@ -93,7 +102,6 @@ exports['webhook'] = async function handle(req: IRequest, res: Response) {
     } catch (err) {
       console.log('pullUpdate: error: ' + pull.kinds)
       console.error(err)
-      return res.status(500).json({ error: { message: err.message } })
     }
   } else {
     // unknown payload

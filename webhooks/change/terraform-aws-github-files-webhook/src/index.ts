@@ -1,29 +1,39 @@
-import { APIGatewayProxyHandler, APIGatewayProxyEvent } from 'aws-lambda'
+import { APIGatewayProxyHandler, APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import { verify } from '@indent/webhook'
-import { Event, Resource } from '@indent/types'
+import { Event, Resource, ApplyUpdateResponse } from '@indent/types'
 import { Octokit } from '@octokit/rest'
 import _ from 'lodash'
 
 export const handle: APIGatewayProxyHandler = async function handle(
   event: APIGatewayProxyEvent
-) {
+): Promise<APIGatewayProxyResult> {
+  const { headers, body } = event
+
   try {
     await verify({
       secret: process.env.INDENT_WEBHOOK_SECRET,
-      headers: event.headers,
-      body: event.body,
+      headers,
+      body,
     })
   } catch (err) {
     console.error('@indent/webhook.verify(): failed')
     console.error(err)
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: { message: err.message } }),
+      body: JSON.stringify({
+        status: {
+          code: 2,
+          message: err.message,
+          details: err.stack,
+        },
+      } as ApplyUpdateResponse),
     }
   }
 
-  const body = JSON.parse(event.body)
-  const { events } = body
+  let events: Event[]
+  const json = JSON.parse(body)
+
+  events = json.events
 
   console.log(`@indent/webhook: received ${events.length} events`)
   console.log(JSON.stringify(events))

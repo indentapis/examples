@@ -1,9 +1,15 @@
 import { verify } from '@indent/webhook'
-import { Event } from '@indent/types'
-import { APIGatewayProxyHandler } from 'aws-lambda'
+import { Event, ApplyUpdateResponse } from '@indent/types'
+import {
+  APIGatewayProxyHandler,
+  APIGatewayProxyEvent,
+  APIGatewayProxyResult,
+} from 'aws-lambda'
 import * as awsIam from './capabilities/aws-iam'
 
-export const handle: APIGatewayProxyHandler = async function handle(event) {
+export const handle: APIGatewayProxyHandler = async function handle(
+  event: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> {
   try {
     await verify({
       secret: process.env.INDENT_WEBHOOK_SECRET,
@@ -15,7 +21,13 @@ export const handle: APIGatewayProxyHandler = async function handle(event) {
     console.error(err)
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: { message: err.message } }),
+      body: JSON.stringify({
+        status: {
+          code: 2,
+          message: err.message,
+          details: err.stack,
+        },
+      } as ApplyUpdateResponse),
     }
   }
 
@@ -60,9 +72,11 @@ async function grantPermission(auditEvent: Event) {
   }
 
   return {
-    code: 404,
-    message:
-      'This resource is not supported by the capabilities of this webhook.',
+    status: {
+      code: 12,
+      message:
+        'This resource is not supported by the capabilities of this webhook.',
+    },
   }
 }
 
@@ -72,8 +86,10 @@ async function revokePermission(auditEvent: Event) {
   }
 
   return {
-    code: 404,
-    message:
-      'This resource is not supported by the capabilities of this webhook.',
+    status: {
+      code: 12,
+      message:
+        'This resource is not supported by the capabilities of this webhook.',
+    },
   }
 }

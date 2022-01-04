@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { verify } from '@indent/webhook'
 import { Request, Response } from 'express'
-import { Resource } from '@indent/types'
+import { Resource, PullUpdateResponse } from '@indent/types'
 
 const INDENT_WEBHOOK_SECRET = process.env.INDENT_WEBHOOK_SECRET
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN
@@ -49,7 +49,10 @@ async function loadFromGitHubTeams(
   })) as Resource[]
 }
 
-exports['webhook'] = async function handle(req: IRequest, res: Response) {
+exports['webhook'] = async function handle(
+  req: IRequest,
+  res: Response
+): Promise<Response<PullUpdateResponse>> {
   const { headers, rawBody } = req
 
   try {
@@ -61,22 +64,36 @@ exports['webhook'] = async function handle(req: IRequest, res: Response) {
   } catch (err) {
     console.error('@indent/webhook.verify(): failed')
     console.error(err)
-    return res.status(500).json({ status: { message: err.message } })
+    return res.status(500).json({
+      status: {
+        code: 2,
+        message: err.message,
+        details: JSON.stringify(err.stack),
+      },
+    })
   }
 
-  const body = JSON.parse(rawBody.toString())
+  const body = JSON.parse(rawBody)
   const pull = body as { kinds: string[] }
+
   if (pull && pull.kinds) {
     console.log('pullUpdate: attempt: ' + pull.kinds)
     try {
-      const resources = await loadFromGitHubTeams()
-      console.log('My Resource: ' + resources[0])
+      const resourcesAsync = await Promise.all(
+        pull.kinds.map(async (kind: string): Promise<Resource[]> => {
+          if (kind.toLowerCase().includes('github.v1.team')) {
+            return await loadFromGitHubTeams()
+          }
+
+          return []
+        })
+      )
+      const resources = resourcesAsync.flat()
       console.log('pullUpdate: success: ' + pull.kinds)
       return res.status(200).json({ resources })
     } catch (err) {
       console.log('pullUpdate: error: ' + pull.kinds)
       console.error(err)
-      return res.status(500).json({ status: { message: err.message } })
     }
   } else {
     // unknown payload

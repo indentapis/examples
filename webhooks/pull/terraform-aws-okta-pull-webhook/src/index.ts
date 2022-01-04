@@ -1,6 +1,10 @@
-import { APIGatewayProxyHandler } from 'aws-lambda'
+import {
+  APIGatewayProxyEvent,
+  APIGatewayProxyHandler,
+  APIGatewayProxyResult,
+} from 'aws-lambda'
 import { verify } from '@indent/webhook'
-import * as Indent from '@indent/types'
+import { Resource, PullUpdateResponse } from '@indent/types'
 import axios from 'axios'
 
 import { getToken } from './utils/okta-auth'
@@ -13,8 +17,8 @@ const APP_ID = process.env.OKTA_SLACK_APP_ID || ''
 async function loadFromOkta({
   path = '',
   limit = 200,
-  transform = (r: any): Indent.Resource => r,
-}): Promise<Indent.Resource[]> {
+  transform = (r: any): Resource => r,
+}): Promise<Resource[]> {
   console.log(`Loading data from Okta: { path: ${path}, limit: ${limit} }`)
   const { Authorization } = await getToken()
   const response = await axios({
@@ -54,7 +58,9 @@ async function loadFromOkta({
     .map(transform)
 }
 
-export const handle: APIGatewayProxyHandler = async function handle(event) {
+export const handle: APIGatewayProxyHandler = async function handle(
+  event: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> {
   try {
     await verify({
       secret: process.env.INDENT_WEBHOOK_SECRET,
@@ -66,7 +72,9 @@ export const handle: APIGatewayProxyHandler = async function handle(event) {
     console.error(err)
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: { message: err.message } }),
+      body: JSON.stringify({
+        status: { code: 2, message: err.message, details: err.stack },
+      } as PullUpdateResponse),
     }
   }
 
@@ -77,7 +85,7 @@ export const handle: APIGatewayProxyHandler = async function handle(event) {
     console.log('pullUpdate: attempt: ' + pull.kinds)
     try {
       const resourcesAsync = await Promise.all(
-        pull.kinds.map(async (kind: string): Promise<Indent.Resource[]> => {
+        pull.kinds.map(async (kind: string): Promise<Resource[]> => {
           if (kind.toLowerCase().includes('user')) {
             return await pullUsers()
           } else if (kind.toLowerCase().includes('group')) {
@@ -92,7 +100,7 @@ export const handle: APIGatewayProxyHandler = async function handle(event) {
 
       return {
         statusCode: 200,
-        body: JSON.stringify({ resources }),
+        body: JSON.stringify({ resources } as PullUpdateResponse),
       }
     } catch (err) {
       console.log('pullUpdate: error: ' + pull.kinds)
@@ -110,7 +118,7 @@ export const handle: APIGatewayProxyHandler = async function handle(event) {
   }
 }
 
-async function pullGroups(): Promise<Indent.Resource[]> {
+async function pullGroups(): Promise<Resource[]> {
   const timestamp = new Date().toISOString()
   const oktaGroupResources = await loadFromOkta({
     path: '/groups',
@@ -131,7 +139,7 @@ async function pullGroups(): Promise<Indent.Resource[]> {
   return oktaGroupResources
 }
 
-async function pullUsers(): Promise<Indent.Resource[]> {
+async function pullUsers(): Promise<Resource[]> {
   const timestamp = new Date().toISOString()
   const oktaUserResources = await loadFromOkta({
     path: '/users',
@@ -205,7 +213,7 @@ async function pullUsers(): Promise<Indent.Resource[]> {
                 managerId: r.labels.managerId,
                 timestamp,
               },
-            } as Indent.Resource)
+            } as Resource)
         )
 
   return [...oktaUserResources, ...appUserResources, ...slackUserResources]

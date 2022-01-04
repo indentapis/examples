@@ -13,7 +13,7 @@
     "clean:all": "npm run clean:dist && npm run clean:tf && npm run clean:modules",
     "create:all": "npm run deploy:init && npm run deploy:all",
     "deploy:init": "cd terraform && terraform init",
-    "deploy:all": "npm install && npm run build && npm run bundle && npm run tf:apply -auto-approve",
+    "deploy:all": "npm install && npm run build && npm run bundle && npm run tf:apply -- -auto-approve",
     "destroy:all": "npm run tf:destroy -auto-approve && npm run clean:all",
     "tf:plan": "cd terraform && terraform plan -var-file ./config/terraform.tfvars",
     "tf:apply": "cd terraform && terraform apply -compact-warnings -var-file ./config/terraform.tfvars",
@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@indent/webhook": "^0.1.5",
-    "@indent/types": "^0.1.5",
+    "@indent/types": "latest",
     "axios": "^0.21.1"
   },
   "devDependencies": {

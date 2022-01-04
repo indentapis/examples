@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios'
-import { Event } from '@indent/types'
+import { Event, ApplyUpdateResponse } from '@indent/types'
 import { GaxiosResponse } from 'gaxios'
 import { verify } from '@indent/webhook'
 import { Request, Response } from 'express'
@@ -17,7 +17,9 @@ exports['webhook'] = async function handle(req: IRequest, res: Response) {
   } catch (err) {
     console.error('@indent/webhook.verify(): failed')
     console.error(err)
-    return res.status(500).json({ status: { message: err.message } })
+    return res
+      .status(500)
+      .json({ status: { code: 2, message: err.message, details: err.stack } })
   }
 
   let events: Array<Event>
@@ -29,7 +31,9 @@ exports['webhook'] = async function handle(req: IRequest, res: Response) {
   } catch (err) {
     console.error('JSON.parse(body): failed')
     console.error(err)
-    return res.status(500).json({ status: { message: err.message } })
+    return res
+      .status(500)
+      .json({ status: { code: 2, message: err.message, details: err.stack } })
   }
 
   console.log(`@indent/webhook: received ${events.length} events`)
@@ -37,28 +41,32 @@ exports['webhook'] = async function handle(req: IRequest, res: Response) {
 
   try {
     await Promise.all(
-      events.map((auditEvent: Event): Promise<
-        void | GaxiosResponse<any> | AxiosResponse<any> | Status
-      > => {
-        let { actor, event, resources } = auditEvent
+      events.map(
+        (
+          auditEvent: Event
+        ): Promise<
+          void | GaxiosResponse<any> | AxiosResponse<any> | ApplyUpdateResponse
+        > => {
+          let { actor, event, resources } = auditEvent
 
-        console.log(
-          `@indent/webhook: ${event} { actor: ${
-            actor.id
-          }, resources: ${JSON.stringify(resources.map((r) => r.id))} }`
-        )
+          console.log(
+            `@indent/webhook: ${event} { actor: ${
+              actor.id
+            }, resources: ${JSON.stringify(resources.map((r) => r.id))} }`
+          )
 
-        switch (event) {
-          case 'access/grant':
-            return grantPermission(auditEvent)
-          case 'access/revoke':
-            return revokePermission(auditEvent)
-          default:
-            console.log('received unknown event')
-            console.log(auditEvent)
-            return Promise.resolve()
+          switch (event) {
+            case 'access/grant':
+              return grantPermission(auditEvent)
+            case 'access/revoke':
+              return revokePermission(auditEvent)
+            default:
+              console.log('received unknown event')
+              console.log(auditEvent)
+              return Promise.resolve()
+          }
         }
-      })
+      )
     )
   } catch (err) {
     if (err.response) {
@@ -87,9 +95,11 @@ async function grantPermission(auditEvent: Event) {
   }
 
   return {
-    code: 404,
-    message:
-      'This resource is not supported by the capabilities of this webhook.',
+    status: {
+      code: 12,
+      message:
+        'This resource is not supported by the capabilities of this webhook.',
+    },
   }
 }
 
@@ -99,15 +109,12 @@ async function revokePermission(auditEvent: Event) {
   }
 
   return {
-    code: 404,
-    message:
-      'This resource is not supported by the capabilities of this webhook.',
+    status: {
+      code: 12,
+      message:
+        'This resource is not supported by the capabilities of this webhook.',
+    },
   }
 }
 
 type IRequest = Request & { rawBody: string }
-
-type Status = {
-  code: number
-  message: string
-}

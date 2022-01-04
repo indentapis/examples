@@ -16,7 +16,7 @@
     "deploy:all": "npm install && npm run build && npm run bundle && npm run tf:apply -auto-approve",
     "destroy:all": "npm run tf:destroy -auto-approve && npm run clean:all",
     "tf:plan": "cd terraform && terraform plan -var-file ./config/terraform.tfvars",
-    "tf:apply": "cd terraform && terraform apply -auto-approve -compact-warnings -var-file ./config/terraform.tfvars",
+    "tf:apply": "cd terraform && terraform apply -compact-warnings -var-file ./config/terraform.tfvars",
     "tf:destroy": "cd terraform && terraform destroy -auto-approve -var-file ./config/terraform.tfvars"
   },
   "author": "Indent Inc <open@indent.com>",

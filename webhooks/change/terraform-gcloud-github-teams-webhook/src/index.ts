@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios'
-import { Event } from '@indent/types'
+import { Event, ApplyUpdateResponse } from '@indent/types'
 import { verify } from '@indent/webhook'
 import { Request, Response } from 'express'
 import * as github from './capabilities/github'
@@ -16,7 +16,9 @@ exports['webhook'] = async function handle(req: IRequest, res: Response) {
   } catch (err) {
     console.error('@indent/webhook.verify(): failed')
     console.error(err)
-    return res.status(500).json({ status: { message: err.message } })
+    return res
+      .status(500)
+      .json({ status: { code: 2, message: err.message, details: err.stack } })
   }
 
   let events: Array<Event>
@@ -28,7 +30,9 @@ exports['webhook'] = async function handle(req: IRequest, res: Response) {
   } catch (err) {
     console.error('JSON.parse(body): failed')
     console.error(err)
-    return res.status(500).json({ status: { message: err.message } })
+    return res
+      .status(500)
+      .json({ status: { code: 2, message: err.message, details: err.stack } })
   }
 
   console.log(`@indent/webhook: received ${events.length} events`)
@@ -37,7 +41,9 @@ exports['webhook'] = async function handle(req: IRequest, res: Response) {
   try {
     await Promise.all(
       events.map(
-        (auditEvent: Event): Promise<void | AxiosResponse<any> | Status> => {
+        (
+          auditEvent: Event
+        ): Promise<void | AxiosResponse<any> | ApplyUpdateResponse> => {
           let { actor, event, resources } = auditEvent
 
           console.log(
@@ -75,9 +81,12 @@ exports['webhook'] = async function handle(req: IRequest, res: Response) {
     } else {
       console.error(err)
     }
-    return res
-      .status(500)
-      .json({ message: '@indent/webhook: failed to provision, check logs' })
+    return res.status(500).json({
+      status: {
+        code: 2,
+        message: '@indent/webhook: failed to provision, check logs',
+      },
+    })
   }
 
   return res.status(200).json({})
@@ -89,9 +98,11 @@ async function grantPermission(auditEvent: Event) {
   }
 
   return {
-    code: 404,
-    message:
-      'This resource is not supported by the capabilities of this webhook.',
+    status: {
+      code: 12,
+      message:
+        'This resource is not supported by the capabilities of this webhook.',
+    },
   }
 }
 
@@ -101,15 +112,12 @@ async function revokePermission(auditEvent: Event) {
   }
 
   return {
-    code: 404,
-    message:
-      'This resource is not supported by the capabilities of this webhook.',
+    status: {
+      code: 12,
+      message:
+        'This resource is not supported by the capabilities of this webhook.',
+    },
   }
 }
 
 type IRequest = Request & { rawBody: string }
-
-type Status = {
-  code: number
-  message: string
-}

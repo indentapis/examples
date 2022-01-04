@@ -1,6 +1,10 @@
-import { APIGatewayProxyHandler } from 'aws-lambda'
+import {
+  APIGatewayProxyEvent,
+  APIGatewayProxyHandler,
+  APIGatewayProxyResult,
+} from 'aws-lambda'
 import { verify } from '@indent/webhook'
-import { Resource } from '@indent/types'
+import { Resource, PullUpdateResponse } from '@indent/types'
 import {
   Group,
   IAMClient,
@@ -10,7 +14,9 @@ import {
 
 const iamClient = new IAMClient({ region: `${process.env.AWS_REGION}` })
 
-export const handle: APIGatewayProxyHandler = async function handle(event) {
+export const handle: APIGatewayProxyHandler = async function handle(
+  event: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> {
   try {
     await verify({
       secret: process.env.INDENT_WEBHOOK_SECRET,
@@ -22,7 +28,13 @@ export const handle: APIGatewayProxyHandler = async function handle(event) {
     console.error(err)
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: { message: err.message } }),
+      body: JSON.stringify({
+        status: {
+          code: 2,
+          message: err.message,
+          details: err.stack,
+        },
+      } as PullUpdateResponse),
     }
   }
 
@@ -32,20 +44,24 @@ export const handle: APIGatewayProxyHandler = async function handle(event) {
   if (pull && pull.kinds) {
     console.log('pullUpdate: attempt: ' + pull.kinds)
     try {
-      const resources = await loadFromAWS()
-      console.log('My Resource: ' + resources[0])
+      const resourcesAsync = await Promise.all(
+        pull.kinds.map(async (kind: string): Promise<Resource[]> => {
+          if (kind.toLowerCase().includes('aws.iam.v1.group')) {
+            return await loadFromAWS()
+          }
+
+          return []
+        })
+      )
+      const resources = resourcesAsync.flat()
       console.log('pullUpdate: success: ' + pull.kinds)
       return {
         statusCode: 200,
-        body: JSON.stringify({ resources }),
+        body: JSON.stringify({ resources } as PullUpdateResponse),
       }
     } catch (err) {
       console.log('pullUpdate: error: ' + pull.kinds)
       console.error(err)
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ error: err.message }),
-      }
     }
   } else {
     // unknown payload
@@ -55,7 +71,7 @@ export const handle: APIGatewayProxyHandler = async function handle(event) {
 
   return {
     statusCode: 200,
-    body: JSON.stringify({}),
+    body: '{}',
   }
 }
 

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Event, Resource } from '@indent/types'
+import { ApplyUpdateResponse, Event, Resource } from '@indent/types'
 import { getToken } from '../utils/okta-auth'
 
 const OKTA_PROFILE_RESOURCE_KIND =
@@ -37,7 +37,13 @@ export async function grantPermission(auditEvent: Event) {
     console.error(err)
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: { message: err.message } }),
+      body: JSON.stringify({
+        status: {
+          code: 500,
+          message: err.message,
+          details: err.stack,
+        },
+      } as ApplyUpdateResponse),
     }
   }
 }
@@ -61,7 +67,13 @@ export async function revokePermission(auditEvent: Event) {
     console.error(err)
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: { message: err.message } }),
+      body: JSON.stringify({
+        status: {
+          code: 500,
+          message: err.message,
+          details: err.stack,
+        },
+      } as ApplyUpdateResponse),
     }
   }
 }

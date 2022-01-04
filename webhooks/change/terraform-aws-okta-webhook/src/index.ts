@@ -1,11 +1,17 @@
-import { APIGatewayProxyHandler } from 'aws-lambda'
+import {
+  APIGatewayProxyHandler,
+  APIGatewayProxyResult,
+  APIGatewayProxyEvent,
+} from 'aws-lambda'
 import { verify } from '@indent/webhook'
-import * as Indent from '@indent/types'
+import { Event, Resource, ApplyUpdateResponse } from '@indent/types'
 import axios from 'axios'
 
 import { getToken } from './utils/okta-auth'
 
-export const handle: APIGatewayProxyHandler = async function handle(event) {
+export const handle: APIGatewayProxyHandler = async function handle(
+  event: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> {
   try {
     await verify({
       secret: process.env.INDENT_WEBHOOK_SECRET,
@@ -16,8 +22,14 @@ export const handle: APIGatewayProxyHandler = async function handle(event) {
     console.error('@indent/webhook.verify(): failed')
     console.error(err)
     return {
-      statusCode: 500,
-      body: JSON.stringify({ error: { message: err.message } }),
+      statuscode: 2,
+      body: JSON.stringify({
+        status: {
+          code: 2,
+          message: err.message,
+          details: err.stack,
+        },
+      } as ApplyUpdateResponse),
     }
   }
 
@@ -28,7 +40,7 @@ export const handle: APIGatewayProxyHandler = async function handle(event) {
   console.log(JSON.stringify(events, null, 2))
 
   await Promise.all(
-    events.map((auditEvent: Indent.Event) => {
+    events.map((auditEvent: Event) => {
       let { actor, event, resources } = auditEvent
 
       console.log(
@@ -86,7 +98,7 @@ async function removeUserFromGroup({ user, group }) {
 
 const okta = { addUserToGroup, removeUserFromGroup }
 
-async function grantPermission(auditEvent: Indent.Event) {
+async function grantPermission(auditEvent: Event) {
   const { event, actor, resources } = auditEvent
   const user = getOktaIdFromResources(resources, 'user')
   const group =
@@ -102,7 +114,7 @@ async function grantPermission(auditEvent: Indent.Event) {
   })
 }
 
-async function revokePermission(auditEvent: Indent.Event) {
+async function revokePermission(auditEvent: Event) {
   const { event, actor, resources } = auditEvent
   const user = getOktaIdFromResources(resources, 'user')
   const group =
@@ -119,10 +131,7 @@ async function revokePermission(auditEvent: Indent.Event) {
   })
 }
 
-function getOktaIdFromResources(
-  resources: Indent.Resource[],
-  kind: string
-): string {
+function getOktaIdFromResources(resources: Resource[], kind: string): string {
   return resources
     .filter((r) => r.kind && r.kind.toLowerCase().includes(kind.toLowerCase()))
     .map((r) => {
