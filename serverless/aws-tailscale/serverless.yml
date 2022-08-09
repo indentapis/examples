@@ -1,0 +1,18 @@
+service: indent-aws-tailscale
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  environment:
+    INDENT_WEBHOOK_SECRET: ""
+    TAILSCALE_API_KEY: ""
+    TAILSCALE_TAILNET: ""
+
+functions:
+  handle:
+    handler: lambda.handle
+    url: true
+
+plugins:
+  - serverless-esbuild

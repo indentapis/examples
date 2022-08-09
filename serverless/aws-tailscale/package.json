@@ -1,0 +1,10 @@
+{
+  "devDependencies": {
+    "esbuild": "^0.14.25",
+    "serverless-esbuild": "^1.25.0"
+  },
+  "dependencies": {
+    "@indent/integration-tailscale": "^0.0.1-canary.20",
+    "@indent/runtime-aws-lambda": "^0.0.1-canary.27"
+  }
+}
